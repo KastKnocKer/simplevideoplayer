@@ -1,0 +1,37 @@
+﻿Build started 3/18/2013 9:24:46 PM.
+     1>Project "C:\Users\Matteo\Documents\videoplayer\videoplayer.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\Users\Matteo\Documents\videoplayer\\SDL\include /IC:\Users\Matteo\Documents\videoplayer\\ffmpeg\include /I.\GeneratedFiles /I. /IC:\Qt\qt5\qtbase\include /I.\GeneratedFiles\Debug /IC:\Qt\qt5\qtbase\..\qtmultimedia\include\QtMultimedia /IC:\Qt\qt5\qtbase\..\qtmultimedia\include /IC:\Qt\qt5\qtbase\..\qttools\include /IC:\Qt\qt5\qtbase\..\qttools\include\QtHelp /IC:\Qt\qt5\qtbase\..\qtdeclarative\include\QtDeclarative /IC:\Qt\qt5\qtbase\..\qtdeclarative\include /IC:\Qt\qt5\qtbase\include\QtGui /IC:\Qt\qt5\qtbase\include\QtOpenGL /IC:\Qt\qt5\qtbase\include\QtWidgets /IC:\Qt\qt5\qtbase\include\QtConcurrent /IC:\Qt\qt5\qtbase\include\QtMultimediaWidgets /IC:\Qt\qt5\qtbase\include\QtCore /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D QT_DLL /D QT_GUI_LIB /D QT_MULTIMEDIA_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /D QT_CONCURRENT_LIB /D QT_MULTIMEDIAWIDGETS_LIB /D QT_CORE_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt AVClock2.cpp VideoThread.cpp videoplayer.cpp
+         AVClock2.cpp
+         VideoThread.cpp
+         videoplayer.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matteo\Documents\videoplayer\Win32\Debug\\videoplayer.exe" /NOLOGO /LIBPATH:C:\Users\Matteo\Documents\videoplayer\\ffmpeg\lib /LIBPATH:C:\Users\Matteo\Documents\videoplayer\\SDL\lib /LIBPATH:C:\Qt\qt5\qtbase\lib qtmaind.lib Qt5Cored5.lib Qt5Guid5.lib Qt5Multimediad5.lib Qt5MultimediaWidgetsd5.lib Qt5OpenGLd5.lib Qt5Widgetsd5.lib avcodec.lib avformat.lib swscale.lib avutil.lib SDL.lib gdi32.lib user32.lib Qt5Cored5.lib Qt5Guid5.lib Qt5Multimediad5.lib Qt5OpenGLd5.lib OpenGL32.lib Qt5Widgetsd5.lib Qt5Concurrentd5.lib Qt5MultimediaWidgetsd5.lib Qt5Cored5.lib Qt5Guid5.lib Qt5OpenGLd5.lib Qt5Widgetsd5.lib Qt5Concurrentd5.lib Qt5Cored5.lib Qt5Guid5.lib Qt5Multimediad5.lib Qt5Testd5.lib Qt5Helpd5.lib Qt5OpenGLd5.lib Qt5Widgetsd5.lib Qt5Concurrentd5.lib Qt5MultimediaWidgetsd5.lib Qt5Declaratived5.lib Qt5Cored5.lib Qt5Guid5.lib Qt5Multimediad5.lib Qt5OpenGLd5.lib Qt5Widgetsd5.lib Qt5Concurrentd5.lib Qt5MultimediaWidgetsd5.lib Qt5Guid.lib Qt5Multimediad.lib Qt5OpenGLd.lib opengl32.lib glu32.lib Qt5Widgetsd.lib Qt5Concurrentd.lib Qt5MultimediaWidgetsd.lib Qt5Cored.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matteo\Documents\videoplayer\Win32\Debug\videoplayer.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matteo\Documents\videoplayer\Win32\Debug\videoplayer.lib" /MACHINE:X86 /SAFESEH Debug\AudioManger.obj
+         Debug\AVClock.obj
+         Debug\AVClock2.obj
+         Debug\Bitmap.obj
+         Debug\DecodeThread.obj
+         Debug\moc_AVClock.obj
+         Debug\moc_AVClock2.obj
+         Debug\moc_DecodeThread.obj
+         Debug\moc_Video.obj
+         Debug\moc_videoplayer.obj
+         Debug\moc_VideoThread.obj
+         Debug\qrc_videoplayer.obj
+         Debug\main.obj
+         Debug\PacketQueue2.obj
+         Debug\PacketQueue3.obj
+         Debug\Refresh2.obj
+         Debug\utility.obj
+         Debug\Video.obj
+         Debug\VideoPicture2.obj
+         Debug\videoplayer.obj
+         Debug\VideoState.obj
+         Debug\VideoThread.obj
+         videoplayer.vcxproj -> C:\Users\Matteo\Documents\videoplayer\Win32\Debug\videoplayer.exe
+     1>Done Building Project "C:\Users\Matteo\Documents\videoplayer\videoplayer.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:05.76
