@@ -109,24 +109,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_AVClock2.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Video2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_Video2.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_Video2.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoThread2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_VideoThread2.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_VideoThread2.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="PacketQueueVideo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -154,12 +136,6 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="AVClock2.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Video2.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="VideoThread2.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

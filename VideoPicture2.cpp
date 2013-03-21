@@ -36,7 +36,8 @@ int VideoPicture2::Put(AVFrame *pFrameRGB, double pts){
 	per avere un accesso mutuamente esclusivo alla lista */
 	_mutex_data->lock();
 
-	queue.push_back(std::pair<AVFrame*, double>(pFrameRGB, pts));				//aggiungo il frame RGB alla coda
+	std::pair<AVFrame*, double> p(pFrameRGB, pts);
+	queue.push_back(p);						//aggiungo il frame RGB alla coda
 
 	_cond_data->wakeOne();					//sveglio un processo in coda se c'è
 
@@ -51,14 +52,12 @@ int VideoPicture2::Put(AVFrame *pFrameRGB, double pts){
 }
 
 std::pair<AVFrame*, double> VideoPicture2::Get(){
-
-	AVFrame* read;
-	double pts;
 	
+	std::pair<AVFrame*, double> read;
+
 	_mutex_data->lock();
 	if(!queue.empty()){
-
-		std::pair<AVFrame*, double>(read, pts) = queue.front();	//prelevo primo elemento
+		read = queue.front();	//prelevo primo elemento
 		queue.pop_front();		//elimino elemento prelevato
 
 	} else {
@@ -72,7 +71,7 @@ std::pair<AVFrame*, double> VideoPicture2::Get(){
 	_cond_maxsize->wakeOne();
 	_mutex_maxsize->unlock();
 
-	return std::pair<AVFrame*, double>(read, pts);
+	return read;
 }
 
 

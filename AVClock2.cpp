@@ -38,8 +38,9 @@ void AVClock2::video_refresh_timer(void){
         else
         {
             /* take an element from the queue */
-			pFrameRGB = _is->pictq.Get().first;
-			pts = _is->pictq.Get().second;
+			std::pair<AVFrame*, double> p = _is->pictq.Get();
+			pts = p.second;
+			pFrameRGB = p.first;
 
             delay = pts - _is->frame_last_pts; /* the pts from last time */
             if (delay <= 0 || delay >= 1.0)
