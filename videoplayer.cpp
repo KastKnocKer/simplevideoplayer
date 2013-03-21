@@ -81,7 +81,7 @@ videoplayer::videoplayer(QWidget *parent)
     setFixedSize(400,100);
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
-	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
+	//connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
 }
 
 //DISTRUTTORE

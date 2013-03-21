@@ -94,8 +94,8 @@ void AVClock2::video_refresh_timer(void){
 			_is->window->setFrame(pFrameRGB);
 
             /* show the picture! */
-            emit needupdate();
-
+            //emit needupdate();
+			_is->window->update();
 
 			/////////////////////////////////////////////////////////////////////////////
 
