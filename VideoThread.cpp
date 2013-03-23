@@ -75,9 +75,6 @@ void VideoThread::run(){
 				pFrame->linesize, 0, _is->video_st->codec->height, pFrameRGB->data, 
 						pFrameRGB->linesize);
 
-			/*_is->window->setFrame(pFrameRGB);
-			_is->window->update();*/
-
 			/* aggiunta del frame RGB alla nuova coda */
 			if(_is->pictq.Put(pFrameRGB, pts) < 0) {
 				qDebug() << "quitting putting frame - videothread";

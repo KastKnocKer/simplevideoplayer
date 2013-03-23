@@ -5,6 +5,9 @@
 
 #include "VideoState.h"
 
+class QTimer;
+class QObject;
+
 class AVClock2 : public QObject
 {
 
@@ -23,6 +26,8 @@ private:
 public slots:
 
 	void video_refresh_timer(void);
+	//utilizzato per stoppare il timer e resettare le variabili
+	void reset();				
 
 signals:
 

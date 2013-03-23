@@ -38,8 +38,8 @@ public:
 	PacketQueueAudio(Utility *manager);
 	~PacketQueueAudio(void);
 
-	int get(AVPacket& pkt, int block);
-	int put(AVPacket& pkt);
+	int Get(AVPacket* pkt, int block);
+	int Put(AVPacket* pkt);
 
 	//ritorna la dimensione della lista
 	int getSize();

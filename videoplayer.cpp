@@ -80,8 +80,10 @@ videoplayer::videoplayer(QWidget *parent)
 
     setFixedSize(400,100);
 
+	_clock = new AVClock2();										//inizializzazione del clock
+
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
-	//connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
+	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
 }
 
 //DISTRUTTORE
@@ -168,7 +170,8 @@ funzione per il timer digitale
 	 /* genero un nuovo oggetto VideoState */
 	is = VideoState();	
 
-	_clock = new AVClock2();										//inizializzazione del clock
+	_clock->reset();												//resetto il clock
+
 	_clock->SetVideoState(&is);										//gli passo il puntatore a VideoState
 
 	is.setSourceFilename(this->getSourceFilename());				//imposto il nome del file all'oggetto VideoState
@@ -202,10 +205,6 @@ funzione per il timer digitale
 		qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
 		exit(1);
 	}
-
-
-	//TODO devo mettere una wait? in modo che lasci scorrere la riproduzione?
-	//ho tolto la l'ascoltatore di SDL event
 
 	return;
 

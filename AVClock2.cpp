@@ -94,8 +94,7 @@ void AVClock2::video_refresh_timer(void){
 			_is->window->setFrame(pFrameRGB);
 
             /* show the picture! */
-            //emit needupdate();
-			_is->window->update();
+            emit needupdate();
 
 			/////////////////////////////////////////////////////////////////////////////
 
@@ -153,6 +152,23 @@ void AVClock2::schedule_refresh(int delay){
 	a questo verrà associato lo slot video_refresh_timer
 	*/
 	timer->start(delay);
+}
+
+/**
+SLOT
+utilizzato per resettare il clock a termine riproduzione
+*/
+void AVClock2::reset(void){
+
+	timer->stop();				//fermo il timer
+
+	actual_delay = 0.0;
+	delay = 0.0;
+	sync_threshold = 0.0;
+	ref_clock = 0.0;
+	diff = 0.0;
+
+	pts = 0.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

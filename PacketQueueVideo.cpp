@@ -45,7 +45,7 @@ int PacketQueueVideo::Get(AVPacket *pkt, int block){
 		*pkt = prelevato;												//ottengo un puntatore all'oggetto prelevato
 	}
 	else if (!block) {													//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
-		
+		return -1;
 	}
 	else{																//caso lista vuota, mi metto in attesa
 		_cond->wait(_mutex);

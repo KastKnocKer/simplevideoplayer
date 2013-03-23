@@ -11,7 +11,10 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 	int n, len1, data_size = 0;
 	double pts;
 
-	while(is->audioq.get(pkt, 1) < 0 && !is->quit);		//Prelevo il primo pacchetto dalla coda, attende fino a che non c'è un pacchetto, è inutile proseguire...
+	while(is->audioq.Get(&pkt, 1) < 0 && !is->quit){;		
+		//Prelevo il primo pacchetto dalla coda,
+		//attende fino a che non c'è un pacchetto, è inutile proseguire...
+	}
 	is->audio_pkt_data = pkt.data;
 	is->audio_pkt_size = pkt.size;
 
@@ -59,7 +62,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		}
 
 		/* next packet */
-		if(is->audioq.get(pkt, 1) < 0){
+		if(is->audioq.Get(&pkt, 1) < 0){
 		  return -1;
 		}
 

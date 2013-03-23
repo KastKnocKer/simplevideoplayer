@@ -1,14 +1,17 @@
 
 //definizioni di valori statici
-
 #define SDL_AUDIO_BUFFER_SIZE 1024
 #define VIDEO_PICTURE_QUEUE_SIZE 1
 
 #define FF_REFRESH_EVENT (SDL_USEREVENT +1)
 #define FF_QUIT_EVENT (SDL_USEREVENT + 2)
 
-#define MAX_AUDIOQ_SIZE (5 * 16 * 1024)
-#define MAX_VIDEOQ_SIZE (5 * 256 * 1024)
+//#define MAX_AUDIOQ_SIZE (5 * 16 * 1024)
+//#define MAX_VIDEOQ_SIZE (5 * 256 * 1024)
+#define MAX_AUDIOQ_SIZE (32)
+#define MAX_VIDEOQ_SIZE (256)
+
+
 
 #define AV_SYNC_THRESHOLD 0.01
 #define AV_NOSYNC_THRESHOLD 10.0

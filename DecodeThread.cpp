@@ -140,7 +140,7 @@ void DecodeThread::run(){
 			_is->videoq.Put(_packet);
 		} 
 		else if(_packet->stream_index == _is->audioStream) {						//se è AUDIO lo metto nella rispettiva coda
-			_is->audioq.put(*_packet);
+			_is->audioq.Put(_packet);
 		} 
 		else {
 			av_free_packet(_packet);
@@ -149,7 +149,6 @@ void DecodeThread::run(){
 
 	/* all done - wait for it*/
 	while(!_is->quit){
-		//SDL_Delay(100);
 		this->sleep(100);
 	}
 
