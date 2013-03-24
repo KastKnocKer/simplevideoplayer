@@ -2,6 +2,7 @@
 
 DecodeThread *static_rif;		//Riferimento statico all'oggetto stesso
 
+//COSTRUTTORE
 DecodeThread::DecodeThread(QObject *parent): QThread(parent)
 {
 	/* copia di puntatori */
@@ -12,6 +13,9 @@ DecodeThread::DecodeThread(QObject *parent): QThread(parent)
 	
 }
 
+/*
+metodo per settare il riferimento statico
+*/
 void DecodeThread::set(DecodeThread *t){
 	static_rif = t;
 }
@@ -50,6 +54,9 @@ void our_release_buffer(struct AVCodecContext *c, AVFrame *pic)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
+codice che viene eseguit dal thread
+*/
 void DecodeThread::run(){
 	
 	video_index = -1;					//reset degli indici
@@ -177,7 +184,7 @@ int DecodeThread::stream_component_open(int stream_index){
 		return -1;
 	}	
 
-	// Get a pointer to the codec context for the video stream
+	// Get a pointer to the codec context for the video/audio stream
 	codecCtx = pFormatCtx->streams[stream_index]->codec;
 
 	/* caso codec AUDIO, vado a settare i parametri per SDL AUDIO */

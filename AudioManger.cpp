@@ -78,7 +78,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 
 
 /**
-metodo interno utilizzato dalla finestra SDL per aggiornare lo stato dello stream audio
+metodo interno utilizzato da SDL per aggiornare lo stato dello stream audio
 */
 void audio_callback(void *userdata, Uint8 *stream, int len) {
 
