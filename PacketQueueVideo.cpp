@@ -72,3 +72,8 @@ QMutex* PacketQueueVideo::getMutex(){
 QWaitCondition* PacketQueueVideo::GetCond(){
 	return _cond;	
 };
+
+void PacketQueueVideo::quit(){
+	_cond->wakeAll();		//Sveglio tutti i processi che sono eventualmente in coda
+	queue.clear();			//Svuoto la coda
+}

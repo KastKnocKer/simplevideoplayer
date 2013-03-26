@@ -8,7 +8,7 @@ Video::Video(QWidget *parent) : QGLWidget(parent) {
 	h = 0;
 	display = false;
 
-	count = true;
+	count = true;	
 
 }
 
@@ -117,3 +117,8 @@ void Video::setFrame(AVFrame* pFrameRGB){
 void Video::startdisplay(void){
 	display = true;	
 };
+
+void Video::closeEvent(QCloseEvent *event){
+	qDebug() << "Chiudo";
+	emit chiudi();
+}

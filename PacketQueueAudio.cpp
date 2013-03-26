@@ -69,3 +69,8 @@ SDL_mutex* PacketQueueAudio::getMutex(){
 SDL_cond* PacketQueueAudio::getCond(){
 	return _cond;	
 };
+
+void PacketQueueAudio::quit(){
+	SDL_CondSignal(_cond);		//Sveglio eventualmente il processo addormentato
+	queue.clear();				//Libero la coda
+}

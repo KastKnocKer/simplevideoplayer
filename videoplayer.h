@@ -61,6 +61,7 @@ public slots:
     void tick(qint64 time);
 
 	void loadFile();													//metodo una volta che ho scelto il file, che fa partire la riproduzione
+	void quit();														//Metodo per fermare la riproduzione
 
 public:
 
@@ -74,6 +75,8 @@ public:
 
 	//ritorna il nome del file selezionato
 	std::string getSourceFilename();
+
+	
 
 };
 

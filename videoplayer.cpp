@@ -84,6 +84,7 @@ videoplayer::videoplayer(QWidget *parent)
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
+	QObject::connect(&window, &Video::chiudi, this, &videoplayer::quit);
 }
 
 //DISTRUTTORE
@@ -160,7 +161,6 @@ funzione per il timer digitale
  metodo richiamato dall'event listener del bottone STOP
  */
  void videoplayer::stop(){
-
 	qDebug() << "stop button pressed";
 	//manager->setStopValue(1);	//imposto il valore di stop alla classe utility
  }
@@ -224,3 +224,11 @@ int videoplayer::initializeSDL(){
 
 	return 0;
 }
+
+
+ void videoplayer::quit(){
+	qDebug() << "Quit";
+	is.audioq.quit();
+	is.videoq.quit();
+	is.quit = 1;
+ }

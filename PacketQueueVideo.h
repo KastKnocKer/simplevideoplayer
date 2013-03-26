@@ -41,6 +41,8 @@ public:
 	int Get(AVPacket *pkt, int block);
 	int Put(AVPacket *pkt);
 
+	void quit();
+
 	//ritorna la dimensione della lista
 	int GetSize();
 

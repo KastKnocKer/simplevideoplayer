@@ -5,6 +5,7 @@
 #include <gl\GL.h>
 #include <gl\GLU.h>
 #include <QtGui/QMouseEvent>
+#include <QtCore>
 
 //FFMPEG
 extern "C"	{
@@ -35,6 +36,11 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
+	void closeEvent(QCloseEvent *event);
+
+signals:
+	void chiudi();
+
 
 private:
 
