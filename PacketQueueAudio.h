@@ -2,8 +2,8 @@
 
 //QT
 #include <QDebug>
-#include <SDL.h>
-#include <SDL_thread.h>
+#include "SDL\include\SDL.h"
+#include "SDL\include\SDL_thread.h"
 
 //STD
 #include <list>
@@ -11,6 +11,7 @@
 extern "C"	{
 	#include "ffmpeg\include\libavcodec\avcodec.h"
 	#include "ffmpeg\include\libavformat\avformat.h"
+	#include "ffmpeg\include\libavformat\avio.h"
 	#include "ffmpeg\include\libswscale\swscale.h"
 	#include "ffmpeg\include\libavutil\avutil.h"
 	#undef main

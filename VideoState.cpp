@@ -26,6 +26,18 @@ VideoState::VideoState(){
 	frame_timer = 0;
 	frame_last_pts = 0;
 	frame_last_delay = 0;
+
+	audio_diff_cum = 0; /* used for AV difference average computation */
+    audio_diff_avg_coef = 0;
+    audio_diff_threshold = 0;
+	audio_diff_avg_count = 0;
+
+	video_current_pts = 0;	//current displayed pts (different from video_clock if frame fifos are used)
+	video_current_pts_time = 0;
+
+	av_sync_type = 0;
+	external_clock = 0.0; /* external clock base */
+	external_clock_time = 0;
 }
 
 //DISTRUTTORE

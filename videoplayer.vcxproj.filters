@@ -79,15 +79,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_DecodeThread.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="AVClock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_AVClock.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_AVClock.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_Video.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -127,9 +118,6 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="DecodeThread.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="AVClock.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Video.h">

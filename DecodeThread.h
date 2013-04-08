@@ -7,6 +7,7 @@
 
 #include "AudioManager.h"
 #include "VideoThread.h"
+#include "AVClock2.h"
 
 //definisco una costante che rapresenta il formato dei pixel voluto commento perché è già definita in videothread
 //const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;	
@@ -19,6 +20,7 @@ class DecodeThread : public QThread
 
 private:
 
+	AVClock2* _clock;
 	VideoState *_is;
 	
 	AVPacket _pkt1, *_packet;
@@ -61,10 +63,12 @@ public:
 	void set(DecodeThread *t);
 
 	void SetVideoState(VideoState *is);
+	VideoState* GetVideoState();
+
+	AVClock2* GetAVClock();
+	void SetAVClock(AVClock2 *c);
 
 	void fail(void);
-
-	VideoState* is();
 
 };
 

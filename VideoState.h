@@ -30,6 +30,11 @@ public:
 
 	AVFormatContext *pFormatCtx;
 
+	//CLOCK
+	int             av_sync_type;
+	double          external_clock; /* external clock base */
+	int64_t         external_clock_time;
+
 	//AUDIO
 	double			audio_clock;
 	AVStream        *audio_st;
@@ -46,12 +51,19 @@ public:
 	double			frame_last_pts;
 	double			frame_last_delay;
 
+	double			audio_diff_cum; /* used for AV difference average computation */
+    double			audio_diff_avg_coef;
+    double			audio_diff_threshold;
+	int				audio_diff_avg_count;
+
 	//VIDEO
 	double			video_clock;	//pts of the last decoded frame / predicted pts of the next decoded frame
 	AVStream        *video_st;
 	PacketQueueVideo    videoq;
 	VideoPicture2	pictq;
 	uint64_t		global_video_pkt_pts;
+	double			video_current_pts;	//current displayed pts (different from video_clock if frame fifos are used)
+	int64_t			video_current_pts_time; ///time (av_gettime) at which we updated video_current_pts - used to have running video pts
 
 	int             quit;
 

@@ -13,7 +13,6 @@ extern "C"	{
 	#include "ffmpeg\include\libavformat\avformat.h"
 	#include "ffmpeg\include\libswscale\swscale.h"
 	#include "ffmpeg\include\libavutil\avutil.h"
-	#undef main
 }
 
 class Video: public QGLWidget {

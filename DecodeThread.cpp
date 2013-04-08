@@ -39,7 +39,7 @@ int our_get_buffer(struct AVCodecContext *c, AVFrame *pic)
 {
     int ret = avcodec_default_get_buffer(c, pic);					//funzione di default di ffmpeg
     uint64_t *pts = (uint64_t*)av_malloc(sizeof(uint64_t));
-    *pts = static_rif->is()->global_video_pkt_pts;
+	*pts = static_rif->GetVideoState()->global_video_pkt_pts;
     pic->opaque = pts;
     return ret;
 }
@@ -196,18 +196,20 @@ int DecodeThread::stream_component_open(int stream_index){
 		wanted_spec.silence = 0;
 		wanted_spec.samples = SDL_AUDIO_BUFFER_SIZE;
 		wanted_spec.callback = audio_callback;
-		wanted_spec.userdata = _is;
+		wanted_spec.userdata = _clock;
     
 		if(SDL_OpenAudio(&wanted_spec, &spec) < 0) {				//apertura backend audio
 			qDebug() << "SDL_OpenAudio: " << SDL_GetError();
 			return -1;
 		}
+
+		_is->audio_hw_buf_size = spec.size;
 	}
 
 	//sia nel caso VIDEO che AUDIO vado a caricare rispettivo codec
 	codec = avcodec_find_decoder(codecCtx->codec_id);
 	if(!codec || (avcodec_open2(codecCtx, codec, &optionsDict) < 0)) {
-		fprintf(stderr, "Unsupported codec!\n");
+		qDebug() << "Unsupported codec!";
 		return -1;
 	}
 
@@ -219,6 +221,13 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->audio_st = pFormatCtx->streams[stream_index];
 			_is->audio_buf_size = 0;
 			_is->audio_buf_index = 0;
+
+			 /* averaging filter for audio sync */
+			_is->audio_diff_avg_coef = exp(log(0.01 / AUDIO_DIFF_AVG_NB));
+			_is->audio_diff_avg_count = 0;
+			/* Correct audio only if larger error than this */
+			_is->audio_diff_threshold = 2.0 * SDL_AUDIO_BUFFER_SIZE / codecCtx->sample_rate;
+
 			memset(&_is->audio_pkt, 0, sizeof(_is->audio_pkt));
 			_is->audioq = PacketQueueAudio();											//inizializzo la coda di paccheti AUDIO
 			SDL_PauseAudio(0);
@@ -235,6 +244,7 @@ int DecodeThread::stream_component_open(int stream_index){
 			//inizializzazione del timer del computer
 			_is->frame_timer = (double) av_gettime()/1000000.0;
 			_is->frame_last_delay = 40e-3;
+			_is->video_current_pts_time = av_gettime();
     
 			_is->videoq = PacketQueueVideo();											//inizializzo la coda di frame VIDEO
 			_video_th = new VideoThread();											//inizializzo il thread di riproduzione video
@@ -269,14 +279,23 @@ int DecodeThread::stream_component_open(int stream_index){
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-VideoState* DecodeThread::is(){
+VideoState* DecodeThread::GetVideoState(){
 	return _is;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////
 
 void DecodeThread::SetVideoState(VideoState *is){
 
 	_is = is;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+AVClock2* DecodeThread::GetAVClock(){
+	return _clock;
+}
+
+void DecodeThread::SetAVClock(AVClock2 *c){
+
+	_clock = c;
 };
 

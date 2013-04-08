@@ -1,16 +1,7 @@
 #include "PacketQueueVideo.h"
 
-PacketQueueVideo::PacketQueueVideo(Utility *manager)
-{
-
-	PacketQueueVideo::manager = manager;
-	_mutex = new QMutex();
-	_cond = new QWaitCondition();
-}
-
 PacketQueueVideo::PacketQueueVideo(void)
 {
-	manager = nullptr;
 	_mutex = new QMutex();
 	_cond = new QWaitCondition();
 }

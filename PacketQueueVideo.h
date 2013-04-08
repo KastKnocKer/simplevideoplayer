@@ -35,7 +35,6 @@ private:
 public:
 
 	PacketQueueVideo(void);
-	PacketQueueVideo(Utility *manager);
 	~PacketQueueVideo(void);
 
 	int Get(AVPacket *pkt, int block);

@@ -84,7 +84,7 @@ videoplayer::videoplayer(QWidget *parent)
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
-	QObject::connect(&window, &Video::chiudi, this, &videoplayer::quit);
+	connect(&window, &Video::chiudi, this, &videoplayer::quit);
 }
 
 //DISTRUTTORE
@@ -196,6 +196,7 @@ funzione per il timer digitale
 	*/
 	_demuxer = new DecodeThread();									//inizializzo oggetto DecodeThread
 	_demuxer->SetVideoState(&is);
+	_demuxer->SetAVClock(_clock);
 	_demuxer->set(_demuxer);										//setto puntatore statico all'oggetto
 	is.parse_tid = _demuxer;
 	_demuxer->start();

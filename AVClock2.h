@@ -13,15 +13,18 @@ class AVClock2 : public QObject
 
 	Q_OBJECT
 
+public:
+
+	typedef enum {
+        AudioClock, VideoClock, ExternalClock
+	} ClockType;
+
+
 private:
 
-	
 	VideoState *_is;
-	double actual_delay, delay, sync_threshold, ref_clock, diff;
+	ClockType clock_type;
 	AVFrame *pFrameRGB;
-	double pts;
-
-	double get_audio_clock();
 
 public slots:
 
@@ -40,6 +43,18 @@ public:
 	AVClock2(QObject *parent = 0);
 	~AVClock2(void);
 
+	double get_audio_clock();
+	double get_video_clock();
+	double get_external_clock();
+
+	/**
+	metodo che ritorna il clock, in base al tipo di sincronizzazione impostato
+	*/
+	double get_master_clock();
+
+	void setClockType(ClockType ct);
+	AVClock2::ClockType clockType() const;
+
 	/**
 	metodo per impostare una chiamata ritardata a video_refresh_timer
 	dopo un tot di millisecondi
@@ -48,6 +63,7 @@ public:
 	void schedule_refresh(int delay);
 
 	void SetVideoState(VideoState *is);
+	VideoState* GetVideoState();
 
 	QTimer* getTimer();
 };

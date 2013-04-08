@@ -5,13 +5,8 @@ AVClock2::AVClock2(QObject *parent) :QObject(parent)
 {
 	timer = new QTimer(this);
 
-	actual_delay = 0.0;
-	delay = 0.0;
-	sync_threshold = 0.0;
-	ref_clock = 0.0;
-	diff = 0.0;
-
-	pts = 0.0;
+	//inizializzazione di default del tipo di clock
+	setClockType(VideoClock);
 
 	//ogni volta che viene emesso un timeout, eseguo un video_refresh_timer
 	connect(timer, &QTimer::timeout, this, &AVClock2::video_refresh_timer);
@@ -23,6 +18,13 @@ AVClock2::~AVClock2(void)
 }
 
 void AVClock2::video_refresh_timer(void){
+
+	double actual_delay = 0.0;
+	double delay = 0.0;
+	double sync_threshold = 0.0;
+	double ref_clock = 0.0;
+	double diff = 0.0;
+	double pts = 0.0;
 
 	//se il video_thread è attivo
 	if (_is->video_st)
@@ -41,6 +43,9 @@ void AVClock2::video_refresh_timer(void){
 			std::pair<AVFrame*, double> p = _is->pictq.Get();
 			pts = p.second;
 			pFrameRGB = p.first;
+
+			_is->video_current_pts = pts;
+			_is->video_current_pts_time = av_gettime();
 
             delay = pts - _is->frame_last_pts; /* the pts from last time */
             if (delay <= 0 || delay >= 1.0)
@@ -119,7 +124,7 @@ void AVClock2::video_refresh_timer(void){
 
 }
 
-
+//////////////////////////////////////////////////////////////////////////////
 
 double AVClock2::get_audio_clock()
 {
@@ -143,6 +148,28 @@ double AVClock2::get_audio_clock()
     return audio_pts;
 }
 
+double AVClock2::get_video_clock(){
+
+  double delta;
+  delta = (av_gettime() - _is->video_current_pts_time) / 1000000.0;
+  return _is->video_current_pts + delta;
+}
+
+double AVClock2::get_external_clock(){
+  return av_gettime() / 1000000.0;
+}
+
+double AVClock2::get_master_clock() {
+	if(clock_type == VideoClock) {
+		return get_video_clock();
+  } else if(clock_type == AudioClock) {
+		return get_audio_clock();
+  } else {
+		return get_external_clock();
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 void AVClock2::schedule_refresh(int delay){
 
@@ -161,25 +188,34 @@ utilizzato per resettare il clock a termine riproduzione
 void AVClock2::reset(void){
 
 	timer->stop();				//fermo il timer
-
-	actual_delay = 0.0;
-	delay = 0.0;
-	sync_threshold = 0.0;
-	ref_clock = 0.0;
-	diff = 0.0;
-
-	pts = 0.0;
+	setClockType(VideoClock);
+	
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 void AVClock2::SetVideoState(VideoState *is){
-
 	_is = is;
 };
 
+VideoState* AVClock2::GetVideoState(){
+	return _is;
+}
 
 QTimer* AVClock2::getTimer(){
 	
 	return timer;	
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AVClock2::setClockType(ClockType ct)
+{
+    clock_type = ct;
+}
+
+AVClock2::ClockType AVClock2::clockType() const
+{
+    return clock_type;
+}
+
