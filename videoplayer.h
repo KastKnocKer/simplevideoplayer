@@ -46,6 +46,10 @@ private:
     QAction *playAction;
     QAction *pauseAction;
     QAction *stopAction;
+	QAction *skipforwardAction;
+	QAction *skipbackwardAction;
+	QAction *seekforwardAction;
+	QAction *seelbackwardAction;
 
 	void createMenu();
 	void stop();

@@ -47,6 +47,12 @@ videoplayer::videoplayer(QWidget *parent)
     stopAction = new QAction(style()->standardIcon(QStyle::SP_MediaStop), tr("Stop"), this);
     stopAction->setShortcut(tr("Ctrl+S"));
     stopAction->setDisabled(false);
+	skipforwardAction = new QAction(style()->standardIcon(QStyle::SP_MediaSkipForward), tr("SkipForward"), this);
+    skipforwardAction->setShortcut(tr("Ctrl+S+F"));
+    skipforwardAction->setDisabled(true);
+	skipbackwardAction = new QAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("SkipBackward"), this);
+    skipbackwardAction->setShortcut(tr("Ctrl+S+F"));
+    skipbackwardAction->setDisabled(true);
 
 	//event listener dei pulsanti
 	QObject::connect(stopAction, SIGNAL(triggered()), this, SLOT(stop()) );
@@ -55,6 +61,7 @@ videoplayer::videoplayer(QWidget *parent)
     bar->addAction(playAction);
     bar->addAction(pauseAction);
     bar->addAction(stopAction);
+	bar->addAction(skipforwardAction);
 
     QLabel *volumeLabel = new QLabel;
     volumeLabel->setPixmap(QPixmap(":/images/volume.png"));
