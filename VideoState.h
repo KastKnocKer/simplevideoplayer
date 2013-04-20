@@ -30,15 +30,25 @@ public:
 
 	AVFormatContext *pFormatCtx;
 
+	//SEEK
+	int             seek_req;			//controllo se è stato o menno richiesto il seek
+	int             seek_flags;
+	int64_t         seek_pos;			//posizione del seek
+	AVPacket		flush_pkt;
+
 	//CLOCK
 	int             av_sync_type;
 	double          external_clock; /* external clock base */
 	int64_t         external_clock_time;
 
+	//CODE
+	PacketQueueAudio    audioq;
+	PacketQueueVideo    videoq;
+	VideoPicture2		pictq;
+
 	//AUDIO
 	double			audio_clock;
 	AVStream        *audio_st;
-	PacketQueueAudio    audioq;
 	uint8_t         audio_buf[(AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2];
 	unsigned int    audio_buf_size;
 	unsigned int    audio_buf_index;
@@ -59,8 +69,6 @@ public:
 	//VIDEO
 	double			video_clock;	//pts of the last decoded frame / predicted pts of the next decoded frame
 	AVStream        *video_st;
-	PacketQueueVideo    videoq;
-	VideoPicture2	pictq;
 	uint64_t		global_video_pkt_pts;
 	double			video_current_pts;	//current displayed pts (different from video_clock if frame fifos are used)
 	int64_t			video_current_pts_time; ///time (av_gettime) at which we updated video_current_pts - used to have running video pts

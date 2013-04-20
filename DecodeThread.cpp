@@ -123,7 +123,42 @@ void DecodeThread::run(){
 			break;
 		}
 
-		//seek stuff goes here
+		//SEEK - controllo se ho una richiesta di seek
+		if(_is->seek_req){
+
+			int stream_index = -1;
+			int64_t seek_target = _is->seek_pos;
+
+
+			if(_is->videoStream >= 0){
+				stream_index = _is->videoStream;
+			} 
+			else if(_is->audioStream >= 0){
+				stream_index = _is->audioStream;
+			}
+
+			if(stream_index >= 0){
+				//funzione per riscalare il timestamp e portarlo in secondi
+				seek_target= av_rescale_q(seek_target, AV_TIME_BASE_Q, _pFormatCtx->streams[stream_index]->time_base);
+			}
+      
+			if(av_seek_frame(_is->pFormatCtx, stream_index, seek_target, _is->seek_flags) < 0) {
+				qDebug() << "error while seeking";
+			} 
+			else {
+				//svuoto le liste e inserisco pacchetto di flush
+				if(_is->audioStream >= 0) {
+					_is->audioq.Flush();
+					_is->audioq.Put(&_is->flush_pkt);
+				}
+				if(_is->videoStream >= 0) {
+					_is->videoq.Flush();
+					_is->videoq.Put(&_is->flush_pkt);
+				}
+			}
+			_is->seek_req = 0;
+		}
+
 		//qui lui inzialmente usava un peso proprio totale della lista in byte, noi usiamo solo numero di elementi
 		//bisogna ridurre le 2 costanti
 		if(_is->audioq.getSize() > MAX_AUDIOQ_SIZE || _is->videoq.GetSize() > MAX_VIDEOQ_SIZE) {
@@ -230,6 +265,7 @@ int DecodeThread::stream_component_open(int stream_index){
 
 			memset(&_is->audio_pkt, 0, sizeof(_is->audio_pkt));
 			_is->audioq = PacketQueueAudio();											//inizializzo la coda di paccheti AUDIO
+			_is->audioq.setFlushPkt(&_is->flush_pkt);
 			SDL_PauseAudio(0);
 			break;
 
@@ -247,6 +283,7 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->video_current_pts_time = av_gettime();
     
 			_is->videoq = PacketQueueVideo();											//inizializzo la coda di frame VIDEO
+			_is->videoq.setFlushPkt(&_is->flush_pkt);
 			_video_th = new VideoThread();											//inizializzo il thread di riproduzione video
 			_video_th->SetVideoState(_is);
 			_video_th->start();														//mando in esecuzione il thread decodifica video

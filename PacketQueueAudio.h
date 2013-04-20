@@ -33,20 +33,35 @@ private:
 
 	Utility *manager;
 
+	AVPacket *flush_pkt;
+
 public:
 
 	PacketQueueAudio(void);
 	PacketQueueAudio(Utility *manager);
 	~PacketQueueAudio(void);
 
+	
 	int Get(AVPacket* pkt, int block);
 	int Put(AVPacket* pkt);
+
+	/**
+	metodo per svuotare la lista
+	*/
+	int Flush();
+
 	void quit();
 
-	//ritorna la dimensione della lista
+	/**
+	ritorna la dimensione della lista (numero pacchetti)
+	*/
 	int getSize();
 
 	SDL_mutex* getMutex();
 	SDL_cond* getCond();
 
+	/**
+	metodo per settare il riferimento al pacchetto di FLUSH
+	*/
+	void setFlushPkt(AVPacket *pkt);
 };

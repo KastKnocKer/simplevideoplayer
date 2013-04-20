@@ -4,6 +4,7 @@ PacketQueueVideo::PacketQueueVideo(void)
 {
 	_mutex = new QMutex();
 	_cond = new QWaitCondition();
+	flush_pkt = nullptr;
 }
 
 
@@ -48,6 +49,20 @@ int PacketQueueVideo::Get(AVPacket *pkt, int block){
 }
 
 /**
+metodo per svuotare la lista
+*/
+int PacketQueueVideo::Flush(){
+
+	_mutex->lock();
+
+	queue.clear();	//svuoto la lista
+
+	_mutex->unlock();
+
+	return 0;
+}
+
+/**
 ritorna la dimensione della lista
 */
 int PacketQueueVideo::GetSize(){
@@ -67,4 +82,12 @@ QWaitCondition* PacketQueueVideo::GetCond(){
 void PacketQueueVideo::quit(){
 	_cond->wakeAll();		//Sveglio tutti i processi che sono eventualmente in coda
 	queue.clear();			//Svuoto la coda
+}
+
+/**
+	metodo per settare il riferimento al pacchetto di FLUSH
+*/
+void PacketQueueVideo::setFlushPkt(AVPacket *pkt){
+
+	flush_pkt = pkt;
 }

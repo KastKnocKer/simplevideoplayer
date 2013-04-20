@@ -3,6 +3,7 @@
 //COSTRUTTORE
 videoplayer::videoplayer(QWidget *parent)
 {
+	signalMapper = new QSignalMapper(this);
 
 	createMenu();	
 
@@ -40,27 +41,52 @@ videoplayer::videoplayer(QWidget *parent)
     //Ora mi occupo dei pulsati
     playAction = new QAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play"), this);
     playAction->setShortcut(tr("Ctrl+P"));
-    playAction->setDisabled(true);
+    playAction->setDisabled(false);
     pauseAction = new QAction(style()->standardIcon(QStyle::SP_MediaPause), tr("Pause"), this);
     pauseAction->setShortcut(tr("Ctrl+A"));
-    pauseAction->setDisabled(false);
+    pauseAction->setDisabled(true);
     stopAction = new QAction(style()->standardIcon(QStyle::SP_MediaStop), tr("Stop"), this);
     stopAction->setShortcut(tr("Ctrl+S"));
-    stopAction->setDisabled(false);
+    stopAction->setDisabled(true);
 	skipforwardAction = new QAction(style()->standardIcon(QStyle::SP_MediaSkipForward), tr("SkipForward"), this);
     skipforwardAction->setShortcut(tr("Ctrl+S+F"));
     skipforwardAction->setDisabled(true);
 	skipbackwardAction = new QAction(style()->standardIcon(QStyle::SP_MediaSkipBackward), tr("SkipBackward"), this);
-    skipbackwardAction->setShortcut(tr("Ctrl+S+F"));
+    skipbackwardAction->setShortcut(tr("Ctrl+S+B"));
     skipbackwardAction->setDisabled(true);
+	seekforwardAction = new QAction(style()->standardIcon(QStyle::SP_MediaSeekForward), tr("SeekForward"), this);
+    seekforwardAction->setShortcut(tr("Ctrl+F"));
+    seekforwardAction->setDisabled(true);
+	seekbackwardAction = new QAction(style()->standardIcon(QStyle::SP_MediaSeekBackward), tr("SeekBackward"), this);
+    seekbackwardAction->setShortcut(tr("Ctrl+B"));
+    seekbackwardAction->setDisabled(true);
 
 	//event listener dei pulsanti
-	QObject::connect(stopAction, SIGNAL(triggered()), this, SLOT(stop()) );
+	connect(stopAction, &QAction::triggered, this, &videoplayer::stop);
+	connect(playAction, &QAction::triggered, this, &videoplayer::playing);;
+	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
+
+	signalMapper->setMapping(seekforwardAction, 10.0);
+	signalMapper->setMapping(seekbackwardAction, -10.0);
+	signalMapper->setMapping(skipbackwardAction, -60.0);
+	signalMapper->setMapping(skipforwardAction, 60.0);
+
+	connect(skipforwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
+	connect(seekforwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
+	connect(skipbackwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
+	connect(seekbackwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
+
+	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(seek(int)));
 	
+
+
     QToolBar *bar = new QToolBar;
     bar->addAction(playAction);
     bar->addAction(pauseAction);
     bar->addAction(stopAction);
+	bar->addAction(skipbackwardAction);
+	bar->addAction(seekbackwardAction);
+	bar->addAction(seekforwardAction);
 	bar->addAction(skipforwardAction);
 
     QLabel *volumeLabel = new QLabel;
@@ -172,9 +198,11 @@ funzione per il timer digitale
 	//manager->setStopValue(1);	//imposto il valore di stop alla classe utility
  }
 
- void videoplayer::loadFile(){
+void videoplayer::loadFile(){
 
-	 /* genero un nuovo oggetto VideoState */
+	emit first_play();
+
+	/* genero un nuovo oggetto VideoState */
 	is = VideoState();	
 
 	_clock->reset();												//resetto il clock
@@ -233,10 +261,52 @@ int videoplayer::initializeSDL(){
 	return 0;
 }
 
+/**
+SLOT, richiamata quando il video passa in riproduzione
+*/
+void videoplayer::playing(){
 
- void videoplayer::quit(){
+	playAction->setDisabled(true);
+	pauseAction->setDisabled(false);
+	stopAction->setDisabled(false);
+	skipforwardAction->setDisabled(false);
+	skipbackwardAction->setDisabled(false);
+	seekforwardAction->setDisabled(false);
+	seekbackwardAction->setDisabled(false);
+}
+
+/**
+SLOT chiamata in seguito alla pressione di QUIT
+*/
+void videoplayer::quit(){
 	qDebug() << "Quit";
 	is.audioq.quit();
 	is.videoq.quit();
 	is.quit = 1;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// SEEK
+
+ /**
+ SLOT chiamata in seguito alla pressione di uno dei tasti di SEEK
+ */
+void videoplayer::seek(int incr){
+
+	 qDebug() << "seek" << incr;
+
+	 double pos = _clock->get_master_clock();
+	 pos += incr;
+
+	 stream_seek((int64_t) (pos*AV_TIME_BASE), incr);
+
  }
+
+void videoplayer::stream_seek(int64_t pos, int rel){
+
+	if(!is.seek_req){
+		is.seek_pos = pos;
+		is.seek_flags = rel < 0 ? AVSEEK_FLAG_BACKWARD : 0;
+		is.seek_req = 1;
+	}
+};

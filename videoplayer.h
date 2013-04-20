@@ -10,6 +10,7 @@
 #include <QtGui>
 #include <QtCore>
 #include <QtWidgets>
+#include <QSignalMapper>
 
 #include "DecodeThread.h"
 #include "VideoState.h"
@@ -23,6 +24,7 @@ class QLCDNumber;
 class glwidget;
 class QSlider;
 class QThread;
+class QSignalMapper;
 
 class videoplayer : public QWidget
 {
@@ -49,23 +51,40 @@ private:
 	QAction *skipforwardAction;
 	QAction *skipbackwardAction;
 	QAction *seekforwardAction;
-	QAction *seelbackwardAction;
+	QAction *seekbackwardAction;
+	QSignalMapper *signalMapper;							//fa da mapping per particolari signal
 
 	void createMenu();
 	void stop();
-	int initializeSDL();												//inizializzazione di SDL per audio
+	int initializeSDL();									//inizializzazione di SDL per audio
 
-	DecodeThread *_demuxer;												//puntatore al thread di decodifica
+	DecodeThread *_demuxer;									//puntatore al thread di decodifica
 	AVClock2 *_clock;
+
+	
+	void stream_seek(int64_t pos, int rel);
+
+signals:
+
+	void first_play();
 	
 
 public slots:
+
     void open(void);
     void about(void);
     void tick(qint64 time);
 
-	void loadFile();													//metodo una volta che ho scelto il file, che fa partire la riproduzione
-	void quit();														//Metodo per fermare la riproduzione
+	void loadFile();										//metodo una volta che ho scelto il file, che fa partire la riproduzione
+	void quit();											//Metodo per fermare la riproduzione
+
+	void playing();
+
+	/**
+	metodo per richiamare il seek
+	@param: tempo in millisecondi
+	*/
+	void seek(int incr);
 
 public:
 

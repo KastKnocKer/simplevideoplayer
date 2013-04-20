@@ -13,6 +13,7 @@ PacketQueueAudio::PacketQueueAudio(void)
 	manager = nullptr;
 	this->_mutex = SDL_CreateMutex();
 	this->_cond = SDL_CreateCond();
+	flush_pkt = nullptr;
 }
 
 
@@ -21,6 +22,10 @@ PacketQueueAudio::~PacketQueueAudio(void)
 }
 
 int PacketQueueAudio::Put(AVPacket* pkt){
+
+	if(pkt != flush_pkt && av_dup_packet(pkt)<0){
+		return -1;
+	}
 
 	SDL_LockMutex(_mutex);
 
@@ -54,6 +59,20 @@ int PacketQueueAudio::Get(AVPacket* pkt, int block){
 }
 
 /**
+metodo per svuotare la lista
+*/
+int PacketQueueAudio::Flush(){
+
+	SDL_LockMutex(_mutex);
+
+	queue.clear();	//svuoto la lista
+
+	SDL_UnlockMutex(_mutex);
+
+	return 0;
+}
+
+/**
 ritorna la dimensione della lista
 */
 int PacketQueueAudio::getSize(){
@@ -73,4 +92,12 @@ SDL_cond* PacketQueueAudio::getCond(){
 void PacketQueueAudio::quit(){
 	SDL_CondSignal(_cond);		//Sveglio eventualmente il processo addormentato
 	queue.clear();				//Libero la coda
+}
+
+/**
+	metodo per settare il riferimento al pacchetto di FLUSH
+*/
+void PacketQueueAudio::setFlushPkt(AVPacket *pkt){
+
+	flush_pkt = pkt;
 }

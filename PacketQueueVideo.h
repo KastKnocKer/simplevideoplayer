@@ -30,6 +30,8 @@ private:
 	QMutex			*_mutex;
 	QWaitCondition  *_cond;
 
+	AVPacket *flush_pkt;
+
 	Utility *manager;
 
 public:
@@ -40,6 +42,11 @@ public:
 	int Get(AVPacket *pkt, int block);
 	int Put(AVPacket *pkt);
 
+	/**
+	metodo per svuotare la lista
+	*/
+	int Flush();
+
 	void quit();
 
 	//ritorna la dimensione della lista
@@ -47,5 +54,10 @@ public:
 
 	QMutex* getMutex();
 	QWaitCondition* GetCond();
+
+	/**
+	metodo per settare il riferimento al pacchetto di FLUSH
+	*/
+	void setFlushPkt(AVPacket *pkt);
 
 };

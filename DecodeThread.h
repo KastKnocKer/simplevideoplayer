@@ -24,6 +24,7 @@ private:
 	VideoState *_is;
 	
 	AVPacket _pkt1, *_packet;
+
 	AVFormatContext *_pFormatCtx;
 
 	int video_index;

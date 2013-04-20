@@ -54,7 +54,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			return data_size;
 		}
 
-		if((&pkt)->data)
+		if(pkt.data)
 			av_free_packet(&pkt);
 
 		if(is->quit){
@@ -64,6 +64,11 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		/* next packet */
 		if(is->audioq.Get(&pkt, 1) < 0){
 		  return -1;
+		}
+
+		if(pkt.data == is->flush_pkt.data){
+			avcodec_flush_buffers(is->audio_st->codec);
+			continue;
 		}
 
 		is->audio_pkt_data = pkt.data;

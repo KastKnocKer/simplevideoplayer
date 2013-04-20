@@ -39,6 +39,13 @@ void VideoThread::run(){
 			qDebug() << "qutting getting packets - videothread";
 			break;
 		}
+
+		//controllo se ho letto pacchetto di FLUSH
+		if(packet->data == _is->flush_pkt.data){
+			avcodec_flush_buffers(_is->video_st->codec);
+			continue;
+		}
+
 		pts = 0;									//resetto il pts a 0, ovvero non trovato
 
 		//Save global pts to be stored in pFrame in first call

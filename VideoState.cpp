@@ -38,6 +38,13 @@ VideoState::VideoState(){
 	av_sync_type = 0;
 	external_clock = 0.0; /* external clock base */
 	external_clock_time = 0;
+
+	seek_req = 0;
+	seek_flags = 0;
+	seek_pos = 0;
+
+	av_init_packet(&flush_pkt);
+	flush_pkt.data = (unsigned char *) "FLUSH";
 }
 
 //DISTRUTTORE
