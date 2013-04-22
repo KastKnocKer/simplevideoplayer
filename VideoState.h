@@ -31,15 +31,20 @@ public:
 	AVFormatContext *pFormatCtx;
 
 	//SEEK
-	int             seek_req;			//controllo se è stato o menno richiesto il seek
-	int             seek_flags;
-	int64_t         seek_pos;			//posizione del seek
+	int             seek_req;			//controllo se è stato o meno richiesto il seek
+	int             seek_flags;			//flag per sapere se sto facendo un forward o backward
+	int64_t         seek_pos;			//posizione del seek (nuova posizione calcolata)
 	AVPacket		flush_pkt;
+	int64_t			duration;			//lunghezza del video in riproduzione
 
 	//CLOCK
 	int             av_sync_type;
 	double          external_clock; /* external clock base */
 	int64_t         external_clock_time;
+	int				currentTime;		//tempo scorrimento slider
+
+	//PAUSE
+	bool			pause;
 
 	//CODE
 	PacketQueueAudio    audioq;

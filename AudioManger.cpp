@@ -115,6 +115,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
 		stream += len1;
 		is->audio_buf_index += len1;
 	}
+
 }
 
 /* Add or subtract samples to get a better sync, return new

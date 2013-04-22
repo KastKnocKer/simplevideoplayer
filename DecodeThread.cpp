@@ -80,6 +80,8 @@ void DecodeThread::run(){
 		exit(1);
 	}
 
+	_pFormatCtx = avformat_alloc_context();
+
 	/* APERTURA FILE VIDEO */
 	if(avformat_open_input(&_pFormatCtx, _is->getSourceFilename().c_str(), NULL, NULL) != 0){	//Apro il file
 		qDebug() << "Impossibile aprire il file";		
@@ -87,6 +89,11 @@ void DecodeThread::run(){
 	}
 
 	_is->pFormatCtx = _pFormatCtx;
+
+	//reperisco informazioni sulla durata e le vado a impostare allo slider
+	int duration = (int) (_pFormatCtx->duration/AV_TIME_BASE);
+	qDebug() << "durata del video: " << duration;
+	emit setduration(0, duration);		//durata max del video
 
 	if(avformat_find_stream_info(_pFormatCtx, NULL)<0){											//Leggo le informazioni sullo stream
 		qDebug() << "Impossibile leggere le info sullo stream";	
@@ -119,8 +126,14 @@ void DecodeThread::run(){
 	//main decode loop
 	while(1){
 
+		//controllo per STOP
 		if(_is->quit){
 			break;
+		}
+
+		//controllo per PAUSE
+		while(_is->pause == true){
+			
 		}
 
 		//SEEK - controllo se ho una richiesta di seek
@@ -128,6 +141,7 @@ void DecodeThread::run(){
 
 			int stream_index = -1;
 			int64_t seek_target = _is->seek_pos;
+			int64_t DesiredFrameNumber;
 
 
 			if(_is->videoStream >= 0){
@@ -138,14 +152,28 @@ void DecodeThread::run(){
 			}
 
 			if(stream_index >= 0){
-				//funzione per riscalare il timestamp e portarlo in secondi
-				seek_target= av_rescale_q(seek_target, AV_TIME_BASE_Q, _pFormatCtx->streams[stream_index]->time_base);
+				//AVRational av1 = {1, AV_TIME_BASE};
+				//funzione per convertire il tempo nel numero di frame desiderato
+				//seek_target= av_rescale_q(seek_target, av1, _pFormatCtx->streams[stream_index]->time_base);
+				
+				DesiredFrameNumber = av_rescale(seek_target, _pFormatCtx->streams[stream_index]->time_base.den, 
+					_pFormatCtx->streams[stream_index]->time_base.num);
+				DesiredFrameNumber /= 1000000;
+				
 			}
       
-			if(av_seek_frame(_is->pFormatCtx, stream_index, seek_target, _is->seek_flags) < 0) {
-				qDebug() << "error while seeking";
+			//if(avformat_seek_file(_is->pFormatCtx, stream_index, INT64_MIN, seek_target, seek_target, _is->seek_flags) < 0) {
+			if(avformat_seek_file(_is->pFormatCtx, stream_index, INT64_MIN, DesiredFrameNumber, DesiredFrameNumber, AVSEEK_FLAG_FRAME) < 0) {
+			
+				qDebug() << "error while seeking " << (long long) DesiredFrameNumber;
+
+				//avcodec_flush_buffers(_pFormatCtx->streams[stream_index]->codec);
 			} 
 			else {
+				qDebug() << "seeking SUCCESS" << (long long) DesiredFrameNumber;
+
+				//avcodec_flush_buffers(_pFormatCtx->streams[stream_index]->codec);
+
 				//svuoto le liste e inserisco pacchetto di flush
 				if(_is->audioStream >= 0) {
 					_is->audioq.Flush();
@@ -156,7 +184,8 @@ void DecodeThread::run(){
 					_is->videoq.Put(&_is->flush_pkt);
 				}
 			}
-			_is->seek_req = 0;
+
+			_is->seek_req = 0;			//resetto a 0 (false) la richiesta di seek
 		}
 
 		//qui lui inzialmente usava un peso proprio totale della lista in byte, noi usiamo solo numero di elementi
@@ -194,6 +223,9 @@ void DecodeThread::run(){
 		this->sleep(100);
 	}
 
+	avformat_free_context(_pFormatCtx);
+
+	SDL_CloseAudio();
 	fail();
 
 	return;
@@ -313,6 +345,7 @@ int DecodeThread::stream_component_open(int stream_index){
 	}
 	return 0;
 };
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 

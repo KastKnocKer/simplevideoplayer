@@ -36,7 +36,7 @@ void VideoThread::run(){
 		// leggo i paccehtti dalla coda
 		if(_is->videoq.Get(packet, 1) < 0){
 			// means we quit getting packets
-			qDebug() << "qutting getting packets - videothread";
+			qDebug() << "quitting getting packets - videothread";
 			break;
 		}
 

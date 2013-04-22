@@ -45,6 +45,10 @@ VideoState::VideoState(){
 
 	av_init_packet(&flush_pkt);
 	flush_pkt.data = (unsigned char *) "FLUSH";
+
+	currentTime = 0;
+
+	pause = false;
 }
 
 //DISTRUTTORE

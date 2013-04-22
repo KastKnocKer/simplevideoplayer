@@ -14,6 +14,10 @@ PacketQueueVideo::~PacketQueueVideo(void)
 
 int PacketQueueVideo::Put(AVPacket *pkt){
 
+	if(pkt != flush_pkt && av_dup_packet(pkt)<0){
+		return -1;
+	}
+
 	_mutex->lock();
 
 	queue.push_back(*pkt);

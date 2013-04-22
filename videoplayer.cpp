@@ -29,7 +29,6 @@ videoplayer::videoplayer(QWidget *parent)
 
     //Barra di scorrimento
     positionSlider = new QSlider(Qt::Horizontal);
-    positionSlider->setRange(0, 0);
 
     //Inglobo la barra e LCD in un contenitore che li mette io orizzontale
     QHBoxLayout *seekerLayout = new QHBoxLayout;
@@ -63,9 +62,14 @@ videoplayer::videoplayer(QWidget *parent)
 
 	//event listener dei pulsanti
 	connect(stopAction, &QAction::triggered, this, &videoplayer::stop);
-	connect(playAction, &QAction::triggered, this, &videoplayer::playing);;
+	connect(playAction, &QAction::triggered, this, &videoplayer::resume);;
 	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
+	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
 
+	/**
+	utilizzo di un signalMapper per collegare l'evento di pressione dei pulsanti SEEK, 
+	con un particoare valore che verra inviato allo SLOT seek
+	*/
 	signalMapper->setMapping(seekforwardAction, 10.0);
 	signalMapper->setMapping(seekbackwardAction, -10.0);
 	signalMapper->setMapping(skipbackwardAction, -60.0);
@@ -77,8 +81,6 @@ videoplayer::videoplayer(QWidget *parent)
 	connect(seekbackwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
 
 	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(seek(int)));
-	
-
 
     QToolBar *bar = new QToolBar;
     bar->addAction(playAction);
@@ -118,6 +120,8 @@ videoplayer::videoplayer(QWidget *parent)
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
 	connect(&window, &Video::chiudi, this, &videoplayer::quit);
+
+	connect(_clock, &AVClock2::setslider, positionSlider, &QSlider::setValue);
 }
 
 //DISTRUTTORE
@@ -168,7 +172,7 @@ funzione grafica che permette di creare la menubar e i suoi sottomenu
  void videoplayer::about(void)
  {
     QMessageBox msgbox;
-    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> è stato implementato utilizzando Qt 4.8, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
+    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> è stato implementato utilizzando Qt 5, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
  }
 
 /**
@@ -185,18 +189,70 @@ funzione per il timer digitale
  metodo che ritorna il path del video selezionato
  */
 
- std::string videoplayer::getSourceFilename(){
+std::string videoplayer::getSourceFilename(){
 
 	 return _fileName.toStdString();
  }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
  /**
  metodo richiamato dall'event listener del bottone STOP
  */
- void videoplayer::stop(){
+void videoplayer::stop(){
 	qDebug() << "stop button pressed";
 	//manager->setStopValue(1);	//imposto il valore di stop alla classe utility
- }
+}
+
+/**
+SLOT per metter in pausa la riproduzione
+*/
+void videoplayer::pause(void){
+
+	qDebug() << "PAUSE pressed";
+	pauseAction->setDisabled(true);
+	playAction->setDisabled(false);
+	_clock->sliderTimer->stop();
+	is.pause = true;
+	SDL_PauseAudio(1);
+}
+
+/**
+SLOT utilizzato solo quando un video gia iniziato, deve riprendere la riproduzione
+*/
+void videoplayer::resume(){
+
+	this->playing();
+	_clock->start_slider();
+	is.pause = false;
+	SDL_PauseAudio(1);
+}
+
+/**
+SLOT, richiamata quando il video passa in riproduzione
+*/
+void videoplayer::playing(){
+
+	playAction->setDisabled(true);
+	pauseAction->setDisabled(false);
+	stopAction->setDisabled(false);
+	skipforwardAction->setDisabled(false);
+	skipbackwardAction->setDisabled(false);
+	seekforwardAction->setDisabled(false);
+	seekbackwardAction->setDisabled(false);
+}
+
+/**
+SLOT chiamata in seguito alla pressione di QUIT
+*/
+void videoplayer::quit(){
+	qDebug() << "Quit";
+	is.audioq.quit();
+	is.videoq.quit();
+	is.quit = 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void videoplayer::loadFile(){
 
@@ -236,11 +292,21 @@ void videoplayer::loadFile(){
 	is.parse_tid = _demuxer;
 	_demuxer->start();
 
+	/**
+	connect per l'aggiornamento del max valore possibile dello slider
+	coincidente con la durata del video in secondi
+	*/
+	connect(_demuxer, &DecodeThread::setduration, positionSlider, &QSlider::setRange);
+
+	_clock->start_slider();											//faccio partire timer per lo slider
+
 	//nota: VideoState di default dovrebbe avere un riferimento al thread....
 	if(!is.parse_tid) {
 		qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
 		exit(1);
 	}
+
+	_clock->start_slider();											//faccio partire lo slider
 
 	return;
 
@@ -249,7 +315,7 @@ void videoplayer::loadFile(){
  //////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
-inizializzaizone della di SDL AUDIO
+inizializzaizone SDL AUDIO
 */
 int videoplayer::initializeSDL(){
 
@@ -261,29 +327,7 @@ int videoplayer::initializeSDL(){
 	return 0;
 }
 
-/**
-SLOT, richiamata quando il video passa in riproduzione
-*/
-void videoplayer::playing(){
 
-	playAction->setDisabled(true);
-	pauseAction->setDisabled(false);
-	stopAction->setDisabled(false);
-	skipforwardAction->setDisabled(false);
-	skipbackwardAction->setDisabled(false);
-	seekforwardAction->setDisabled(false);
-	seekbackwardAction->setDisabled(false);
-}
-
-/**
-SLOT chiamata in seguito alla pressione di QUIT
-*/
-void videoplayer::quit(){
-	qDebug() << "Quit";
-	is.audioq.quit();
-	is.videoq.quit();
-	is.quit = 1;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // SEEK
@@ -295,18 +339,28 @@ void videoplayer::seek(int incr){
 
 	 qDebug() << "seek" << incr;
 
+	 /**
+	 vado a calcolare il nuovo tempo, andando a sommare il tempo
+	 di seek a quello del master clock
+	 */
 	 double pos = _clock->get_master_clock();
-	 pos += incr;
+	 pos += incr;	
 
+	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
+	 //(che e unita di avcodec)
 	 stream_seek((int64_t) (pos*AV_TIME_BASE), incr);
-
+	 
  }
 
+/**
+funzione utilizzata per impostare le variabili di seek
+*/
 void videoplayer::stream_seek(int64_t pos, int rel){
 
 	if(!is.seek_req){
 		is.seek_pos = pos;
 		is.seek_flags = rel < 0 ? AVSEEK_FLAG_BACKWARD : 0;
+		qDebug() << "seek, verso 1 INDIETRO, 0 AVANTI: " << is.seek_flags;
 		is.seek_req = 1;
 	}
 };

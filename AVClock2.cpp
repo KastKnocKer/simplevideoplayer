@@ -4,12 +4,19 @@
 AVClock2::AVClock2(QObject *parent) :QObject(parent)
 {
 	timer = new QTimer(this);
+	sliderTimer = new QTimer(this);
 
 	//inizializzazione di default del tipo di clock
 	setClockType(VideoClock);
 
 	//ogni volta che viene emesso un timeout, eseguo un video_refresh_timer
 	connect(timer, &QTimer::timeout, this, &AVClock2::video_refresh_timer);
+	
+	/**
+	ogni secondo richiamo la funzione di update dello slider
+	che a sua volta emanera un segnale per aggiornare lo slider al nuovo valore
+	*/
+	connect(sliderTimer, &QTimer::timeout, this, &AVClock2::slider_update);
 }
 
 
@@ -171,6 +178,10 @@ double AVClock2::get_master_clock() {
 
 //////////////////////////////////////////////////////////////////////////////
 
+/**
+funzione che va a richiamare dopo "delay" millisecondi
+il refresh della pagina
+*/
 void AVClock2::schedule_refresh(int delay){
 
 	/**
@@ -190,6 +201,21 @@ void AVClock2::reset(void){
 	timer->stop();				//fermo il timer
 	setClockType(VideoClock);
 	
+}
+
+/**
+metodo per far partire il timer per far scorrere la barra
+*/
+void AVClock2::start_slider(void){
+
+	sliderTimer->start(1000);	//il timer effettuerà un timeout ogni secondo
+}
+
+void AVClock2::slider_update(void){
+
+	++_is->currentTime;				//aggiorno il timer 
+
+	emit setslider(_is->currentTime);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

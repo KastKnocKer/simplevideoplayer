@@ -30,15 +30,19 @@ public slots:
 
 	void video_refresh_timer(void);
 	//utilizzato per stoppare il timer e resettare le variabili
-	void reset();				
+	void reset();		
+
+	void slider_update();
 
 signals:
 
 	void needupdate();
+	void setslider(int val);
 	
 public:
 
-	QTimer *timer;
+	QTimer *timer;			//timer per il refresh della finestra
+	QTimer *sliderTimer;	//timer per il refresh della barra scorrimento
 
 	AVClock2(QObject *parent = 0);
 	~AVClock2(void);
@@ -61,6 +65,8 @@ public:
 	@param: ritardo con in quale eseguire il refresh
 	*/
 	void schedule_refresh(int delay);
+
+	void start_slider();
 
 	void SetVideoState(VideoState *is);
 	VideoState* GetVideoState();

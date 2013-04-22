@@ -14,6 +14,7 @@
 
 class QThread;
 
+
 class DecodeThread : public QThread
 {
 	Q_OBJECT
@@ -44,6 +45,10 @@ private:
 
 	//int our_get_buffer(struct AVCodecContext *c, AVFrame *pic);
 	//void our_release_buffer(struct AVCodecContext *c, AVFrame *pic);
+
+signals:
+
+	void setduration(int start, int end);
 
 public:
 

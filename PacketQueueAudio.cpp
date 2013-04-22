@@ -40,16 +40,16 @@ int PacketQueueAudio::Put(AVPacket* pkt){
 
 int PacketQueueAudio::Get(AVPacket* pkt, int block){
 
-	SDL_LockMutex(_mutex);														//Entro nella sezione critica per accedere in modo esclusivo alla lista
+	SDL_LockMutex(_mutex);									//Entro nella sezione critica per accedere in modo esclusivo alla lista
 
 	if(!queue.empty()) {
-		*pkt = queue.front();										//ottengo il primo elemento
-		queue.pop_front();												//elimino dalla lista elemento preso
+		*pkt = queue.front();								//ottengo il primo elemento
+		queue.pop_front();									//elimino dalla lista elemento preso
 	}
-	else if (!block) {													//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
+	else if (!block) {										//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
 		return -1;
 	}
-	else{																//caso lista vuota, mi metto in attesa
+	else{													//caso lista vuota, mi metto in attesa
 		SDL_CondWait(_cond, _mutex);
 	}
 	
