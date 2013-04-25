@@ -49,6 +49,9 @@ VideoState::VideoState(){
 	currentTime = 0;
 
 	pause = false;
+
+	totalFramesNumber = 0;
+	duration = 0;
 }
 
 //DISTRUTTORE

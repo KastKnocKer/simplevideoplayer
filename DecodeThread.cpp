@@ -93,7 +93,7 @@ void DecodeThread::run(){
 	//reperisco informazioni sulla durata e le vado a impostare allo slider
 	int duration = (int) (_pFormatCtx->duration/AV_TIME_BASE);
 	qDebug() << "durata del video: " << duration;
-	emit setduration(0, duration);		//durata max del video
+	emit setSliderRange(0, duration);		//durata max del video
 
 	if(avformat_find_stream_info(_pFormatCtx, NULL)<0){											//Leggo le informazioni sullo stream
 		qDebug() << "Impossibile leggere le info sullo stream";	
@@ -140,7 +140,7 @@ void DecodeThread::run(){
 		if(_is->seek_req){
 
 			int stream_index = -1;
-			int64_t seek_target = _is->seek_pos;
+			int64_t seek_target = _is->seek_pos; //nuovo tempo desiderato
 			int64_t DesiredFrameNumber;
 
 
@@ -156,9 +156,10 @@ void DecodeThread::run(){
 				//funzione per convertire il tempo nel numero di frame desiderato
 				//seek_target= av_rescale_q(seek_target, av1, _pFormatCtx->streams[stream_index]->time_base);
 				
+				//convert time into frame number
 				DesiredFrameNumber = av_rescale(seek_target, _pFormatCtx->streams[stream_index]->time_base.den, 
 					_pFormatCtx->streams[stream_index]->time_base.num);
-				DesiredFrameNumber /= 1000000;
+				DesiredFrameNumber /= AV_TIME_BASE;
 				
 			}
       
@@ -167,12 +168,9 @@ void DecodeThread::run(){
 			
 				qDebug() << "error while seeking " << (long long) DesiredFrameNumber;
 
-				//avcodec_flush_buffers(_pFormatCtx->streams[stream_index]->codec);
 			} 
 			else {
 				qDebug() << "seeking SUCCESS" << (long long) DesiredFrameNumber;
-
-				//avcodec_flush_buffers(_pFormatCtx->streams[stream_index]->codec);
 
 				//svuoto le liste e inserisco pacchetto di flush
 				if(_is->audioStream >= 0) {
@@ -196,11 +194,15 @@ void DecodeThread::run(){
 			continue;
 		}
 
+		
+
 		if(av_read_frame(_is->pFormatCtx, _packet) < 0) {                       //leggo il frame sucessivo
 			if(_is->pFormatCtx->pb->error == 0) {
 				//SDL_Delay(100); /* no error; wait for user input */
-				this->usleep(100);
-				continue;
+				//this->usleep(100);
+				/*_is->quit = 1;
+				continue;*/
+				break;
 			} else {
 				break;
 			}
@@ -219,13 +221,16 @@ void DecodeThread::run(){
 	}
 
 	/* all done - wait for it*/
-	while(!_is->quit){
+	/*while(!_is->quit){
 		this->sleep(100);
-	}
+	}*/
 
-	avformat_free_context(_pFormatCtx);
+	//avformat_free_context(_pFormatCtx);
+
+	qDebug() << "CHIUSURA AUDIO";
 
 	SDL_CloseAudio();
+	//SDL_PauseAudio(1);
 	fail();
 
 	return;
@@ -239,6 +244,15 @@ void DecodeThread::fail(void){
 	event.user.data1 = _is;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/* questo metodo e usato sia per lo stream audio che video, ed esegue:
+	- apertura codec
+	- setting codec a VideoState
+	- [nel caso audio apertura di SDL_OpenAudio]
+	- inizializzazione delle rispettive queue
+	- inizializzazione del rispettivo thread di riproduzione audio/video
+*/
 int DecodeThread::stream_component_open(int stream_index){
 
 	AVFormatContext *pFormatCtx = _is->pFormatCtx;
@@ -289,6 +303,9 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->audio_buf_size = 0;
 			_is->audio_buf_index = 0;
 
+			qDebug() << "sample rate: " << codecCtx->sample_rate;
+			qDebug() << "channels: " << codecCtx->channels;
+
 			 /* averaging filter for audio sync */
 			_is->audio_diff_avg_coef = exp(log(0.01 / AUDIO_DIFF_AVG_NB));
 			_is->audio_diff_avg_count = 0;
@@ -306,15 +323,23 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->videoStream = stream_index;
 			_is->video_st = pFormatCtx->streams[stream_index];
 
+			//ottengo il numero totale di frame dello stream video
+			_is->totalFramesNumber = _is->video_st->nb_frames;
+			qDebug() << "num TOT frame video" << (long long) _is->video_st->nb_frames;
+
+			qDebug() << "time_base: " << (double) av_q2d(_is->video_st->time_base);
+
+			qDebug() << "avg_frame_rate: " << av_q2d(_is->video_st->avg_frame_rate);
+
 			//imposto le dimensioni della pagina
 			_is->window->setSize(_is->video_st->codec->width, _is->video_st->codec->height);
 
 			//inizializzazione del timer del computer
 			_is->frame_timer = (double) av_gettime()/1000000.0;
 			_is->frame_last_delay = 40e-3;
-			_is->video_current_pts_time = av_gettime();
+			_is->video_current_pts_time = av_gettime();								//inizializzazioen del timer per video clcok
     
-			_is->videoq = PacketQueueVideo();											//inizializzo la coda di frame VIDEO
+			_is->videoq = PacketQueueVideo();										//inizializzo la coda di frame VIDEO
 			_is->videoq.setFlushPkt(&_is->flush_pkt);
 			_video_th = new VideoThread();											//inizializzo il thread di riproduzione video
 			_video_th->SetVideoState(_is);

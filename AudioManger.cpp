@@ -118,64 +118,94 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
 
 }
 
-/* Add or subtract samples to get a better sync, return new
-   audio buffer size */
+/**
+funzione utilizzata in caso di VideoClock
+obbiettivo e controllare se audio e video sono sincronizzati,
+e nel caso non lo fossero, togleire o aggiungere sample audio
+
+tale sincronizzazione non verra effettuata ogni singola volta che ho una variazione
+la chiamero consecutivamente un numero minimo di volte
+
+Add or subtract samples to get a better sync, return new
+   audio buffer size
+*/
 int synchronize_audio(AVClock2 *clock, VideoState *is, short *samples, int samples_size, double pts) {
 
-  int n;
-  double ref_clock;
+  int n = 0;
+  double ref_clock = 0.0;
 
   n = 2 * is->audio_st->codec->channels;
   
+  /* la sincronizzazione non deve essere fatta in caso di AudioClock */
   if(clock->clockType() != clock->AudioClock) {
+
 		double diff, avg_diff;
 		int wanted_size, min_size, max_size /*, nb_samples */;
-    
+		
+		/* calcolo della diff = audio_clock - video_clock */
 		ref_clock = clock->get_master_clock();
 		diff = clock->get_audio_clock() - ref_clock;
 
-    if(diff < AV_NOSYNC_THRESHOLD) {
-		// accumulate the diffs
-		is->audio_diff_cum = diff + is->audio_diff_avg_coef * is->audio_diff_cum;
-		if(is->audio_diff_avg_count < AUDIO_DIFF_AVG_NB) {
-			is->audio_diff_avg_count++;
-		} else {
-			avg_diff = is->audio_diff_cum * (1.0 - is->audio_diff_avg_coef);
-			if(fabs(avg_diff) >= is->audio_diff_threshold) {
-				wanted_size = samples_size + ((int)(diff * is->audio_st->codec->sample_rate) * n);
-				min_size = samples_size * ((100 - SAMPLE_CORRECTION_PERCENT_MAX) / 100);
-				max_size = samples_size * ((100 + SAMPLE_CORRECTION_PERCENT_MAX) / 100);
-				if(wanted_size < min_size) {
-					wanted_size = min_size;
-				} else if (wanted_size > max_size) {
-					wanted_size = max_size;
-				}
-				if(wanted_size < samples_size) {
-					/* remove samples */
-					samples_size = wanted_size;
-				} else if(wanted_size > samples_size) {
-					uint8_t *samples_end, *q;
-					int nb;
+		/*
+		la differenza tra audio e video non deve essere esatta
+		abbiamo un valore entro il quale è considerata accettabile
+		*/
+		if(diff < AV_NOSYNC_THRESHOLD) {
+		
+			// accumulate the diffs
+			is->audio_diff_cum = diff + is->audio_diff_avg_coef * is->audio_diff_cum;
+			if(is->audio_diff_avg_count < AUDIO_DIFF_AVG_NB) {
 
-					/* add samples by copying final sample*/
-					nb = (samples_size - wanted_size);
-					samples_end = (uint8_t *)samples + samples_size - n;
-					q = samples_end + n;
-					while(nb > 0) {
-						memcpy(q, samples_end, n);
-						q += n;
-						nb -= n;
+				is->audio_diff_avg_count++;
+
+			} else {
+
+				avg_diff = is->audio_diff_cum * (1.0 - is->audio_diff_avg_coef);
+			
+				/* controllo se la differenza supera la soglia */
+				if(fabs(avg_diff) >= is->audio_diff_threshold) {
+
+					/* calcoliamo quanti samples dobbiamo aggiungere o togliere */
+					wanted_size = samples_size + ((int)(diff * is->audio_st->codec->sample_rate) * n);
+					min_size = samples_size * ((100 - SAMPLE_CORRECTION_PERCENT_MAX) / 100);
+					max_size = samples_size * ((100 + SAMPLE_CORRECTION_PERCENT_MAX) / 100);
+					if(wanted_size < min_size) {
+						wanted_size = min_size;
+					} else if (wanted_size > max_size) {
+						wanted_size = max_size;
 					}
-					samples_size = wanted_size;
+
+					//CASO AUDIO AVANTI RISPETTO VIDEO
+					if(wanted_size < samples_size) {
+						/* remove samples */
+						samples_size = wanted_size;
+					//CASO AUDIO INDIETRO RISPETTO VIDEO
+					} else if(wanted_size > samples_size) {
+
+						uint8_t *samples_end, *q;
+						int nb;
+
+						/* add samples by copying final sample*/
+						nb = (samples_size - wanted_size);
+						samples_end = (uint8_t *)samples + samples_size - n;
+						q = samples_end + n;
+						while(nb > 0) {
+							memcpy(q, samples_end, n);
+							q += n;
+							nb -= n;
+						}
+						samples_size = wanted_size;
+					}
 				}
 			}
+		} 
+		else {
+			/* difference is TOO big; reset diff stuff */
+			is->audio_diff_avg_count = 0;
+			is->audio_diff_cum = 0;
 		}
-    } 
-	else {
-		/* difference is TOO big; reset diff stuff */
-		is->audio_diff_avg_count = 0;
-		is->audio_diff_cum = 0;
-    }
   }
+
+  /* ritorno al nuova dimensione che deve avere il sample */
   return samples_size;
 }

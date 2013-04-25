@@ -48,7 +48,8 @@ private:
 
 signals:
 
-	void setduration(int start, int end);
+	//per settare il range dello slider
+	void setSliderRange(int start, int end);
 
 public:
 

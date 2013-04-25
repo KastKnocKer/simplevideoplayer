@@ -3,6 +3,8 @@
 #include <QTimer>
 #include <QElapsedTimer>
 
+#include <math.h>
+
 #include "VideoState.h"
 
 class QTimer;
@@ -32,17 +34,14 @@ public slots:
 	//utilizzato per stoppare il timer e resettare le variabili
 	void reset();		
 
-	void slider_update();
-
 signals:
 
 	void needupdate();
-	void setslider(int val);
+	void updateslider(int framenumber);
 	
 public:
 
 	QTimer *timer;			//timer per il refresh della finestra
-	QTimer *sliderTimer;	//timer per il refresh della barra scorrimento
 
 	AVClock2(QObject *parent = 0);
 	~AVClock2(void);
@@ -62,11 +61,9 @@ public:
 	/**
 	metodo per impostare una chiamata ritardata a video_refresh_timer
 	dopo un tot di millisecondi
-	@param: ritardo con in quale eseguire il refresh
+	@param: ritardo con in quale eseguire il refresh [s]
 	*/
 	void schedule_refresh(int delay);
-
-	void start_slider();
 
 	void SetVideoState(VideoState *is);
 	VideoState* GetVideoState();

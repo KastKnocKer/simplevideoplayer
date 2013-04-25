@@ -18,13 +18,14 @@ videoplayer::videoplayer(QWidget *parent)
     QPalette palette;
     palette.setBrush(QPalette::Light, Qt::darkGray);
 
-    timeLcd = new QLCDNumber;
-    timeLcd->setPalette(palette);
+	timerLCD = new QTimer(this);
+    panelLCD = new QLCDNumber;
+    panelLCD->setPalette(palette);
 
     //------------------------------------------------------------------
-    /*qui devo gestire l'lcd con il video
-    mediaObject->setTickInterval(1000);
-    connect(mediaObject, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));*/
+    //qui devo gestire l'lcd con il video
+	//impongo che ogni secondo venga refreshato il pannello
+	connect(timerLCD, &QTimer::timeout, this, &videoplayer::tick);
     //-------------------------------------------------------------------
 
     //Barra di scorrimento
@@ -33,7 +34,7 @@ videoplayer::videoplayer(QWidget *parent)
     //Inglobo la barra e LCD in un contenitore che li mette io orizzontale
     QHBoxLayout *seekerLayout = new QHBoxLayout;
     seekerLayout->addWidget(positionSlider);
-    seekerLayout->addWidget(timeLcd);
+    seekerLayout->addWidget(panelLCD);
     //aggiungo il contenitore alla finestra principale
     mainLayout->addLayout(seekerLayout);
 
@@ -121,7 +122,7 @@ videoplayer::videoplayer(QWidget *parent)
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
 	connect(&window, &Video::chiudi, this, &videoplayer::quit);
 
-	connect(_clock, &AVClock2::setslider, positionSlider, &QSlider::setValue);
+	connect(_clock, &AVClock2::updateslider, positionSlider, &QSlider::setValue);
 }
 
 //DISTRUTTORE
@@ -175,16 +176,6 @@ funzione grafica che permette di creare la menubar e i suoi sottomenu
     msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> è stato implementato utilizzando Qt 5, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
  }
 
-/**
-funzione per il timer digitale
-*/
- void videoplayer::tick(qint64 time)
- {
-     QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
-
-     timeLcd->display(displayTime.toString("mm:ss"));
- }
-
  /**
  metodo che ritorna il path del video selezionato
  */
@@ -195,6 +186,26 @@ std::string videoplayer::getSourceFilename(){
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+// LCD PANEL
+
+/**
+SLOT: funzione per aggiornamento del timer digitale
+*/
+ void videoplayer::tick()
+ {
+	 int64_t time = (int64_t) (_clock->get_master_clock()+0.5);
+
+	 positionSlider->setValue((int) time);
+
+	 //QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
+	 QTime displayTime(0, (time / 60) % 60, (time) % 60);
+     panelLCD->display(displayTime.toString("mm:ss"));
+
+
+ }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+ // CAMBIO STATO DI RIPRODUZIONE
 
  /**
  metodo richiamato dall'event listener del bottone STOP
@@ -212,9 +223,10 @@ void videoplayer::pause(void){
 	qDebug() << "PAUSE pressed";
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(false);
-	_clock->sliderTimer->stop();
+	//_clock->sliderTimer->stop();
 	is.pause = true;
-	SDL_PauseAudio(1);
+	//SDL_PauseAudio(1);
+	SDL_CloseAudio();
 }
 
 /**
@@ -223,7 +235,7 @@ SLOT utilizzato solo quando un video gia iniziato, deve riprendere la riproduzio
 void videoplayer::resume(){
 
 	this->playing();
-	_clock->start_slider();
+	//_clock->start_slider();
 	is.pause = false;
 	SDL_PauseAudio(1);
 }
@@ -296,17 +308,16 @@ void videoplayer::loadFile(){
 	connect per l'aggiornamento del max valore possibile dello slider
 	coincidente con la durata del video in secondi
 	*/
-	connect(_demuxer, &DecodeThread::setduration, positionSlider, &QSlider::setRange);
+	connect(_demuxer, &DecodeThread::setSliderRange, positionSlider, &QSlider::setRange);
 
-	_clock->start_slider();											//faccio partire timer per lo slider
+	timerLCD->start(1000);											//faccio partire timer
+																	//per refresh pannello LCD
 
 	//nota: VideoState di default dovrebbe avere un riferimento al thread....
 	if(!is.parse_tid) {
 		qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
 		exit(1);
 	}
-
-	_clock->start_slider();											//faccio partire lo slider
 
 	return;
 
@@ -340,25 +351,27 @@ void videoplayer::seek(int incr){
 	 qDebug() << "seek" << incr;
 
 	 /**
-	 vado a calcolare il nuovo tempo, andando a sommare il tempo
-	 di seek a quello del master clock
+	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
+	 il tempo di seek a quello del master clock
 	 */
 	 double pos = _clock->get_master_clock();
-	 pos += incr;	
+	 pos += (double) incr;	
+
+	 qDebug() << "seek pos: " << pos;
 
 	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
 	 //(che e unita di avcodec)
-	 stream_seek((int64_t) (pos*AV_TIME_BASE), incr);
+	 stream_seek((int64_t) (pos*AV_TIME_BASE), (double) incr);
 	 
  }
 
 /**
 funzione utilizzata per impostare le variabili di seek
 */
-void videoplayer::stream_seek(int64_t pos, int rel){
+void videoplayer::stream_seek(int64_t pos, double rel){
 
 	if(!is.seek_req){
-		is.seek_pos = pos;
+		is.seek_pos = pos; //abbiamo convertito il tempo nell'avcodec timestamp
 		is.seek_flags = rel < 0 ? AVSEEK_FLAG_BACKWARD : 0;
 		qDebug() << "seek, verso 1 INDIETRO, 0 AVANTI: " << is.seek_flags;
 		is.seek_req = 1;

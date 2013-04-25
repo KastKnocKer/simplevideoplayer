@@ -4,19 +4,12 @@
 AVClock2::AVClock2(QObject *parent) :QObject(parent)
 {
 	timer = new QTimer(this);
-	sliderTimer = new QTimer(this);
 
 	//inizializzazione di default del tipo di clock
 	setClockType(VideoClock);
 
 	//ogni volta che viene emesso un timeout, eseguo un video_refresh_timer
 	connect(timer, &QTimer::timeout, this, &AVClock2::video_refresh_timer);
-	
-	/**
-	ogni secondo richiamo la funzione di update dello slider
-	che a sua volta emanera un segnale per aggiornare lo slider al nuovo valore
-	*/
-	connect(sliderTimer, &QTimer::timeout, this, &AVClock2::slider_update);
 }
 
 
@@ -24,6 +17,13 @@ AVClock2::~AVClock2(void)
 {
 }
 
+/**
+Our strategy is going to be to predict the time of the next PTS by simply measuring the time
+between the previous pts and this one. At the same time, we need to sync the video to the audio.
+We're going to make an audio clock: an internal value thatkeeps track of what position the audio we're playing is at.
+It's like the digital readout on any mp3 player. Since we're synching the video to the audio,
+the video thread uses this value to figure out if it's too far ahead or too far behind.
+*/
 void AVClock2::video_refresh_timer(void){
 
 	double actual_delay = 0.0;
@@ -54,7 +54,17 @@ void AVClock2::video_refresh_timer(void){
 			_is->video_current_pts = pts;
 			_is->video_current_pts_time = av_gettime();
 
+			
+			qDebug() << "current time: " <<  (int) _is->frame_timer;
+
+			qDebug() << "master clock: " << get_master_clock();
+			//uguale a fare qDebug() << "current pts: " << pts;
+
+			qDebug() << "num frame attuale: " << _is->video_st->codec->frame_number;
+			
+			
             delay = pts - _is->frame_last_pts; /* the pts from last time */
+			//we make sure that the delay between the PTS and the previous PTS make sense
             if (delay <= 0 || delay >= 1.0)
             {
                 /* if incorrect delay, use previous one */
@@ -63,26 +73,30 @@ void AVClock2::video_refresh_timer(void){
             /* save for next time */
             _is->frame_last_delay = delay;
             _is->frame_last_pts = pts;
+
+			/* update delay to sync to audio if not master source */
+			if(clock_type != VideoClock){
   
-            /* update delay to sync to audio */
-            ref_clock = get_audio_clock();
-            diff = pts - ref_clock;
+				/* update delay to sync to audio */
+				ref_clock = get_audio_clock();
+				diff = pts - ref_clock;
 
-            /* Skip or repeat the frame. Take delay into account
-             FFPlay still doesn't "know if this is the best guess." */
-            sync_threshold = (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
+				/* Skip or repeat the frame. Take delay into account
+				 FFPlay still doesn't "know if this is the best guess." */
+				sync_threshold = (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
 
-            if (fabs(diff) < AV_NOSYNC_THRESHOLD)
-            {
-                if (diff <= -sync_threshold)
-                {
-                    delay = 0;
-                }
-                else if (diff >= sync_threshold)
-                {
-                    delay = 2 * delay;
-                }
-            }
+				if (fabs(diff) < AV_NOSYNC_THRESHOLD)
+				{
+					if (diff <= -sync_threshold)
+					{
+						delay = 0;
+					}
+					else if (diff >= sync_threshold)
+					{
+						delay = 2 * delay;
+					}
+				}
+			}
 
 			//sommo il frame_timer al delay
             _is->frame_timer += delay;
@@ -108,20 +122,6 @@ void AVClock2::video_refresh_timer(void){
             /* show the picture! */
             emit needupdate();
 
-			/////////////////////////////////////////////////////////////////////////////
-
-            /* update queue for next picture! */
-            /*if (++is->pictq_rindex == VIDEO_PICTURE_QUEUE_SIZE)
-            {
-                is->pictq_rindex = 0;
-            }
-            SDL_LockMutex(is->pictq_mutex);
-            is->pictq_size--;
-            SDL_CondSignal(is->pictq_cond);
-            SDL_UnlockMutex(is->pictq_mutex);*/
-
-			//non devo aggiornare la coda, dato che la gestione del mutex avviene all'interno
-			//della classe VideoPicture
         }
     }
     else
@@ -155,6 +155,10 @@ double AVClock2::get_audio_clock()
     return audio_pts;
 }
 
+/**
+come calcoliamo il video_clock
+video clock = PTS_of_last_read_frame + (current_time - time_elapsed_since_PTS_value_was_get)
+*/
 double AVClock2::get_video_clock(){
 
   double delta;
@@ -162,10 +166,14 @@ double AVClock2::get_video_clock(){
   return _is->video_current_pts + delta;
 }
 
+
 double AVClock2::get_external_clock(){
   return av_gettime() / 1000000.0;
 }
 
+/**
+	metodo che ritorna il clock, in base al tipo di sincronizzazione impostato
+*/
 double AVClock2::get_master_clock() {
 	if(clock_type == VideoClock) {
 		return get_video_clock();
@@ -201,21 +209,6 @@ void AVClock2::reset(void){
 	timer->stop();				//fermo il timer
 	setClockType(VideoClock);
 	
-}
-
-/**
-metodo per far partire il timer per far scorrere la barra
-*/
-void AVClock2::start_slider(void){
-
-	sliderTimer->start(1000);	//il timer effettuerà un timeout ogni secondo
-}
-
-void AVClock2::slider_update(void){
-
-	++_is->currentTime;				//aggiorno il timer 
-
-	emit setslider(_is->currentTime);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

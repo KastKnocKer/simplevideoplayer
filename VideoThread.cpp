@@ -56,12 +56,12 @@ void VideoThread::run(){
 
 		//nota: opaque è una variabile interna a pFrame lasciata libera per essere usata dall'utente come variabile di appoggio per dei dati
 		
-		/* caso in cui non riesco a reperire DTS */
+		/* caso in cui NON RIESCO a reperire DTS */
 		if (packet->dts == (int64_t)AV_NOPTS_VALUE && pFrame->opaque && *(uint64_t*)pFrame->opaque != AV_NOPTS_VALUE)
         {
-            pts = *(uint64_t *) pFrame->opaque;
+            pts = *(uint64_t *) pFrame->opaque;	//vado a reperire il PTS del primo pacchetto
         }
-		/* caso in cui riesco a reperire DTS */
+		/* caso in cui RIESCO a reperire DTS */
         else if (packet->dts != (int64_t)AV_NOPTS_VALUE)
         {
             pts = packet->dts;
@@ -70,7 +70,12 @@ void VideoThread::run(){
         {
             pts = 0;
         }
-        pts *= av_q2d(_is->video_st->time_base);					//converte il tempo in double
+
+		/**
+		PTS = PTS * (time_base convertito in double)
+		ottengo cosi il PTS in secondi
+		*/
+        pts *= av_q2d(_is->video_st->time_base);
 
 		// Did we get a video frame?
 		if(frameFinished) {

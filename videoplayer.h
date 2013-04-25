@@ -11,6 +11,7 @@
 #include <QtCore>
 #include <QtWidgets>
 #include <QSignalMapper>
+#include <QTime>
 
 #include "DecodeThread.h"
 #include "VideoState.h"
@@ -25,6 +26,7 @@ class glwidget;
 class QSlider;
 class QThread;
 class QSignalMapper;
+class QTime;
 
 class videoplayer : public QWidget
 {
@@ -42,7 +44,7 @@ private:
     QAction *actionOpen;
     QAction *exitAction;
     QAction *actionInfo;
-    QLCDNumber *timeLcd;
+    QLCDNumber *panelLCD;
     QSlider *positionSlider;
     QSlider *volumeSlider;
     QAction *playAction;
@@ -53,6 +55,7 @@ private:
 	QAction *seekforwardAction;
 	QAction *seekbackwardAction;
 	QSignalMapper *signalMapper;							//fa da mapping per particolari signal
+	QTimer *timerLCD;
 
 	void createMenu();
 	void stop();
@@ -61,8 +64,7 @@ private:
 	DecodeThread *_demuxer;									//puntatore al thread di decodifica
 	AVClock2 *_clock;
 
-	
-	void stream_seek(int64_t pos, int rel);
+	void stream_seek(int64_t pos, double rel);
 
 signals:
 
@@ -73,7 +75,7 @@ public slots:
 
     void open(void);
     void about(void);
-    void tick(qint64 time);
+    void tick();
 
 	void loadFile();										//metodo una volta che ho scelto il file, che fa partire la riproduzione
 	void quit();											//Metodo per fermare la riproduzione

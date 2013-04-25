@@ -30,12 +30,16 @@ public:
 
 	AVFormatContext *pFormatCtx;
 
+	//UTILITY
+	int64_t			duration;			//lunghezza del video in riproduzione
+	int64_t			totalFramesNumber;	//numero totale di frame
+
+
 	//SEEK
 	int             seek_req;			//controllo se è stato o meno richiesto il seek
 	int             seek_flags;			//flag per sapere se sto facendo un forward o backward
 	int64_t         seek_pos;			//posizione del seek (nuova posizione calcolata)
 	AVPacket		flush_pkt;
-	int64_t			duration;			//lunghezza del video in riproduzione
 
 	//CLOCK
 	int             av_sync_type;
@@ -73,7 +77,7 @@ public:
 
 	//VIDEO
 	double			video_clock;	//pts of the last decoded frame / predicted pts of the next decoded frame
-	AVStream        *video_st;
+	AVStream        *video_st;		//stream del video
 	uint64_t		global_video_pkt_pts;
 	double			video_current_pts;	//current displayed pts (different from video_clock if frame fifos are used)
 	int64_t			video_current_pts_time; ///time (av_gettime) at which we updated video_current_pts - used to have running video pts
