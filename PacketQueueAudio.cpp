@@ -6,6 +6,7 @@ PacketQueueAudio::PacketQueueAudio(void)
 	this->_cond = SDL_CreateCond();
 	flush_pkt = nullptr;
 	_quit = nullptr;
+	_eof = nullptr;
 }
 
 
@@ -43,11 +44,11 @@ int PacketQueueAudio::Get(AVPacket* pkt, int block){
 		*pkt = queue.front();								//ottengo il primo elemento
 		queue.pop_front();									//elimino dalla lista elemento preso
 	}
-	else if(eof){
+	else if(&_eof){
 		/* se la coda è vuota, controllo il flag di eof, se è true
 		allora abbiamo letto e visualizzato tutti i pachetti. Allora
 		solo in questo momento devo settare quit*/
-		quit = 1;
+		*_quit = 1;
 	}
 	else if (!block) {										//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
 		return -1;
@@ -110,4 +111,8 @@ metodo per settare il riferimento al parametro di quit
 */
 void PacketQueueAudio::setQuitVariable(int *quit){
 	_quit = quit;
+}
+
+void PacketQueueAudio::setEOFVariabile(int *eof){
+	_eof = eof;
 }

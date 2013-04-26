@@ -167,7 +167,7 @@ void DecodeThread::run(){
 			}
       
 			//if(avformat_seek_file(_is->pFormatCtx, stream_index, INT64_MIN, seek_target, seek_target, _is->seek_flags) < 0) {
-			if(avformat_seek_file(_is->pFormatCtx, stream_index, INT64_MIN, DesiredFrameNumber, DesiredFrameNumber, AVSEEK_FLAG_FRAME) < 0) {
+			if(avformat_seek_file(_is->pFormatCtx, stream_index, 0, DesiredFrameNumber, DesiredFrameNumber, AVSEEK_FLAG_FRAME) < 0) {
 			
 				qDebug() << "error while seeking " << (long long) DesiredFrameNumber;
 
@@ -228,17 +228,17 @@ void DecodeThread::run(){
 	}
 
 	/* all done - wait for it*/
-	while(!_is->quit){
+	/*while(!_is->quit){
 		this->sleep(100);
-	}
+	}*/
 
 	//avformat_free_context(_pFormatCtx);
 
 	qDebug() << "CHIUSURA AUDIO";
 
-	SDL_CloseAudio();
+	//SDL_CloseAudio();
 	//SDL_PauseAudio(1);
-	fail();
+	//fail();
 
 	return;
 };
@@ -323,6 +323,7 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->audioq = PacketQueueAudio();											//inizializzo la coda di paccheti AUDIO
 			_is->audioq.setFlushPkt(&_is->flush_pkt);
 			_is->audioq.setQuitVariable(&_is->quit);
+			_is->audioq.setQuitVariable(&_is->eof);
 			SDL_PauseAudio(0);
 			break;
 
@@ -350,6 +351,7 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->videoq = PacketQueueVideo();										//inizializzo la coda di frame VIDEO
 			_is->videoq.setFlushPkt(&_is->flush_pkt);
 			_is->videoq.setQuitVariable(&_is->quit);
+			_is->videoq.setQuitVariable(&_is->eof);
 			_video_th = new VideoThread();											//inizializzo il thread di riproduzione video
 			_video_th->SetVideoState(_is);
 			_video_th->start();														//mando in esecuzione il thread decodifica video

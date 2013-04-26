@@ -33,6 +33,7 @@ private:
 	AVPacket *flush_pkt;
 
 	int *_quit;
+	int *_eof;
 
 public:
 
@@ -62,4 +63,5 @@ public:
 
 	void setQuitVariable(int *quit);
 
+	void setEOFVariabile(int *eof);
 };
