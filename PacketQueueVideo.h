@@ -32,7 +32,7 @@ private:
 
 	AVPacket *flush_pkt;
 
-	Utility *manager;
+	int *_quit;
 
 public:
 
@@ -59,5 +59,7 @@ public:
 	metodo per settare il riferimento al pacchetto di FLUSH
 	*/
 	void setFlushPkt(AVPacket *pkt);
+
+	void setQuitVariable(int *quit);
 
 };

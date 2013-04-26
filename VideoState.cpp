@@ -1,12 +1,12 @@
 #include "VideoState.h"
 
-VideoState* global_video_state;
-
 //COSTRUTTORE
 VideoState::VideoState(){
 
 	quit = 0;
+	eof = 0;
 	pictq = VideoPicture2();	//inizializzo la coda di frameRGB
+	pictq.setQuitVariable(&quit);
 
 	pFormatCtx = NULL;
 	audio_st = NULL;
@@ -80,15 +80,15 @@ void VideoState::setSourceFilename(const std::string &filename){
 /**
 metodo per settare il puntatore globale allo stato del video
 */
-void VideoState::setGlobalVideoState(VideoState *is){
-
-	global_video_state = is;
-}
-
-VideoState* VideoState::getGlobalVideoState(){
-
-	return global_video_state;
-
-}
+//void VideoState::setGlobalVideoState(VideoState *is){
+//
+//	global_video_state = is;
+//}
+//
+//VideoState* VideoState::getGlobalVideoState(){
+//
+//	return global_video_state;
+//
+//}
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -34,9 +34,10 @@ private:
 	std::list<std::pair<AVFrame*, double>> queue;
 
 	//TEMPORANEAMENTE STATICO
-	int quit;
+	int *_quit;
 
 public:
+
 	VideoPicture2(void);
 
 	~VideoPicture2(void);
@@ -46,6 +47,8 @@ public:
 	std::pair<AVFrame*, double> Get();
 
 	int getSize();
+
+	void setQuitVariable(int *quit);
 };
 
 #endif //VIDEOPICTURE

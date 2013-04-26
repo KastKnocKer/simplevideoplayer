@@ -55,7 +55,7 @@ private:
 	QAction *seekforwardAction;
 	QAction *seekbackwardAction;
 	QSignalMapper *signalMapper;							//fa da mapping per particolari signal
-	QTimer *timerLCD;
+	//QTimer *timerLCD;
 
 	void createMenu();
 	void stop();
@@ -89,6 +89,7 @@ public slots:
 	@param: tempo in millisecondi
 	*/
 	void seek(int incr);
+	void slider_seek();										//a differenza di seek io non ho un incremento ma un nuovo tempo
 
 public:
 

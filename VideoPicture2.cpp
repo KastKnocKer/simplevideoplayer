@@ -7,7 +7,7 @@ VideoPicture2::VideoPicture2(void)
 	_mutex_data = new QMutex();
 	_mutex_maxsize = new QMutex();
 
-	quit = 0;
+	_quit = nullptr;
 }
 
 
@@ -23,12 +23,12 @@ int VideoPicture2::Put(AVFrame *pFrameRGB, double pts){
 	scelgo di ripartire appena si libera anche un solo posto
 	*/
 	_mutex_maxsize->lock();
-	while(queue.size() >= VIDEO_PICTURE_QUEUE_SIZE && !quit) {
+	while(queue.size() >= VIDEO_PICTURE_QUEUE_SIZE && !(*_quit)) {
 		_cond_maxsize->wait(_mutex_maxsize);	//wait for our buffer to clear
 	}
 	_mutex_maxsize->unlock();
 
-	if(quit){
+	if(*_quit){
 		return -1;
 	}
 
@@ -44,7 +44,7 @@ int VideoPicture2::Put(AVFrame *pFrameRGB, double pts){
 	_mutex_data->unlock();
 
 
-	if(quit) {
+	if(*_quit) {
 		return -1;
 	}
 
@@ -79,4 +79,11 @@ std::pair<AVFrame*, double> VideoPicture2::Get(){
 int VideoPicture2::getSize(void){
 
 	return queue.size();
+}
+
+/**
+metodo per settare il riferimento al parametro di quit
+*/
+void VideoPicture2::setQuitVariable(int *quit){
+	_quit = quit;
 }

@@ -18,14 +18,14 @@ videoplayer::videoplayer(QWidget *parent)
     QPalette palette;
     palette.setBrush(QPalette::Light, Qt::darkGray);
 
-	timerLCD = new QTimer(this);
+	//timerLCD = new QTimer(this);
     panelLCD = new QLCDNumber;
     panelLCD->setPalette(palette);
 
     //------------------------------------------------------------------
     //qui devo gestire l'lcd con il video
 	//impongo che ogni secondo venga refreshato il pannello
-	connect(timerLCD, &QTimer::timeout, this, &videoplayer::tick);
+	//connect(timerLCD, &QTimer::timeout, this, &videoplayer::tick);
     //-------------------------------------------------------------------
 
     //Barra di scorrimento
@@ -68,8 +68,8 @@ videoplayer::videoplayer(QWidget *parent)
 	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
 
 	/**
-	utilizzo di un signalMapper per collegare l'evento di pressione dei pulsanti SEEK, 
-	con un particoare valore che verra inviato allo SLOT seek
+	utilizzo di un signalMapper per collegare l'evento di pressione dei pulsanti SEEK,
+	con un particolare valore che verra inviato allo SLOT seek
 	*/
 	signalMapper->setMapping(seekforwardAction, 10.0);
 	signalMapper->setMapping(seekbackwardAction, -10.0);
@@ -122,7 +122,11 @@ videoplayer::videoplayer(QWidget *parent)
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
 	connect(&window, &Video::chiudi, this, &videoplayer::quit);
 
-	connect(_clock, &AVClock2::updateslider, positionSlider, &QSlider::setValue);
+	//connect sullo SLIDER
+	//connect(_clock, &AVClock2::updateslider, positionSlider, &QSlider::setValue);
+	connect(_clock, &AVClock2::needupdate, this, &videoplayer::tick);
+
+	connect(positionSlider, &QSlider::sliderReleased, this, &videoplayer::slider_seek);
 }
 
 //DISTRUTTORE
@@ -186,10 +190,10 @@ std::string videoplayer::getSourceFilename(){
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LCD PANEL
+// LCD PANEL e SLIDER
 
 /**
-SLOT: funzione per aggiornamento del timer digitale
+SLOT: funzione per aggiornamento del timer digitale e dello slider
 */
  void videoplayer::tick()
  {
@@ -200,8 +204,22 @@ SLOT: funzione per aggiornamento del timer digitale
 	 //QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
 	 QTime displayTime(0, (time / 60) % 60, (time) % 60);
      panelLCD->display(displayTime.toString("mm:ss"));
+ }
 
+ /**
+ SLOT: funzione per settare i parametri di seek, dal valore ottenuto dallo slider
+ */
+ void videoplayer::slider_seek(){
 
+	double pos = positionSlider->value();
+ 
+	qDebug() << "slider seek: " << pos;
+
+	double incr = pos - _clock->get_master_clock();
+
+	//mentre passo il nuovo tempo, lo converto da secondi a microsecondi
+	//(che e unita di avcodec -> timebase)
+	stream_seek((int64_t) (pos*AV_TIME_BASE), incr);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -310,7 +328,7 @@ void videoplayer::loadFile(){
 	*/
 	connect(_demuxer, &DecodeThread::setSliderRange, positionSlider, &QSlider::setRange);
 
-	timerLCD->start(1000);											//faccio partire timer
+	//timerLCD->start(1000);											//faccio partire timer
 																	//per refresh pannello LCD
 
 	//nota: VideoState di default dovrebbe avere un riferimento al thread....
@@ -361,8 +379,7 @@ void videoplayer::seek(int incr){
 
 	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
 	 //(che e unita di avcodec)
-	 stream_seek((int64_t) (pos*AV_TIME_BASE), (double) incr);
-	 
+	 stream_seek((int64_t) (pos*AV_TIME_BASE), (double) incr); 
  }
 
 /**

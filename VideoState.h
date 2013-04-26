@@ -24,6 +24,7 @@ class VideoState {
 
 private:
 
+	//nome del video da riprodurre
 	std::string      _fileName;
 
 public:
@@ -49,6 +50,10 @@ public:
 
 	//PAUSE
 	bool			pause;
+
+	//QUIT
+	int             quit;
+	int				eof;
 
 	//CODE
 	PacketQueueAudio    audioq;
@@ -82,16 +87,18 @@ public:
 	double			video_current_pts;	//current displayed pts (different from video_clock if frame fifos are used)
 	int64_t			video_current_pts_time; ///time (av_gettime) at which we updated video_current_pts - used to have running video pts
 
-	int             quit;
 
 	AVIOContext     *io_context;
 	SwsContext		*sws_ctx;
 
+	//STREAM
 	int             videoStream, audioStream;
 
+	//RIFERIMENTO THREAD
 	QThread			*parse_tid;
 	QThread			*video_tid;
 
+	//RIFERIMENTO FINESTRA RIPRODUZIONE
 	Video			*window;
 
 	VideoState();
@@ -100,8 +107,6 @@ public:
 	std::string getSourceFilename();
 	void setSourceFilename(const std::string &filename);
 
-	void setGlobalVideoState(VideoState *);
-	VideoState* getGlobalVideoState();
 };
 
 #endif //VIDEOSTATE_H

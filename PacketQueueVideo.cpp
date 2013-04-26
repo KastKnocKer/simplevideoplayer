@@ -5,6 +5,7 @@ PacketQueueVideo::PacketQueueVideo(void)
 	_mutex = new QMutex();
 	_cond = new QWaitCondition();
 	flush_pkt = nullptr;
+	_quit = nullptr;
 }
 
 
@@ -32,6 +33,11 @@ int PacketQueueVideo::Put(AVPacket *pkt){
 int PacketQueueVideo::Get(AVPacket *pkt, int block){
 
 	AVPacket prelevato;
+
+	//controllo se quit non vado a leggere altri pacchetti
+	if(*_quit == 1){
+		return -1;
+	}
 																				
 	_mutex->lock();														//Entro nella sezione critica per accedere in modo esclusivo alla lista
 
@@ -94,4 +100,11 @@ void PacketQueueVideo::quit(){
 void PacketQueueVideo::setFlushPkt(AVPacket *pkt){
 
 	flush_pkt = pkt;
+}
+
+/**
+metodo per settare il riferimento al parametro di quit
+*/
+void PacketQueueVideo::setQuitVariable(int *quit){
+	_quit = quit;
 }

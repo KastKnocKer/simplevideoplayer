@@ -1,6 +1,7 @@
 #include "DecodeThread.h"
 
 DecodeThread *static_rif;		//Riferimento statico all'oggetto stesso
+VideoState *global_video_state;
 
 //COSTRUTTORE
 DecodeThread::DecodeThread(QObject *parent): QThread(parent)
@@ -10,6 +11,7 @@ DecodeThread::DecodeThread(QObject *parent): QThread(parent)
 
 	_packet = &_pkt1;
 	_pFormatCtx = NULL;					//variabile temporanea per codec
+	global_video_state = NULL;
 	
 }
 
@@ -22,8 +24,7 @@ void DecodeThread::set(DecodeThread *t){
 
 int decode_interrupt_cb(void *opaque){
 
-	return 0;
-	//return (global_video_state && global_video_state->quit)
+	return (global_video_state && global_video_state->quit);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,19 +69,21 @@ void DecodeThread::run(){
 	_is->audioStream = -1;
 
 	//qua inizializzo la variabile globale di videostate
-	_is->setGlobalVideoState(_is);	
+	global_video_state = _is;
 
 	// will interrupt blocking functions if we quit!
-	callback.callback = decode_interrupt_cb;			//ncecessario CAST?
+	callback.callback = decode_interrupt_cb;
 	callback.opaque = _is;
 
+	_pFormatCtx = avformat_alloc_context();
+	_pFormatCtx->interrupt_callback = callback;
+
 	//inizializzo io_context passandogli il file da riprodurre
-	if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), 0, &callback, &io_dict)){	
+	//if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &callback, &io_dict)){	
+	if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &_pFormatCtx->interrupt_callback, &io_dict)){	
 		qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
 		exit(1);
 	}
-
-	_pFormatCtx = avformat_alloc_context();
 
 	/* APERTURA FILE VIDEO */
 	if(avformat_open_input(&_pFormatCtx, _is->getSourceFilename().c_str(), NULL, NULL) != 0){	//Apro il file
@@ -194,16 +197,20 @@ void DecodeThread::run(){
 			continue;
 		}
 
-		
 
 		if(av_read_frame(_is->pFormatCtx, _packet) < 0) {                       //leggo il frame sucessivo
+
+			//è stata raggiunta la fine del file
 			if(_is->pFormatCtx->pb->error == 0) {
-				//SDL_Delay(100); /* no error; wait for user input */
-				//this->usleep(100);
+				qDebug() << "END OF FILE";
+				_is->eof = 1;													//setto il flag di fine file
+ 
+				//this->usleep(100); /* no error; wait for user input */
 				/*_is->quit = 1;
 				continue;*/
 				break;
 			} else {
+				qDebug() << "ERROR - av_read_frame";
 				break;
 			}
 		}
@@ -221,9 +228,9 @@ void DecodeThread::run(){
 	}
 
 	/* all done - wait for it*/
-	/*while(!_is->quit){
+	while(!_is->quit){
 		this->sleep(100);
-	}*/
+	}
 
 	//avformat_free_context(_pFormatCtx);
 
@@ -236,7 +243,7 @@ void DecodeThread::run(){
 	return;
 };
 
-//funzione eseguita in caso di errore
+//funzione eseguita in caso di errore/chiusura
 void DecodeThread::fail(void){
 
 	SDL_Event event;
@@ -315,6 +322,7 @@ int DecodeThread::stream_component_open(int stream_index){
 			memset(&_is->audio_pkt, 0, sizeof(_is->audio_pkt));
 			_is->audioq = PacketQueueAudio();											//inizializzo la coda di paccheti AUDIO
 			_is->audioq.setFlushPkt(&_is->flush_pkt);
+			_is->audioq.setQuitVariable(&_is->quit);
 			SDL_PauseAudio(0);
 			break;
 
@@ -341,6 +349,7 @@ int DecodeThread::stream_component_open(int stream_index){
     
 			_is->videoq = PacketQueueVideo();										//inizializzo la coda di frame VIDEO
 			_is->videoq.setFlushPkt(&_is->flush_pkt);
+			_is->videoq.setQuitVariable(&_is->quit);
 			_video_th = new VideoThread();											//inizializzo il thread di riproduzione video
 			_video_th->SetVideoState(_is);
 			_video_th->start();														//mando in esecuzione il thread decodifica video

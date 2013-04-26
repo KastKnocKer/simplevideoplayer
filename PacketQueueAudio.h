@@ -18,7 +18,6 @@ extern "C"	{
 }
 
 //altro
-#include "utility.h"
 #include "StaticValue.h"
 
 class PacketQueueAudio
@@ -31,17 +30,15 @@ private:
 	SDL_mutex	*_mutex;
 	SDL_cond *_cond;
 
-	Utility *manager;
-
 	AVPacket *flush_pkt;
+
+	int *_quit;
 
 public:
 
 	PacketQueueAudio(void);
-	PacketQueueAudio(Utility *manager);
 	~PacketQueueAudio(void);
 
-	
 	int Get(AVPacket* pkt, int block);
 	int Put(AVPacket* pkt);
 
@@ -50,6 +47,7 @@ public:
 	*/
 	int Flush();
 
+	
 	void quit();
 
 	/**
@@ -64,4 +62,6 @@ public:
 	metodo per settare il riferimento al pacchetto di FLUSH
 	*/
 	void setFlushPkt(AVPacket *pkt);
+
+	void setQuitVariable(int *quit);
 };
