@@ -62,7 +62,9 @@ videoplayer::videoplayer(QWidget *parent)
     seekbackwardAction->setDisabled(true);
 
 	//event listener dei pulsanti
+	connect(stopAction, &QAction::triggered, &window, &Video::closeWindow);
 	connect(stopAction, &QAction::triggered, this, &videoplayer::stop);
+	//connect(stopAction, &QAction::triggered, this, &videoplayer::quit);
 	connect(playAction, &QAction::triggered, this, &videoplayer::resume);;
 	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
 	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
@@ -120,12 +122,11 @@ videoplayer::videoplayer(QWidget *parent)
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
-	connect(&window, &Video::chiudi, this, &videoplayer::quit);
+	connect(&window, &Video::closeWindow, this, &videoplayer::stop);
+	connect(_clock, &AVClock2::playend, &window, &Video::closeWindow);
 
 	//connect sullo SLIDER
-	//connect(_clock, &AVClock2::updateslider, positionSlider, &QSlider::setValue);
 	connect(_clock, &AVClock2::needupdate, this, &videoplayer::tick);
-
 	connect(positionSlider, &QSlider::sliderReleased, this, &videoplayer::slider_seek);
 }
 
@@ -222,15 +223,28 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
 	stream_seek((int64_t) (pos*AV_TIME_BASE), incr);
  }
 
+ void videoplayer::resetSlider(){
+
+	 panelLCD->display("00:00");
+	 positionSlider->setValue(0);
+ }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
  // CAMBIO STATO DI RIPRODUZIONE
 
  /**
  metodo richiamato dall'event listener del bottone STOP
+ o quando chiudo la finestra di riproduzione
  */
 void videoplayer::stop(){
-	qDebug() << "stop button pressed";
-	//manager->setStopValue(1);	//imposto il valore di stop alla classe utility
+
+	qDebug() << "STOP";
+	is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
+	_clock->reset();			//stoppo il timer di refresh
+	this->resetSlider();		//resetto slider e LCD
+	//CHIUSURA AUDIO E FINESTRA
+	//SDL_PauseAudio(2);			//chiude completamente il corrente stream audio!!
+	SDL_Quit();
 }
 
 /**
@@ -242,9 +256,9 @@ void videoplayer::pause(void){
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(false);
 	//_clock->sliderTimer->stop();
-	is.pause = true;
-	//SDL_PauseAudio(1);
-	SDL_CloseAudio();
+	is.ut.setPauseValue(true);
+	SDL_PauseAudio(1);
+	
 }
 
 /**
@@ -254,7 +268,7 @@ void videoplayer::resume(){
 
 	this->playing();
 	//_clock->start_slider();
-	is.pause = false;
+	is.ut.setPauseValue(false);
 	SDL_PauseAudio(1);
 }
 
@@ -277,9 +291,10 @@ SLOT chiamata in seguito alla pressione di QUIT
 */
 void videoplayer::quit(){
 	qDebug() << "Quit";
+	is.ut.setStopValue(true);
 	is.audioq.quit();
 	is.videoq.quit();
-	is.quit = 1;
+	SDL_Quit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

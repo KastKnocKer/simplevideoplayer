@@ -75,7 +75,7 @@ public slots:
 
     void open(void);
     void about(void);
-    void tick();
+    
 
 	void loadFile();										//metodo una volta che ho scelto il file, che fa partire la riproduzione
 	void quit();											//Metodo per fermare la riproduzione
@@ -84,11 +84,14 @@ public slots:
 	void resume();											//richiama playing e fa ripartire audio
 	void playing();
 
+	//SLIDER E LCD
 	/**
 	metodo per richiamare il seek
 	@param: tempo in millisecondi
 	*/
 	void seek(int incr);
+	void tick();											//metodo di refresh del timer
+	void resetSlider();										//metodo per resettare a 0 slider e LCD
 	void slider_seek();										//a differenza di seek io non ho un incremento ma un nuovo tempo
 
 public:

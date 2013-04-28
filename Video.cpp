@@ -84,12 +84,12 @@ void Video::paintGL() {
 	//swapBuffers(); viene richiamaa in automatico alla fine del paintGL
 }
 
-void Video::mousePressEvent(QMouseEvent *event) {
-
-}
-void Video::mouseMoveEvent(QMouseEvent *event) {
-    printf("%d, %d\n", event->x(), event->y());
-}
+//void Video::mousePressEvent(QMouseEvent *event) {
+//
+//}
+//void Video::mouseMoveEvent(QMouseEvent *event) {
+//    printf("%d, %d\n", event->x(), event->y());
+//}
 
 void Video::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
@@ -118,7 +118,20 @@ void Video::startdisplay(void){
 	display = true;	
 };
 
+
+////////////////////////////////////////////////////////////////////////////////////
+
+/**
+SLOT per imporre la chiusura della finestra
+*/
+void Video::closeWindow(){
+	this->close();
+}
+
+/**
+ridefinizione dell'avento di chiusura della finestra, emetto uno specifico segnale
+*/
 void Video::closeEvent(QCloseEvent *event){
-	qDebug() << "Chiudo";
-	emit chiudi();
+	qDebug() << "VIDEO - WINDOW CLOSING";
+	emit windowClosing();
 }

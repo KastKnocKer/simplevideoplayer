@@ -4,9 +4,8 @@ PacketQueueAudio::PacketQueueAudio(void)
 {
 	this->_mutex = SDL_CreateMutex();
 	this->_cond = SDL_CreateCond();
-	flush_pkt = nullptr;
-	_quit = nullptr;
-	_eof = nullptr;
+
+	ut = nullptr;
 }
 
 
@@ -16,7 +15,8 @@ PacketQueueAudio::~PacketQueueAudio(void)
 
 int PacketQueueAudio::Put(AVPacket* pkt){
 
-	if(pkt != flush_pkt && av_dup_packet(pkt)<0){
+	if(pkt != ut->getFlushPkt() && av_dup_packet(pkt)<0){
+		qDebug() << "packet audio - put";
 		return -1;
 	}
 
@@ -34,7 +34,8 @@ int PacketQueueAudio::Put(AVPacket* pkt){
 int PacketQueueAudio::Get(AVPacket* pkt, int block){
 
 	//controllo se quit non vado a leggere altri pacchetti
-	if(*_quit == 1){
+	if(ut->getStopValue() == true){
+		qDebug() << "packet audio - get - stop";
 		return -1;
 	}
 
@@ -44,11 +45,12 @@ int PacketQueueAudio::Get(AVPacket* pkt, int block){
 		*pkt = queue.front();								//ottengo il primo elemento
 		queue.pop_front();									//elimino dalla lista elemento preso
 	}
-	else if(&_eof){
+	else if(ut->getEOFValue() == true){
+		qDebug() << "packet audio - get - eof";
 		/* se la coda è vuota, controllo il flag di eof, se è true
 		allora abbiamo letto e visualizzato tutti i pachetti. Allora
 		solo in questo momento devo settare quit*/
-		*_quit = 1;
+		ut->setStopValue(true);
 	}
 	else if (!block) {										//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
 		return -1;
@@ -94,25 +96,18 @@ SDL_cond* PacketQueueAudio::getCond(){
 };
 
 void PacketQueueAudio::quit(){
+
+	SDL_LockMutex(_mutex);
+
 	SDL_CondSignal(_cond);		//Sveglio eventualmente il processo addormentato
 	queue.clear();				//Libero la coda
-}
 
-/**
-	metodo per settare il riferimento al pacchetto di FLUSH
-*/
-void PacketQueueAudio::setFlushPkt(AVPacket *pkt){
-
-	flush_pkt = pkt;
+	SDL_UnlockMutex(_mutex);
 }
 
 /**
 metodo per settare il riferimento al parametro di quit
 */
-void PacketQueueAudio::setQuitVariable(int *quit){
-	_quit = quit;
-}
-
-void PacketQueueAudio::setEOFVariabile(int *eof){
-	_eof = eof;
+void PacketQueueAudio::setUtility(Status *ut){
+	this->ut = ut;
 }

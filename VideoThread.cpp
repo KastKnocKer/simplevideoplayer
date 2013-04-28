@@ -41,7 +41,7 @@ void VideoThread::run(){
 		}
 
 		//controllo se ho letto pacchetto di FLUSH
-		if(packet->data == _is->flush_pkt.data){
+		if(packet->data == _is->flush_pkt->data){
 			avcodec_flush_buffers(_is->video_st->codec);
 			continue;
 		}

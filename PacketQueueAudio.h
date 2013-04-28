@@ -8,17 +8,9 @@
 //STD
 #include <list>
 
-extern "C"	{
-	#include "ffmpeg\include\libavcodec\avcodec.h"
-	#include "ffmpeg\include\libavformat\avformat.h"
-	#include "ffmpeg\include\libavformat\avio.h"
-	#include "ffmpeg\include\libswscale\swscale.h"
-	#include "ffmpeg\include\libavutil\avutil.h"
-	#undef main
-}
-
 //altro
 #include "StaticValue.h"
+#include "Status.h"
 
 class PacketQueueAudio
 {
@@ -30,10 +22,7 @@ private:
 	SDL_mutex	*_mutex;
 	SDL_cond *_cond;
 
-	AVPacket *flush_pkt;
-
-	int *_quit;
-	int *_eof;
+	Status *ut;
 
 public:
 
@@ -48,7 +37,6 @@ public:
 	*/
 	int Flush();
 
-	
 	void quit();
 
 	/**
@@ -64,7 +52,5 @@ public:
 	*/
 	void setFlushPkt(AVPacket *pkt);
 
-	void setQuitVariable(int *quit);
-
-	void setEOFVariabile(int *eof);
+	void setUtility(Status *ut);
 };

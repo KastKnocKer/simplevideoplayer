@@ -1,122 +1,88 @@
 #include "VideoPicture.h"
 
-int queue_picture(VideoState *is, AVFrame *pFrameRGB){
+VideoPicture::VideoPicture(void)
+{
+	_cond_maxsize = new QWaitCondition();
+	_cond_data = new QWaitCondition();
+	_mutex_data = new QMutex();
+	_mutex_maxsize = new QMutex();
 
-	/* 
-	per utilizzare questa coda abbiamo necessità di 2 puntatori:
-	-uno all'indice di lettura
-	-uno all'indice di scrittura
-	sono mantenuti dentro VideoState
+	ut = nullptr;
+}
+
+
+VideoPicture::~VideoPicture(void)
+{
+}
+
+int VideoPicture::Put(AVFrame *pFrameRGB, double pts){
+
+	/*abbiamo bisogno che la coda non superi una determinata
+	dimensione, per non dover così rallentare il processo di display a video
+	nel caso la coda(buffer) fosse pieno mi metto in attesa che si liberi
+	scelgo di ripartire appena si libera anche un solo posto
 	*/
-	VideoPicture *vp;
-	AVPicture pict;
+	_mutex_maxsize->lock();
 
-	SDL_LockMutex(is->pictq_mutex);
-
-	while(is->pictq_size >= VIDEO_PICTURE_QUEUE_SIZE && !is->quit) {
-		SDL_CondWait(is->pictq_cond, is->pictq_mutex);	//wait for our buffer to clear
+	while(queue.size() >= VIDEO_PICTURE_QUEUE_SIZE && (ut->getStopValue() == false)) {
+		_cond_maxsize->wait(_mutex_maxsize);	//wait for our buffer to clear
 	}
 
-	SDL_UnlockMutex(is->pictq_mutex);
+	_mutex_maxsize->unlock();
 
-	if(is->quit)
+	if(ut->getStopValue() == true){
 		return -1;
-
-	// windex is set to 0 initially
-	vp = &is->pictq[is->pictq_windex];	//vado a ottenere il puntatore alla VideoPicture nella picture_queue all'indice pictq_windex
-
-	/* allocate or resize the buffer! */
-	if(!vp->bmp || vp->width != is->video_st->codec->width || vp->height != is->video_st->codec->height) {
-		
-		SDL_Event event;
-
-		vp->allocated = 0;
-		/* we have to do it in the main thread */
-		event.type = FF_ALLOC_EVENT;
-		event.user.data1 = is;
-		SDL_PushEvent(&event);
-
-		/* wait until we have a picture allocated */
-		SDL_LockMutex(is->pictq_mutex);
-		while(!vp->allocated && !is->quit) {
-			SDL_CondWait(is->pictq_cond, is->pictq_mutex);
-		}
-		SDL_UnlockMutex(is->pictq_mutex);
-		if(is->quit) {
-			return -1;
-		}
 	}
 
-	/* We have a place to put our picture on the queue */
-	if(vp->bmp) {
+	/* questa seconda lock viene invece eseguita 
+	per avere un accesso mutuamente esclusivo alla lista */
+	_mutex_data->lock();
 
-		SDL_LockYUVOverlay(vp->bmp);
-    
-		/* point pict at the queue */
+	std::pair<AVFrame*, double> p(pFrameRGB, pts);
+	queue.push_back(p);						//aggiungo il frame RGB alla coda
 
-		pict.data[0] = vp->bmp->pixels[0];
-		pict.data[1] = vp->bmp->pixels[2];
-		pict.data[2] = vp->bmp->pixels[1];
-    
-		pict.linesize[0] = vp->bmp->pitches[0];
-		pict.linesize[1] = vp->bmp->pitches[2];
-		pict.linesize[2] = vp->bmp->pitches[1];
-    
-		// Convert the image into YUV format that SDL uses
-		sws_scale
-		(
-			is->sws_ctx,
-			(uint8_t const * const *)pFrame->data,
-			pFrame->linesize,
-			0, 
-			is->video_st->codec->height, 
-			pict.data, 
-			pict.linesize
-		);
-    
-		SDL_UnlockYUVOverlay(vp->bmp);
+	_cond_data->wakeOne();					//sveglio un processo in coda se c'è
 
-		/* now we inform our display thread that we have a pic ready */
-		if(++is->pictq_windex == VIDEO_PICTURE_QUEUE_SIZE) {
-			is->pictq_windex = 0;
-		}
+	_mutex_data->unlock();
 
-		SDL_LockMutex(is->pictq_mutex);
-		++is->pictq_size;									//aumento la dimensione della coda
-		SDL_UnlockMutex(is->pictq_mutex);
+	if(ut->getStopValue() == true) {
+		return -1;
 	}
 
 	return 0;
+}
 
-};
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void alloc_picture(void *userdata){
-
-	VideoState *is = (VideoState *)userdata;
-	VideoPicture *vp;
-
-	vp = &is->pictq[is->pictq_windex];
-	if(vp->bmp) {
-		// we already have one make another, bigger/smaller
-		SDL_FreeYUVOverlay(vp->bmp);
-	}
-
+std::pair<AVFrame*, double> VideoPicture::Get(){
 	
-	// Allocate a place to put our YUV image on that screen
-	vp->bmp = SDL_CreateYUVOverlay(is->video_st->codec->width,
-				 is->video_st->codec->height,
-				 SDL_YV12_OVERLAY,
-				 screen);
-	vp->width = is->video_st->codec->width;
-	vp->height = is->video_st->codec->height;
-  
-	SDL_LockMutex(is->pictq_mutex);
-	vp->allocated = 1;
-	SDL_CondSignal(is->pictq_cond);
-	SDL_UnlockMutex(is->pictq_mutex);
+	std::pair<AVFrame*, double> read;
 
+	_mutex_data->lock();
+
+	if(!queue.empty()){
+		read = queue.front();	//prelevo primo elemento
+		queue.pop_front();		//elimino elemento prelevato
+
+	} else {
+		_cond_data->wait(_mutex_data);
+	}
+	_mutex_data->unlock();
+
+
+	/* una volta prelevato, vado a svegliare la coda dei frame che devono essere depositati */
+	_mutex_maxsize->lock();
+	_cond_maxsize->wakeOne();
+	_mutex_maxsize->unlock();
+
+	return read;
+}
+
+
+/* ritorna le dimensioni della coda di frame */
+int VideoPicture::getSize(void){
+	return queue.size();
+}
+
+
+void VideoPicture::setUtility(Status *ut){
+	this->ut = ut;
 }

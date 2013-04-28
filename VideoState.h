@@ -10,7 +10,7 @@
 
 #include "PacketQueueAudio.h"
 #include "PacketQueueVideo.h"
-#include "VideoPicture2.h"
+#include "VideoPicture.h"
 #include "Video.h"
 
 #include <SDL.h>
@@ -34,13 +34,14 @@ public:
 	//UTILITY
 	int64_t			duration;			//lunghezza del video in riproduzione
 	int64_t			totalFramesNumber;	//numero totale di frame
+	Status			ut;
+	AVPacket		*flush_pkt;
 
 
 	//SEEK
 	int             seek_req;			//controllo se è stato o meno richiesto il seek
 	int             seek_flags;			//flag per sapere se sto facendo un forward o backward
 	int64_t         seek_pos;			//posizione del seek (nuova posizione calcolata)
-	AVPacket		flush_pkt;
 
 	//CLOCK
 	int             av_sync_type;
@@ -48,17 +49,10 @@ public:
 	int64_t         external_clock_time;
 	int				currentTime;		//tempo scorrimento slider
 
-	//PAUSE
-	bool			pause;
-
-	//QUIT
-	int             quit;
-	int				eof;
-
 	//CODE
 	PacketQueueAudio    audioq;
 	PacketQueueVideo    videoq;
-	VideoPicture2		pictq;
+	VideoPicture		pictq;
 
 	//AUDIO
 	double			audio_clock;

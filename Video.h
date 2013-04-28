@@ -27,19 +27,26 @@ public:
 
 	void startdisplay(void);
 
+public slots:
+
+	/** 
+	metodo richiamato a fine riproduzione per forzare la chiusura della finestra
+	*/
+	void closeWindow();
+
 protected:
 
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+    /*void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);*/
     void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 
 signals:
-	void chiudi();
 
+	void windowClosing();	//segnale emesso quando la finestra è stata forzatamente chiusa
 
 private:
 

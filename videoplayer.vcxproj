@@ -196,9 +196,9 @@
     <ClCompile Include="PacketQueueVideo.cpp" />
     <ClCompile Include="PacketQueueAudio.cpp" />
     <ClCompile Include="Refresh2.cpp" />
-    <ClCompile Include="utility.cpp" />
+    <ClCompile Include="Status.cpp" />
     <ClCompile Include="Video.cpp" />
-    <ClCompile Include="VideoPicture2.cpp" />
+    <ClCompile Include="VideoPicture.cpp" />
     <ClCompile Include="videoplayer.cpp" />
     <ClCompile Include="VideoState.cpp" />
     <ClCompile Include="VideoThread.cpp" />
@@ -265,7 +265,7 @@
     <ClInclude Include="PacketQueueVideo.h" />
     <ClInclude Include="PacketQueueAudio.h" />
     <ClInclude Include="StaticValue.h" />
-    <ClInclude Include="utility.h" />
+    <ClInclude Include="Status.h" />
     <CustomBuild Include="Video.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -284,7 +284,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_GUI_LIB -DQT_MULTIMEDIA_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_CONCURRENT_LIB -DQT_MULTIMEDIAWIDGETS_LIB -DQT_CORE_LIB  "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\..\qtmultimedia\include\QtMultimedia" "-I$(QTDIR)\..\qtmultimedia\include" "-I$(QTDIR)\..\qttools\include" "-I$(QTDIR)\..\qttools\include\QtHelp" "-I$(QTDIR)\..\qtdeclarative\include\QtDeclarative" "-I$(QTDIR)\..\qtdeclarative\include" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtMultimediaWidgets" "-I$(QTDIR)\include\QtCore"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_GUI_LIB -DQT_MULTIMEDIA_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_CONCURRENT_LIB -DQT_MULTIMEDIAWIDGETS_LIB -DQT_CORE_LIB  "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\..\qtmultimedia\include\QtMultimedia" "-I$(QTDIR)\..\qtmultimedia\include" "-I$(QTDIR)\..\qttools\include" "-I$(QTDIR)\..\qttools\include\QtHelp" "-I$(QTDIR)\..\qtdeclarative\include\QtDeclarative" "-I$(QTDIR)\..\qtdeclarative\include" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtMultimediaWidgets" "-I$(QTDIR)\include\QtCore"</Command>
     </CustomBuild>
-    <ClInclude Include="VideoPicture2.h" />
+    <ClInclude Include="VideoPicture.h" />
     <ClInclude Include="VideoState.h" />
     <CustomBuild Include="VideoThread.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

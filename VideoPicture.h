@@ -1,31 +1,41 @@
+#pragma once
 
-#include <string>
-#include <QDebug>
+#include <list>
+#include <utility>
 
-//FFMPEG
-extern "C"	{
-	#include "ffmpeg\include\libavcodec\avcodec.h"
-	#include "ffmpeg\include\libavformat\avformat.h"
-	#include "ffmpeg\include\libswscale\swscale.h"
-	#include "ffmpeg\include\libavutil\avutil.h"
-	#undef main
-}
+#include <QMutex>
+#include <QWaitcondition>
 
-//SDL
-#include <SDL.h>
-#include <SDL_thread.h>
+#include "StaticValue.h"
+#include "Status.h"
 
-#include "VideoState.h"
+/**
+classe che mantiene la coda dei frame gia convertiti in RGB e del rispettivo
+PTS (suo o assegnato)
+*/
+class VideoPicture
+{
+private:
 
-#define FF_ALLOC_EVENT   (SDL_USEREVENT)
+	QWaitCondition	*_cond_maxsize, *_cond_data;
+	QMutex			*_mutex_maxsize, *_mutex_data;
 
-typedef struct VideoPicture {
-  SDL_Overlay *bmp;
-  int width, height; /* source height & width */
-  int allocated;
-} VideoPicture;
+	//std::list<AVFrame> queue;
+	std::list<std::pair<AVFrame*, double>> queue;
 
-int queue_picture(VideoState *is, AVFrame *pFrameRGB);
+	Status *ut;
 
-/* metodo per allocare una Picture */
-void alloc_picture(void *userdata);
+public:
+
+	VideoPicture(void);
+
+	~VideoPicture(void);
+
+	int Put(AVFrame *pFrameRGB, double pts);
+
+	std::pair<AVFrame*, double> Get();
+
+	int getSize();
+
+	void setUtility(Status *ut);
+};

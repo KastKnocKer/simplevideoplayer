@@ -11,7 +11,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 	int n, len1, data_size = 0;
 	double pts;
 
-	while(is->audioq.Get(&pkt, 1) < 0 && !is->quit){;		
+	while(is->audioq.Get(&pkt, 1) < 0 && (is->ut.getStopValue() == false)){;		
 		//Prelevo il primo pacchetto dalla coda,
 		//attende fino a che non c'è un pacchetto, è inutile proseguire...
 	}
@@ -57,7 +57,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		if(pkt.data)
 			av_free_packet(&pkt);
 
-		if(is->quit){
+		if(is->ut.getStopValue() == true){
 			return -1;
 		}
 
@@ -66,7 +66,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		  return -1;
 		}
 
-		if(pkt.data == is->flush_pkt.data){
+		if(pkt.data == is->flush_pkt->data){
 			avcodec_flush_buffers(is->audio_st->codec);
 			continue;
 		}

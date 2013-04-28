@@ -3,10 +3,24 @@
 //COSTRUTTORE
 VideoState::VideoState(){
 
-	quit = 0;
-	eof = 0;
-	pictq = VideoPicture2();	//inizializzo la coda di frameRGB
-	pictq.setQuitVariable(&quit);
+	//inizializzo la classe utility
+	ut = Status();
+
+	//ottengo il riferimento al pacchetto di FLUSH
+	flush_pkt = ut.getFlushPkt();
+
+	//inizializzo la coda di frameRGB
+	pictq = VideoPicture();	
+	pictq.setUtility(&ut);
+
+	//inizializzo la coda di pacchetti audio
+	audioq = PacketQueueAudio();
+	audioq.setUtility(&ut);
+
+	//inizializzo la coda di pacchetti VIDEO
+	videoq = PacketQueueVideo();
+	videoq.setUtility(&ut);
+
 
 	pFormatCtx = NULL;
 	audio_st = NULL;
@@ -43,12 +57,7 @@ VideoState::VideoState(){
 	seek_flags = 0;
 	seek_pos = 0;
 
-	av_init_packet(&flush_pkt);
-	flush_pkt.data = (unsigned char *) "FLUSH";
-
 	currentTime = 0;
-
-	pause = false;
 
 	totalFramesNumber = 0;
 	duration = 0;
@@ -73,22 +82,3 @@ void VideoState::setSourceFilename(const std::string &filename){
 
 	return;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-/**
-metodo per settare il puntatore globale allo stato del video
-*/
-//void VideoState::setGlobalVideoState(VideoState *is){
-//
-//	global_video_state = is;
-//}
-//
-//VideoState* VideoState::getGlobalVideoState(){
-//
-//	return global_video_state;
-//
-//}
-
-////////////////////////////////////////////////////////////////////////////////

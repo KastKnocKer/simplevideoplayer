@@ -4,9 +4,8 @@ PacketQueueVideo::PacketQueueVideo(void)
 {
 	_mutex = new QMutex();
 	_cond = new QWaitCondition();
-	flush_pkt = nullptr;
-	_quit = nullptr;
-	_eof = nullptr;
+
+	ut = nullptr;
 }
 
 
@@ -16,7 +15,7 @@ PacketQueueVideo::~PacketQueueVideo(void)
 
 int PacketQueueVideo::Put(AVPacket *pkt){
 
-	if(pkt != flush_pkt && av_dup_packet(pkt)<0){
+	if(pkt != ut->getFlushPkt() && av_dup_packet(pkt)<0){
 		return -1;
 	}
 
@@ -36,7 +35,7 @@ int PacketQueueVideo::Get(AVPacket *pkt, int block){
 	AVPacket prelevato;
 
 	//controllo se quit non vado a leggere altri pacchetti
-	if(*_quit == 1){
+	if(ut->getStopValue() == true){
 		return -1;
 	}
 																				
@@ -47,11 +46,11 @@ int PacketQueueVideo::Get(AVPacket *pkt, int block){
 		queue.pop_front();												//elimino dalla lista elemento preso
 		*pkt = prelevato;												//ottengo un puntatore all'oggetto prelevato
 	}
-	else if(&_eof){
+	else if(ut->getEOFValue() == true){
 		/* se la coda è vuota, controllo il flag di eof, se è true
 		allora abbiamo letto e visualizzato tutti i pachetti. Allora
 		solo in questo momento devo settare quit*/
-		*_quit = 1;
+		ut->setStopValue(true);
 	}
 	else if (!block) {													//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
 		return -1;
@@ -97,25 +96,18 @@ QWaitCondition* PacketQueueVideo::GetCond(){
 };
 
 void PacketQueueVideo::quit(){
+
+	_mutex->lock();
+
 	_cond->wakeAll();		//Sveglio tutti i processi che sono eventualmente in coda
 	queue.clear();			//Svuoto la coda
-}
 
-/**
-	metodo per settare il riferimento al pacchetto di FLUSH
-*/
-void PacketQueueVideo::setFlushPkt(AVPacket *pkt){
-
-	flush_pkt = pkt;
+	_mutex->unlock();
 }
 
 /**
 metodo per settare il riferimento al parametro di quit
 */
-void PacketQueueVideo::setQuitVariable(int *quit){
-	_quit = quit;
-}
-
-void PacketQueueVideo::setEOFVariabile(int *eof){
-	_eof = eof;
+void PacketQueueVideo::setUtility(Status *ut){
+	this->ut = ut;
 }

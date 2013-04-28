@@ -31,12 +31,14 @@ private:
 public slots:
 
 	void video_refresh_timer(void);
+
 	//utilizzato per stoppare il timer e resettare le variabili
 	void reset();		
 
 signals:
 
 	void needupdate();
+	void playend();
 	void updateslider(int framenumber);
 	
 public:

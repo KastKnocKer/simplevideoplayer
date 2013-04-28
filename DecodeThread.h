@@ -32,9 +32,10 @@ private:
 	int audio_index;
 	
 	AVDictionary *io_dict;
-	AVIOInterruptCB callback;
 
 	VideoThread *_video_th;
+
+	int duration;
 
 	/*
 	corpo del thread,

@@ -33,6 +33,8 @@ void AVClock2::video_refresh_timer(void){
 	double diff = 0.0;
 	double pts = 0.0;
 
+	
+
 	//se il video_thread è attivo
 	if (_is->video_st)
 	{
@@ -55,12 +57,12 @@ void AVClock2::video_refresh_timer(void){
 			_is->video_current_pts_time = av_gettime();
 
 			
-			qDebug() << "current time: " <<  (int) _is->frame_timer;
+			//qDebug() << "current time: " <<  (int) _is->frame_timer;
 
-			qDebug() << "master clock: " << get_master_clock();
-			//uguale a fare qDebug() << "current pts: " << pts;
+			//qDebug() << "master clock: " << get_master_clock();
+			////uguale a fare qDebug() << "current pts: " << pts;
 
-			qDebug() << "num frame attuale: " << _is->video_st->codec->frame_number;
+			//qDebug() << "num frame attuale: " << _is->video_st->codec->frame_number;
 			
 			
             delay = pts - _is->frame_last_pts; /* the pts from last time */
@@ -115,19 +117,35 @@ void AVClock2::video_refresh_timer(void){
 
 			//////////////////////////////////////////////////////////////////////////////
 
-            schedule_refresh((int) (actual_delay * 1000 + 0.5));
+            
 
 			_is->window->setFrame(pFrameRGB);
 
             /* show the picture! */
             emit needupdate();
 
+			/* caso in cui ho finito la riproduzione, sono all'ultimo frame */
+			if(_is->video_st->codec->frame_number == (int) _is->totalFramesNumber){
+
+				qDebug() << "AVCLOCK - ultimo frame visualizzato";
+
+				//TODO fai emettere segnale dopo msec ultimo frame
+				emit playend();
+
+				return;
+
+			} else {
+
+				schedule_refresh((int) (actual_delay * 1000 + 0.5));
+			}
         }
     }
     else
     {
         schedule_refresh(100);
     }
+
+	return;
 
 }
 

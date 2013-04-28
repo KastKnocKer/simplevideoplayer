@@ -8,16 +8,8 @@
 //STD
 #include <list>
 
-extern "C"	{
-	#include "ffmpeg\include\libavcodec\avcodec.h"
-	#include "ffmpeg\include\libavformat\avformat.h"
-	#include "ffmpeg\include\libswscale\swscale.h"
-	#include "ffmpeg\include\libavutil\avutil.h"
-	#undef main
-}
-
 //altro
-#include "utility.h"
+#include "Status.h"
 #include "StaticValue.h"
 
 class PacketQueueVideo
@@ -30,10 +22,7 @@ private:
 	QMutex			*_mutex;
 	QWaitCondition  *_cond;
 
-	AVPacket *flush_pkt;
-
-	int *_quit;
-	int *_eof;
+	Status *ut;
 
 public:
 
@@ -56,12 +45,5 @@ public:
 	QMutex* getMutex();
 	QWaitCondition* GetCond();
 
-	/**
-	metodo per settare il riferimento al pacchetto di FLUSH
-	*/
-	void setFlushPkt(AVPacket *pkt);
-
-	void setQuitVariable(int *quit);
-
-	void setEOFVariabile(int *eof);
+	void setUtility(Status *ut);
 };
