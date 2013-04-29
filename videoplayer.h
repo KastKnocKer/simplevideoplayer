@@ -93,7 +93,7 @@ public slots:
 
 public:
 
-	Video window;														//finestra di riproduzione
+	Video *window;														//finestra di riproduzione
 	VideoState is;														//classe contente tutti i dati sul video in riproduzione
 
 	//COSTRUTTORE

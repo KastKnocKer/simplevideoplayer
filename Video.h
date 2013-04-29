@@ -21,7 +21,7 @@ class Video: public QGLWidget {
 
 public:
 
-    Video(QWidget *parent = NULL);
+    explicit Video(QWidget *parent = 0);
 	~Video();
 	void setSize(int w, int h);
 	void setFrame(AVFrame* pFrameRGB);

@@ -62,9 +62,7 @@ videoplayer::videoplayer(QWidget *parent)
     seekbackwardAction->setDisabled(true);
 
 	//event listener dei pulsanti
-	connect(stopAction, &QAction::triggered, &window, &Video::closeWindow);
 	connect(stopAction, &QAction::triggered, this, &videoplayer::stop);
-	//connect(stopAction, &QAction::triggered, this, &videoplayer::quit);
 	connect(playAction, &QAction::triggered, this, &videoplayer::resume);;
 	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
 	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
@@ -120,10 +118,15 @@ videoplayer::videoplayer(QWidget *parent)
 
 	_clock = new AVClock2();										//inizializzazione del clock
 
+	/*inizializzo la finestra */
+	window = new Video();
+
+	connect(stopAction, &QAction::triggered, window, &Video::closeWindow);
+
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
-	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
-	connect(&window, SIGNAL(closeWindow()), this, SLOT(stop()));
-	connect(_clock, &AVClock2::playend, &window, &Video::closeWindow);
+	connect(_clock, &AVClock2::needupdate, window, &Video::updateGL);
+	connect(window, SIGNAL(closeWindow()), this, SLOT(stop()));
+	connect(_clock, &AVClock2::playend, window, &Video::closeWindow);
 
 	//connect sullo SLIDER
 	connect(_clock, &AVClock2::needupdate, this, &videoplayer::tick);
@@ -314,17 +317,14 @@ void videoplayer::loadFile(){
 	/* genero un nuovo oggetto VideoState */
 	is = VideoState();	
 
-	/*inizializzo la finestra */
-	//window = Video();
-
 	_clock->reset();												//resetto il clock
 
 	_clock->SetVideoState(&is);										//gli passo il puntatore a VideoState
 
 	is.setSourceFilename(this->getSourceFilename());				//imposto il nome del file all'oggetto VideoState
-	is.window = &window;
+	is.window = window;
 
-	window.show();
+	window->show();
 
 	// Register all formats and codecs
 	av_register_all();
