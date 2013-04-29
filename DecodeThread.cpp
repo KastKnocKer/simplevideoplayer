@@ -131,9 +131,9 @@ void DecodeThread::run(){
 		}
 
 		//controllo per PAUSE
-		/*while(_is->ut->getPauseValue() == true){
-			
-		}*/
+		if(_is->ut.getPauseValue() == true){
+			continue;
+		};
 
 		//SEEK - controllo se ho una richiesta di seek
 		if(_is->seek_req){
@@ -230,7 +230,6 @@ void DecodeThread::run(){
 		this->sleep(100);
 	}*/
 
-	qDebug() << "DecodeThread - rilevato stop value, esco";
 	//avformat_free_context(_pFormatCtx);
 
 	//fail();
@@ -329,7 +328,9 @@ int DecodeThread::stream_component_open(int stream_index){
 			qDebug() << "num TOT frame video" << (long long) _is->video_st->nb_frames;
 
 			//reperisco informazioni sulla durata e le vado a impostare allo slider
+			//CASO FAVOREVOLE: trovo direttamente il valore della durata del video
 			duration = (int) (_pFormatCtx->duration/AV_TIME_BASE);
+			//CASO SFAVOREVOLE: calcolo la durata come num_frame * frame_rate
 			if(duration <= 0){
 				duration = (int) av_rescale(_is->totalFramesNumber, _pFormatCtx->streams[stream_index]->time_base.num, 
 					_pFormatCtx->streams[stream_index]->time_base.den);

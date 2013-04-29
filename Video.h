@@ -28,6 +28,10 @@ public:
 
 	void startdisplay(void);
 
+signals:
+
+	void windowClosing();	//segnale emesso quando la finestra è stata forzatamente chiusa
+
 public slots:
 
 	/** 
@@ -44,10 +48,6 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
-
-signals:
-
-	void windowClosing();	//segnale emesso quando la finestra è stata forzatamente chiusa
 
 private:
 

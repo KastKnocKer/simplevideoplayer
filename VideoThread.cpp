@@ -33,6 +33,10 @@ void VideoThread::run(){
 	*/
 	while(1) {
 
+		if(_is->ut.getPauseValue() == true){;
+			continue;
+		};
+
 		// leggo i paccehtti dalla coda
 		if(_is->videoq.Get(packet, 1) < 0){
 			// means we quit getting packets

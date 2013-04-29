@@ -216,6 +216,7 @@ void AVClock2::schedule_refresh(int delay){
 	a questo verrà associato lo slot video_refresh_timer
 	*/
 	timer->start(delay);
+	//timer->singleShot(delay, this, SLOT(video_refresh_timer()));
 }
 
 /**
@@ -225,8 +226,6 @@ utilizzato per resettare il clock a termine riproduzione
 void AVClock2::reset(void){
 
 	timer->stop();				//fermo il timer
-	setClockType(VideoClock);
-	
 }
 
 ///////////////////////////////////////////////////////////////////////////////

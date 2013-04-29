@@ -62,7 +62,6 @@ videoplayer::videoplayer(QWidget *parent)
     seekbackwardAction->setDisabled(true);
 
 	//event listener dei pulsanti
-	connect(stopAction, &QAction::triggered, this, &videoplayer::stop);
 	connect(playAction, &QAction::triggered, this, &videoplayer::resume);;
 	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
 	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
@@ -117,16 +116,6 @@ videoplayer::videoplayer(QWidget *parent)
     setFixedSize(400,100);
 
 	_clock = new AVClock2();										//inizializzazione del clock
-
-	/*inizializzo la finestra */
-	window = new Video();
-
-	connect(stopAction, &QAction::triggered, window, &Video::closeWindow);
-
-	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
-	connect(_clock, &AVClock2::needupdate, window, &Video::updateGL);
-	connect(window, SIGNAL(closeWindow()), this, SLOT(stop()));
-	connect(_clock, &AVClock2::playend, window, &Video::closeWindow);
 
 	//connect sullo SLIDER
 	connect(_clock, &AVClock2::needupdate, this, &videoplayer::tick);
@@ -241,6 +230,8 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  */
 void videoplayer::stop(){
 
+	qDebug() << "STOP";
+
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(false);
 	stopAction->setDisabled(true);
@@ -248,14 +239,11 @@ void videoplayer::stop(){
 	skipbackwardAction->setDisabled(true);
 	seekforwardAction->setDisabled(true);
 	seekbackwardAction->setDisabled(true);
-
-	qDebug() << "STOP";
+	
 	is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
 	_clock->reset();			//stoppo il timer di refresh
-	this->resetSlider();		//resetto slider e LCD
-	//CHIUSURA AUDIO E FINESTRA
-	//SDL_PauseAudio(2);			//chiude completamente il corrente stream audio!!
-	SDL_Quit();
+	this->resetSlider();		//resetto slider e LCD	
+	SDL_Quit();					//chiude completamente il corrente stream audio!!
 }
 
 /**
@@ -264,11 +252,18 @@ SLOT per metter in pausa la riproduzione
 void videoplayer::pause(void){
 
 	qDebug() << "PAUSE pressed";
+
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(false);
-	//_clock->sliderTimer->stop();
+	skipforwardAction->setDisabled(true);
+	skipbackwardAction->setDisabled(true);
+	seekforwardAction->setDisabled(true);
+	seekbackwardAction->setDisabled(true);
+
 	is.ut.setPauseValue(true);
+	//_clock->reset();
 	SDL_PauseAudio(1);
+	
 	
 }
 
@@ -277,10 +272,13 @@ SLOT utilizzato solo quando un video gia iniziato, deve riprendere la riproduzio
 */
 void videoplayer::resume(){
 
-	this->playing();
+	qDebug() << "RESUME";
+
+	this->playing();				//riabilito i corrispettivi pulsanti
 	//_clock->start_slider();
 	is.ut.setPauseValue(false);
-	SDL_PauseAudio(1);
+	//_clock->schedule_refresh(1);
+	SDL_PauseAudio(0);
 }
 
 /**
@@ -316,6 +314,17 @@ void videoplayer::loadFile(){
 
 	/* genero un nuovo oggetto VideoState */
 	is = VideoState();	
+
+	/*inizializzo la finestra */
+	window = new Video();
+	/* alla chiusura della finestra mando in stop */
+	connect(window, &Video::windowClosing, this, &videoplayer::stop);
+	/* collego il bottone stop alla chiusura della finestra */
+	connect(stopAction, &QAction::triggered, window, &Video::closeWindow);
+
+	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
+	connect(_clock, &AVClock2::needupdate, window, &Video::updateGL);
+	connect(_clock, &AVClock2::playend, window, &Video::closeWindow);
 
 	_clock->reset();												//resetto il clock
 
@@ -353,9 +362,6 @@ void videoplayer::loadFile(){
 	coincidente con la durata del video in secondi
 	*/
 	connect(_demuxer, &DecodeThread::setSliderRange, positionSlider, &QSlider::setRange);
-
-	//timerLCD->start(1000);											//faccio partire timer
-																	//per refresh pannello LCD
 
 	//nota: VideoState di default dovrebbe avere un riferimento al thread....
 	if(!is.parse_tid) {
