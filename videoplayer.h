@@ -34,8 +34,6 @@ class videoplayer : public QWidget
 
 private:
 
-	//Utility *manager;
-
 	QString _fileName;														//nome del file video
 
     QMenuBar *menuBar;
@@ -55,7 +53,6 @@ private:
 	QAction *seekforwardAction;
 	QAction *seekbackwardAction;
 	QSignalMapper *signalMapper;							//fa da mapping per particolari signal
-	//QTimer *timerLCD;
 
 	void createMenu();
 	void stop();

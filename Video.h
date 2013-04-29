@@ -20,6 +20,7 @@ class Video: public QGLWidget {
     Q_OBJECT // must include this if you use Qt signals/slots
 
 public:
+
     Video(QWidget *parent = NULL);
 	~Video();
 	void setSize(int w, int h);
@@ -39,8 +40,8 @@ protected:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
-    /*void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);*/
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 	void closeEvent(QCloseEvent *event);
 

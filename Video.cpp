@@ -1,6 +1,7 @@
 #include "Video.h"
 
 Video::Video(QWidget *parent) : QGLWidget(parent) {
+
     setMouseTracking(true);
 
 	pFrameRGB = NULL;
@@ -84,12 +85,10 @@ void Video::paintGL() {
 	//swapBuffers(); viene richiamaa in automatico alla fine del paintGL
 }
 
-//void Video::mousePressEvent(QMouseEvent *event) {
-//
-//}
-//void Video::mouseMoveEvent(QMouseEvent *event) {
-//    printf("%d, %d\n", event->x(), event->y());
-//}
+void Video::mousePressEvent(QMouseEvent *event) {
+}
+void Video::mouseMoveEvent(QMouseEvent *event) {
+}
 
 void Video::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {

@@ -122,7 +122,7 @@ videoplayer::videoplayer(QWidget *parent)
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, &window, &Video::updateGL);
-	connect(&window, &Video::closeWindow, this, &videoplayer::stop);
+	connect(&window, SIGNAL(closeWindow()), this, SLOT(stop()));
 	connect(_clock, &AVClock2::playend, &window, &Video::closeWindow);
 
 	//connect sullo SLIDER
@@ -238,6 +238,14 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  */
 void videoplayer::stop(){
 
+	pauseAction->setDisabled(true);
+	playAction->setDisabled(false);
+	stopAction->setDisabled(true);
+	skipforwardAction->setDisabled(true);
+	skipbackwardAction->setDisabled(true);
+	seekforwardAction->setDisabled(true);
+	seekbackwardAction->setDisabled(true);
+
 	qDebug() << "STOP";
 	is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
 	_clock->reset();			//stoppo il timer di refresh
@@ -305,6 +313,9 @@ void videoplayer::loadFile(){
 
 	/* genero un nuovo oggetto VideoState */
 	is = VideoState();	
+
+	/*inizializzo la finestra */
+	//window = Video();
 
 	_clock->reset();												//resetto il clock
 
