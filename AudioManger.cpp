@@ -57,11 +57,11 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		if(pkt.data)
 			av_free_packet(&pkt);
 
-		if(is->ut.getStopValue() == true){
+		if((is->ut.getStopValue() == true) || (is->ut.getPauseValue() == true)){
 			return -1;
 		}
 
-		/* next packet */
+		/* read next packet */
 		if(is->audioq.Get(&pkt, 1) < 0){
 		  return -1;
 		}
@@ -74,7 +74,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		is->audio_pkt_data = pkt.data;
 		is->audio_pkt_size = pkt.size;
 
-		/* if update, update the audio clock w/pts */
+		/* if update, update the audio clock with the pts */
 		if(pkt.pts != AV_NOPTS_VALUE){
 			is->audio_clock = av_q2d(is->audio_st->time_base)*pkt.pts;
 		}
@@ -84,6 +84,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 
 /**
 metodo interno utilizzato da SDL per aggiornare lo stato dello stream audio
+prepare a new audio buffer
 */
 void audio_callback(void *userdata, Uint8 *stream, int len) {
 
@@ -155,7 +156,7 @@ int synchronize_audio(AVClock2 *clock, VideoState *is, short *samples, int sampl
 			// accumulate the diffs
 			is->audio_diff_cum = diff + is->audio_diff_avg_coef * is->audio_diff_cum;
 			if(is->audio_diff_avg_count < AUDIO_DIFF_AVG_NB) {
-
+				/* not enough mesasures to have a correct estimate */
 				is->audio_diff_avg_count++;
 
 			} else {

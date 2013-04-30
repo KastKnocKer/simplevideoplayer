@@ -20,6 +20,7 @@ private:
 
 	bool _quit;
 	bool _pause;
+	bool _lastpause;
 	bool _eof;
 
 	AVPacket flush_pkt;	//pacchetto di flush usato durante il seek
@@ -34,6 +35,11 @@ public:
 
 	void setPauseValue(bool pause);
 	bool getPauseValue(); 
+
+	void setLastPauseValue(bool lastpause);
+	bool getLastPauseValue();
+
+	bool isPauseChanged();
 
 	void setEOFValue(bool eof);
 	bool getEOFValue();

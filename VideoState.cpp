@@ -46,7 +46,8 @@ VideoState::VideoState(){
     audio_diff_threshold = 0;
 	audio_diff_avg_count = 0;
 
-	video_current_pts = 0;	//current displayed pts (different from video_clock if frame fifos are used)
+	video_current_pts = 0.0;	//current displayed pts (different from video_clock if frame fifos are used)
+	video_current_pts_drift = 0.0;
 	video_current_pts_time = 0;
 
 	av_sync_type = 0;
@@ -61,6 +62,7 @@ VideoState::VideoState(){
 
 	totalFramesNumber = 0;
 	duration = 0;
+	read_pause_return = 0;
 }
 
 //DISTRUTTORE

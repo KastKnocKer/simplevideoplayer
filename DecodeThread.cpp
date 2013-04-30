@@ -121,6 +121,9 @@ void DecodeThread::run(){
 		fail();		//richiamo la funzione che mi va a chiudere la finestra
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// INIZIO CICLO DECODIFICA
+
 	//main decode loop
 	while(1){
 
@@ -131,8 +134,15 @@ void DecodeThread::run(){
 		}
 
 		//controllo per PAUSE
-		if(_is->ut.getPauseValue() == true){
-			continue;
+		if(_is->ut.isPauseChanged()){
+			_is->ut.setLastPauseValue(_is->ut.getPauseValue());
+			if(_is->ut.getPauseValue() == true){
+				qDebug() << "DecodeThread - av_read_pause";
+				_is->read_pause_return = av_read_pause(_pFormatCtx);
+			} else {
+				qDebug() << "DecodeThread - av_read_play";
+				av_read_play(_pFormatCtx);
+			}
 		};
 
 		//SEEK - controllo se ho una richiesta di seek
@@ -184,6 +194,9 @@ void DecodeThread::run(){
 
 			_is->seek_req = 0;			//resetto a 0 (false) la richiesta di seek
 		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		//FINE CICLO DECODIFICA
 
 		//qui lui inzialmente usava un peso proprio totale della lista in byte, noi usiamo solo numero di elementi
 		//bisogna ridurre le 2 costanti

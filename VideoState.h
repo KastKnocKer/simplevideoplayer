@@ -36,6 +36,7 @@ public:
 	int64_t			totalFramesNumber;	//numero totale di frame
 	Status			ut;
 	AVPacket		*flush_pkt;
+	int				read_pause_return;
 
 
 	//SEEK
@@ -79,6 +80,7 @@ public:
 	AVStream        *video_st;		//stream del video
 	uint64_t		global_video_pkt_pts;
 	double			video_current_pts;	//current displayed pts (different from video_clock if frame fifos are used)
+	double			video_current_pts_drift;
 	int64_t			video_current_pts_time; ///time (av_gettime) at which we updated video_current_pts - used to have running video pts
 
 

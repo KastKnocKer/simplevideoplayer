@@ -31,7 +31,7 @@ void AVClock2::video_refresh_timer(void){
 	double sync_threshold = 0.0;
 	double ref_clock = 0.0;
 	double diff = 0.0;
-	double pts = 0.0;
+	double frame_current_pts = 0.0;
 
 	
 
@@ -50,22 +50,21 @@ void AVClock2::video_refresh_timer(void){
         {
             /* take an element from the queue */
 			std::pair<AVFrame*, double> p = _is->pictq.Get();
-			pts = p.second;
+			frame_current_pts = p.second;
 			pFrameRGB = p.first;
 
-			_is->video_current_pts = pts;
+			_is->video_current_pts = frame_current_pts;
 			_is->video_current_pts_time = av_gettime();
-
+			_is->video_current_pts_drift = _is->video_current_pts - (_is->video_current_pts_time/1000000.0);
 			
 			//qDebug() << "current time: " <<  (int) _is->frame_timer;
 
 			//qDebug() << "master clock: " << get_master_clock();
 			////uguale a fare qDebug() << "current pts: " << pts;
 
-			//qDebug() << "num frame attuale: " << _is->video_st->codec->frame_number;
+			//qDebug() << "num frame attuale: " << _is->video_st->codec->frame_number;			
 			
-			
-            delay = pts - _is->frame_last_pts; /* the pts from last time */
+            delay = frame_current_pts - _is->frame_last_pts; /* the pts from last time */
 			//we make sure that the delay between the PTS and the previous PTS make sense
             if (delay <= 0 || delay >= 1.0)
             {
@@ -74,14 +73,14 @@ void AVClock2::video_refresh_timer(void){
             }
             /* save for next time */
             _is->frame_last_delay = delay;
-            _is->frame_last_pts = pts;
+            _is->frame_last_pts = frame_current_pts;
 
 			/* update delay to sync to audio if not master source */
 			if(clock_type != VideoClock){
   
 				/* update delay to sync to audio */
 				ref_clock = get_audio_clock();
-				diff = pts - ref_clock;
+				diff = frame_current_pts - ref_clock;
 
 				/* Skip or repeat the frame. Take delay into account
 				 FFPlay still doesn't "know if this is the best guess." */
@@ -108,6 +107,8 @@ void AVClock2::video_refresh_timer(void){
 
             /* computer the REAL delay */
             actual_delay = _is->frame_timer - (av_gettime() / 1000000.0);
+
+			qDebug() << "delay: " << delay << "actual delay: " << actual_delay << "frame current pts: " << frame_current_pts << "A-V: " << -diff;
 
             if (actual_delay < 0.010)
             {
@@ -178,10 +179,18 @@ come calcoliamo il video_clock
 video clock = PTS_of_last_read_frame + (current_time - time_elapsed_since_PTS_value_was_get)
 */
 double AVClock2::get_video_clock(){
+	
+	if(_is->ut.getPauseValue() == true){
+		return _is->video_current_pts;
+	} else {
+		return _is->video_current_pts_drift + av_gettime()/1000000.0;	
+	}
 
-  double delta;
-  delta = (av_gettime() - _is->video_current_pts_time) / 1000000.0;
-  return _is->video_current_pts + delta;
+	/*
+		double delta;
+		delta = (av_gettime() - _is->video_current_pts_time) / 1000000.0;
+		return _is->video_current_pts + delta;
+	*/
 }
 
 

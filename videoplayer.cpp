@@ -261,7 +261,7 @@ void videoplayer::pause(void){
 	seekbackwardAction->setDisabled(true);
 
 	is.ut.setPauseValue(true);
-	//_clock->reset();
+
 	SDL_PauseAudio(1);
 	
 	
@@ -274,10 +274,17 @@ void videoplayer::resume(){
 
 	qDebug() << "RESUME";
 
-	this->playing();				//riabilito i corrispettivi pulsanti
-	//_clock->start_slider();
+	if(is.ut.getPauseValue() == true){
+		is.frame_timer += av_gettime()/1000000.0 + is.video_current_pts_drift - is.video_current_pts;
+		if(is.read_pause_return != AVERROR(ENOSYS)){
+			is.video_current_pts = is.video_current_pts_drift + av_gettime()/1000000.0;
+		}
+		is.video_current_pts_drift = is.video_current_pts - av_gettime()/1000000.0;
+	}
 	is.ut.setPauseValue(false);
-	//_clock->schedule_refresh(1);
+
+	this->playing();				//riabilito i corrispettivi pulsanti
+
 	SDL_PauseAudio(0);
 }
 
