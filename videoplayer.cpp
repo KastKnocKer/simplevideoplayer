@@ -41,7 +41,7 @@ videoplayer::videoplayer(QWidget *parent)
     //Ora mi occupo dei pulsati
     playAction = new QAction(style()->standardIcon(QStyle::SP_MediaPlay), tr("Play"), this);
     playAction->setShortcut(tr("Ctrl+P"));
-    playAction->setDisabled(false);
+    playAction->setDisabled(true);
     pauseAction = new QAction(style()->standardIcon(QStyle::SP_MediaPause), tr("Pause"), this);
     pauseAction->setShortcut(tr("Ctrl+A"));
     pauseAction->setDisabled(true);
@@ -70,10 +70,10 @@ videoplayer::videoplayer(QWidget *parent)
 	utilizzo di un signalMapper per collegare l'evento di pressione dei pulsanti SEEK,
 	con un particolare valore che verra inviato allo SLOT seek
 	*/
-	signalMapper->setMapping(seekforwardAction, 10.0);
-	signalMapper->setMapping(seekbackwardAction, -10.0);
-	signalMapper->setMapping(skipbackwardAction, -60.0);
-	signalMapper->setMapping(skipforwardAction, 60.0);
+	signalMapper->setMapping(seekforwardAction, 10);
+	signalMapper->setMapping(seekbackwardAction, -10);
+	signalMapper->setMapping(skipbackwardAction, -60);
+	signalMapper->setMapping(skipforwardAction, 60);
 
 	connect(skipforwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
 	connect(seekforwardAction, SIGNAL(triggered()), signalMapper, SLOT(map()));
@@ -225,8 +225,7 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  // CAMBIO STATO DI RIPRODUZIONE
 
  /**
- metodo richiamato dall'event listener del bottone STOP
- o quando chiudo la finestra di riproduzione
+ metodo richiamato dopo che ho chiuso la finestra di riproduzione
  */
 void videoplayer::stop(){
 
@@ -241,9 +240,24 @@ void videoplayer::stop(){
 	seekbackwardAction->setDisabled(true);
 	
 	is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
+	
 	_clock->reset();			//stoppo il timer di refresh
 	this->resetSlider();		//resetto slider e LCD	
 	SDL_Quit();					//chiude completamente il corrente stream audio!!
+}
+
+/**
+SLOT chiamata in seguito alla pressione di QUIT
+*/
+void videoplayer::quit(){
+
+	qDebug() << "Quit";
+
+	is.ut.setStopValue(true);
+	is.ut.setPauseValue(false);
+	/*is.audioq.quit();
+	is.videoq.quit();
+	SDL_Quit();*/
 }
 
 /**
@@ -263,7 +277,6 @@ void videoplayer::pause(void){
 	is.ut.setPauseValue(true);
 
 	SDL_PauseAudio(1);
-	
 	
 }
 
@@ -302,16 +315,42 @@ void videoplayer::playing(){
 	seekbackwardAction->setDisabled(false);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// SEEK
+
+ /**
+ SLOT chiamata in seguito alla pressione di uno dei tasti di SEEK
+ */
+void videoplayer::seek(int incr){
+
+	 qDebug() << "seek" << incr;
+
+	 /**
+	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
+	 il tempo di seek a quello del master clock
+	 */
+	 double pos = _clock->get_master_clock();
+	 pos += (double) incr;	
+
+	 qDebug() << "seek pos: " << pos;
+
+	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
+	 //(che e unita di avcodec)
+	 stream_seek((int64_t) (pos*AV_TIME_BASE), (int64_t) (incr* AV_TIME_BASE)); 
+ }
+
 /**
-SLOT chiamata in seguito alla pressione di QUIT
+funzione utilizzata per impostare le variabili di seek
 */
-void videoplayer::quit(){
-	qDebug() << "Quit";
-	is.ut.setStopValue(true);
-	is.audioq.quit();
-	is.videoq.quit();
-	SDL_Quit();
-}
+void videoplayer::stream_seek(int64_t pos, int64_t rel){
+
+	if(!is.seek_req){
+		is.seek_pos = pos; //abbiamo convertito il tempo nell'avcodec timestamp
+		is.seek_rel = rel;
+		is.seek_flags = AVSEEK_FLAG_FRAME;
+		is.seek_req = 1;
+	}
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -326,12 +365,11 @@ void videoplayer::loadFile(){
 	window = new Video();
 	/* alla chiusura della finestra mando in stop */
 	connect(window, &Video::windowClosing, this, &videoplayer::stop);
-	/* collego il bottone stop alla chiusura della finestra */
-	connect(stopAction, &QAction::triggered, window, &Video::closeWindow);
+	/* collego il bottone stop alla rispettiva SLOT */
+	connect(stopAction, &QAction::triggered, this, &videoplayer::quit);
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, window, &Video::updateGL);
-	connect(_clock, &AVClock2::playend, window, &Video::closeWindow);
 
 	_clock->reset();												//resetto il clock
 
@@ -362,6 +400,7 @@ void videoplayer::loadFile(){
 	_demuxer->SetAVClock(_clock);
 	_demuxer->set(_demuxer);										//setto puntatore statico all'oggetto
 	is.parse_tid = _demuxer;
+	connect(_demuxer, &DecodeThread::eof, window, &Video::closeWindow);
 	_demuxer->start();
 
 	/**
@@ -397,39 +436,3 @@ int videoplayer::initializeSDL(){
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// SEEK
-
- /**
- SLOT chiamata in seguito alla pressione di uno dei tasti di SEEK
- */
-void videoplayer::seek(int incr){
-
-	 qDebug() << "seek" << incr;
-
-	 /**
-	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
-	 il tempo di seek a quello del master clock
-	 */
-	 double pos = _clock->get_master_clock();
-	 pos += (double) incr;	
-
-	 qDebug() << "seek pos: " << pos;
-
-	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
-	 //(che e unita di avcodec)
-	 stream_seek((int64_t) (pos*AV_TIME_BASE), (double) incr); 
- }
-
-/**
-funzione utilizzata per impostare le variabili di seek
-*/
-void videoplayer::stream_seek(int64_t pos, double rel){
-
-	if(!is.seek_req){
-		is.seek_pos = pos; //abbiamo convertito il tempo nell'avcodec timestamp
-		is.seek_flags = rel < 0 ? AVSEEK_FLAG_BACKWARD : 0;
-		qDebug() << "seek, verso 1 INDIETRO, 0 AVANTI: " << is.seek_flags;
-		is.seek_req = 1;
-	}
-};

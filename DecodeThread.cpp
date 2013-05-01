@@ -80,13 +80,15 @@ void DecodeThread::run(){
 	//if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &callback, &io_dict)){	
 	if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &_pFormatCtx->interrupt_callback, &io_dict)){	
 		qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
-		exit(1);
+		fail();
+		return;
 	}
 
 	/* APERTURA FILE VIDEO */
 	if(avformat_open_input(&_pFormatCtx, _is->getSourceFilename().c_str(), NULL, NULL) != 0){	//Apro il file
 		qDebug() << "Impossibile aprire il file";		
-		exit(1);
+		fail();
+		return;
 	}
 
 	_is->pFormatCtx = _pFormatCtx;
@@ -95,7 +97,8 @@ void DecodeThread::run(){
 
 	if(avformat_find_stream_info(_pFormatCtx, NULL)<0){											//Leggo le informazioni sullo stream
 		qDebug() << "Impossibile leggere le info sullo stream";	
-		exit(1);
+		fail();
+		return;
 	}
 
 	av_dump_format(_pFormatCtx, 0, _is->getSourceFilename().c_str(), 0);						//Mostro a video le info sul file
@@ -119,6 +122,7 @@ void DecodeThread::run(){
 	if(_is->videoStream < 0 || _is->audioStream < 0) {
 		qDebug() << "could not open codecs " << QString::fromStdString(_is->getSourceFilename());
 		fail();		//richiamo la funzione che mi va a chiudere la finestra
+		return;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,10 +152,12 @@ void DecodeThread::run(){
 		//SEEK - controllo se ho una richiesta di seek
 		if(_is->seek_req){
 
-			int stream_index = -1;
-			int64_t seek_target = _is->seek_pos; //nuovo tempo desiderato
-			int64_t DesiredFrameNumber;
+			int stream_index = -1;	//reset variabile identifica lo stream
 
+			int64_t seek_target = _is->seek_pos; //nuovo tempo desiderato
+			int64_t seek_min= _is->seek_rel > 0 ? seek_target - _is->seek_rel + 2: INT64_MIN;
+	        int64_t seek_max= _is->seek_rel < 0 ? seek_target - _is->seek_rel - 2: INT64_MAX;
+			int64_t DesiredFrameNumber;
 
 			if(_is->videoStream >= 0){
 				stream_index = _is->videoStream;
@@ -174,12 +180,11 @@ void DecodeThread::run(){
       
 			//if(avformat_seek_file(_is->pFormatCtx, stream_index, INT64_MIN, seek_target, seek_target, _is->seek_flags) < 0) {
 			if(avformat_seek_file(_is->pFormatCtx, stream_index, 0, DesiredFrameNumber, DesiredFrameNumber, AVSEEK_FLAG_FRAME) < 0) {
-			
-				qDebug() << "error while seeking " << (long long) DesiredFrameNumber;
-
+			//if(avformat_seek_file(_is->pFormatCtx, stream_index, seek_min, seek_target, seek_max, _is->seek_flags)<0){
+				qDebug() << "SEEKING ERROR" << (long long) DesiredFrameNumber;
 			} 
 			else {
-				qDebug() << "seeking SUCCESS" << (long long) DesiredFrameNumber;
+				qDebug() << "SEEKING SUCCESS" << (long long) DesiredFrameNumber;
 
 				//svuoto le liste e inserisco pacchetto di flush
 				if(_is->audioStream >= 0) {
@@ -193,17 +198,38 @@ void DecodeThread::run(){
 			}
 
 			_is->seek_req = 0;			//resetto a 0 (false) la richiesta di seek
+			_is->ut.setEOFValue(false);
 		}
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		//FINE CICLO DECODIFICA
 
 		//qui lui inzialmente usava un peso proprio totale della lista in byte, noi usiamo solo numero di elementi
 		//bisogna ridurre le 2 costanti
 		if(_is->audioq.getSize() > MAX_AUDIOQ_SIZE || _is->videoq.GetSize() > MAX_VIDEOQ_SIZE) {
 			//SDL_Delay(10);	//faccio una sleep
-			this->usleep(10);
+			this->usleep(10000);
 			continue;
+		}
+
+		if(_is->ut.getEOFValue() == true){
+
+			qDebug() << "END OF FILE - DECODING";
+
+			if(_is->videoStream >= 0){
+				av_init_packet(_packet);
+                _packet->data = NULL;
+                _packet->size = 0;
+                _packet->stream_index = _is->videoStream;
+				_is->videoq.Put(_packet);
+            }
+			this->usleep(10000);
+            if(_is->audioq.getSize() + _is->videoq.GetSize() == 0){
+
+				//TODO - possibile implementazione del loop
+				
+				qDebug() << "EOF - liste vuote";
+				fail();
+				return;
+			}
 		}
 
 
@@ -212,9 +238,9 @@ void DecodeThread::run(){
 			//è stata raggiunta la fine del file
 			if(_is->pFormatCtx->pb->error == 0) {
 
-				qDebug() << "END OF FILE - DECODING";
 				_is->ut.setEOFValue(true);										//setto il flag di fine file
-				break;
+				continue;
+				//break;
 
 			//errore di lettura del pacchetto
 			} else {
@@ -234,18 +260,20 @@ void DecodeThread::run(){
 			av_free_packet(_packet);
 		}
 	}
-	//FINE CICLO DI DECODIFICA
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	//FINE CICLO DECODIFICA
 
 	qDebug() << "DecodeThread - esco dal ciclo di decodifica";
 
 	/* all done - wait for it*/
-	/*while(_is->ut.getStopValue() != true){
-		this->sleep(100);
-	}*/
+	while(_is->ut.getStopValue() != true){
+		this->usleep(100000);
+	}
 
 	//avformat_free_context(_pFormatCtx);
 
-	//fail();
+	fail();
 
 	return;
 };
@@ -253,9 +281,8 @@ void DecodeThread::run(){
 //funzione eseguita in caso di errore/chiusura
 void DecodeThread::fail(void){
 
-	SDL_Event event;
-	event.type = FF_QUIT_EVENT;
-	event.user.data1 = _is;
+	qDebug() << "fail!!";
+	emit eof();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

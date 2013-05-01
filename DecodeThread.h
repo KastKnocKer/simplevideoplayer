@@ -51,6 +51,7 @@ signals:
 
 	//per settare il range dello slider
 	void setSliderRange(int start, int end);
+	void eof();
 
 public:
 

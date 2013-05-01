@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_AVClock2_t {
-    QByteArrayData data[4];
-    char stringdata[42];
+    QByteArrayData data[8];
+    char stringdata[81];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,9 +32,14 @@ static const qt_meta_stringdata_AVClock2_t qt_meta_stringdata_AVClock2 = {
 QT_MOC_LITERAL(0, 0, 8),
 QT_MOC_LITERAL(1, 9, 10),
 QT_MOC_LITERAL(2, 20, 0),
-QT_MOC_LITERAL(3, 21, 19)
+QT_MOC_LITERAL(3, 21, 7),
+QT_MOC_LITERAL(4, 29, 12),
+QT_MOC_LITERAL(5, 42, 11),
+QT_MOC_LITERAL(6, 54, 19),
+QT_MOC_LITERAL(7, 74, 5)
     },
-    "AVClock2\0needupdate\0\0video_refresh_timer\0"
+    "AVClock2\0needupdate\0\0playend\0updateslider\0"
+    "framenumber\0video_refresh_timer\0reset\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -44,23 +49,29 @@ static const uint qt_meta_data_AVClock2[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       3,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   24,    2, 0x05,
+       1,    0,   39,    2, 0x05,
+       3,    0,   40,    2, 0x05,
+       4,    1,   41,    2, 0x05,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,   25,    2, 0x0a,
+       6,    0,   44,    2, 0x0a,
+       7,    0,   45,    2, 0x0a,
 
  // signals: parameters
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    5,
 
  // slots: parameters
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -72,7 +83,10 @@ void AVClock2::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         AVClock2 *_t = static_cast<AVClock2 *>(_o);
         switch (_id) {
         case 0: _t->needupdate(); break;
-        case 1: _t->video_refresh_timer(); break;
+        case 1: _t->playend(); break;
+        case 2: _t->updateslider((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->video_refresh_timer(); break;
+        case 4: _t->reset(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -84,8 +98,19 @@ void AVClock2::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
                 *result = 0;
             }
         }
+        {
+            typedef void (AVClock2::*_t)();
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&AVClock2::playend)) {
+                *result = 1;
+            }
+        }
+        {
+            typedef void (AVClock2::*_t)(int );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&AVClock2::updateslider)) {
+                *result = 2;
+            }
+        }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject AVClock2::staticMetaObject = {
@@ -113,13 +138,13 @@ int AVClock2::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 5;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 5)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 5;
     }
     return _id;
 }
@@ -128,5 +153,18 @@ int AVClock2::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 void AVClock2::needupdate()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, 0);
+}
+
+// SIGNAL 1
+void AVClock2::playend()
+{
+    QMetaObject::activate(this, &staticMetaObject, 1, 0);
+}
+
+// SIGNAL 2
+void AVClock2::updateslider(int _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 QT_END_MOC_NAMESPACE

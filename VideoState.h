@@ -43,6 +43,7 @@ public:
 	int             seek_req;			//controllo se è stato o meno richiesto il seek
 	int             seek_flags;			//flag per sapere se sto facendo un forward o backward
 	int64_t         seek_pos;			//posizione del seek (nuova posizione calcolata)
+	int64_t			seek_rel;			//incremento nel timestamp di riproduzione
 
 	//CLOCK
 	int             av_sync_type;

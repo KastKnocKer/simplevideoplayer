@@ -61,7 +61,7 @@ private:
 	DecodeThread *_demuxer;									//puntatore al thread di decodifica
 	AVClock2 *_clock;
 
-	void stream_seek(int64_t pos, double rel);
+	void stream_seek(int64_t pos, int64_t rel);
 
 signals:
 

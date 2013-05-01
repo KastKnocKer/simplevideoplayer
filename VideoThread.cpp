@@ -33,8 +33,9 @@ void VideoThread::run(){
 	*/
 	while(1) {
 
-		if(_is->ut.getPauseValue() == true){;
+		if(_is->ut.getPauseValue() && !_is->ut.getStopValue()){
 			continue;
+			//this->usleep(10000);
 		};
 
 		// leggo i paccehtti dalla coda

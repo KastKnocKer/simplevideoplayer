@@ -57,6 +57,7 @@ VideoState::VideoState(){
 	seek_req = 0;
 	seek_flags = 0;
 	seek_pos = 0;
+	seek_rel = 0;
 
 	currentTime = 0;
 

@@ -128,7 +128,7 @@ void Video::closeWindow(){
 }
 
 /**
-ridefinizione dell'avento di chiusura della finestra, emetto uno specifico segnale
+ridefinizione dell'avvento di chiusura della finestra, emetto uno specifico segnale
 */
 void Video::closeEvent(QCloseEvent *event){
 	qDebug() << "VIDEO - WINDOW CLOSING";

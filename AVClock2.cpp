@@ -108,7 +108,7 @@ void AVClock2::video_refresh_timer(void){
             /* computer the REAL delay */
             actual_delay = _is->frame_timer - (av_gettime() / 1000000.0);
 
-			qDebug() << "delay: " << delay << "actual delay: " << actual_delay << "frame current pts: " << frame_current_pts << "A-V: " << -diff;
+			//qDebug() << "delay: " << delay << "actual delay: " << actual_delay << "frame current pts: " << frame_current_pts << "A-V: " << -diff;
 
             if (actual_delay < 0.010)
             {
@@ -128,12 +128,12 @@ void AVClock2::video_refresh_timer(void){
 			/* caso in cui ho finito la riproduzione, sono all'ultimo frame */
 			if(_is->video_st->codec->frame_number == (int) _is->totalFramesNumber){
 
-				qDebug() << "AVCLOCK - ultimo frame visualizzato";
+				//qDebug() << "AVCLOCK - ultimo frame visualizzato";
 
-				//TODO fai emettere segnale dopo msec ultimo frame
-				emit playend();
+				////TODO fai emettere segnale dopo msec ultimo frame
+				//emit playend();
 
-				return;
+				//return;
 
 			} else {
 
