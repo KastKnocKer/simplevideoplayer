@@ -9,7 +9,8 @@ Video::Video(QWidget *parent) : QGLWidget(parent) {
 	h = 0;
 	display = false;
 
-	count = true;	
+	count = true;
+	_extClose = false;
 
 }
 
@@ -93,7 +94,9 @@ void Video::mouseMoveEvent(QMouseEvent *event) {
 void Video::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
     case Qt::Key_Escape:
-        close();
+        //close();
+		qDebug() << "Video - X pressed";
+		emit Xpressed();
         break;
     default:
         event->ignore();
@@ -124,6 +127,7 @@ void Video::startdisplay(void){
 SLOT per imporre la chiusura della finestra
 */
 void Video::closeWindow(){
+	_extClose = true;
 	this->close();
 }
 
@@ -131,6 +135,16 @@ void Video::closeWindow(){
 ridefinizione dell'avvento di chiusura della finestra, emetto uno specifico segnale
 */
 void Video::closeEvent(QCloseEvent *event){
-	qDebug() << "VIDEO - WINDOW CLOSING";
-	emit windowClosing();
+	
+	//CASO PREMO CHIUDI FINESTRA
+	if(!_extClose){
+		qDebug() << "VIDEO - WINDOW CLOSING INT";
+		emit Xpressed();
+		event->ignore();
+	}
+	else{
+		qDebug() << "VIDEO - WINDOW CLOSING ext";
+		emit windowClosing();
+	}
+	_extClose = false;
 }

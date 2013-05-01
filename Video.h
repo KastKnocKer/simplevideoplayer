@@ -31,6 +31,7 @@ public:
 signals:
 
 	void windowClosing();	//segnale emesso quando la finestra è stata forzatamente chiusa
+	void Xpressed();
 
 public slots:
 
@@ -56,6 +57,8 @@ private:
 	GLuint _texture_video;
 	bool display;
 	bool count;
+
+	bool _extClose;
 
 };
 #endif  /* _GLWIDGET_H */

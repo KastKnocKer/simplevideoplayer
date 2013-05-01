@@ -239,7 +239,7 @@ void videoplayer::stop(){
 	seekforwardAction->setDisabled(true);
 	seekbackwardAction->setDisabled(true);
 	
-	is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
+	//is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
 	
 	_clock->reset();			//stoppo il timer di refresh
 	this->resetSlider();		//resetto slider e LCD	
@@ -258,6 +258,7 @@ void videoplayer::quit(){
 	/*is.audioq.quit();
 	is.videoq.quit();
 	SDL_Quit();*/
+
 }
 
 /**
@@ -367,6 +368,7 @@ void videoplayer::loadFile(){
 	connect(window, &Video::windowClosing, this, &videoplayer::stop);
 	/* collego il bottone stop alla rispettiva SLOT */
 	connect(stopAction, &QAction::triggered, this, &videoplayer::quit);
+	connect(window, &Video::Xpressed, this, &videoplayer::quit);
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
 	connect(_clock, &AVClock2::needupdate, window, &Video::updateGL);
