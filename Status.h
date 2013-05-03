@@ -4,6 +4,7 @@
 classe per la gestione di parametri fondamentali per piu processi dell'applicativo
 i valori sono privati e accessibili solo tramite apposite chiamate
 */
+#include <QDebug>
 
 extern "C"	{
 	#include "ffmpeg\include\libavcodec\avcodec.h"
@@ -14,6 +15,7 @@ extern "C"	{
 	#undef main
 }
 
+class QDebug;
 class Status{
 
 private:

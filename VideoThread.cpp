@@ -47,6 +47,7 @@ void VideoThread::run(){
 
 		//controllo se ho letto pacchetto di FLUSH
 		if(packet->data == _is->flush_pkt->data){
+			qDebug() << "VideoThread - letto FLUSH PKT";
 			avcodec_flush_buffers(_is->video_st->codec);
 			continue;
 		}

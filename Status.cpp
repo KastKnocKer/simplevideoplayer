@@ -18,6 +18,7 @@ Status::~Status(){
 ////////////////////////////////////////////////////////
 
 void Status::setStopValue(bool quit){
+	qDebug() << "QUIT" << quit;
 	_quit = quit;
 };
 
@@ -28,6 +29,7 @@ bool Status::getStopValue(){
 ////////////////////////////////////////////////////////
 
 void Status::setPauseValue(bool pause){
+	qDebug() << "PAUSE" << pause;
 	_pause = pause;
 };
 
@@ -56,6 +58,7 @@ bool Status::isPauseChanged(){
 ////////////////////////////////////////////////////////
 
 void Status::setEOFValue(bool eof){
+	qDebug() << "EOF" << eof;
 	_eof = eof;
 }
 	

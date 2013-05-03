@@ -16,6 +16,7 @@
 #include "DecodeThread.h"
 #include "VideoState.h"
 #include "AVClock2.h"
+#include <inttypes.h>
 
 
 class QMenu;

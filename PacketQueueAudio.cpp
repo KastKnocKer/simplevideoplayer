@@ -16,7 +16,7 @@ PacketQueueAudio::~PacketQueueAudio(void)
 int PacketQueueAudio::Put(AVPacket* pkt){
 
 	if(pkt != ut->getFlushPkt() && av_dup_packet(pkt)<0){
-		qDebug() << "packet audio - put";
+		qDebug() << "PacketQueueAudio - packet not duplicated";
 		return -1;
 	}
 
@@ -31,29 +31,28 @@ int PacketQueueAudio::Put(AVPacket* pkt){
 	return 0;
 }
 
+/* return < 0 if aborted, 0 if no packet and > 0 if packet.  */
 int PacketQueueAudio::Get(AVPacket* pkt, int block){
+
+	AVPacket prelevato;
+	int ret = 0;
 
 	//controllo se quit non vado a leggere altri pacchetti
 	if(ut->getStopValue() == true){
-		qDebug() << "packet audio - get - stop";
+		qDebug() << "PacketQueueVideo - rilevato QUIT";
 		return -1;
 	}
 
 	SDL_LockMutex(_mutex);									//Entro nella sezione critica per accedere in modo esclusivo alla lista
 
 	if(!queue.empty()) {
-		*pkt = queue.front();								//ottengo il primo elemento
+		prelevato = queue.front();							//ottengo il primo elemento
 		queue.pop_front();									//elimino dalla lista elemento preso
-	}
-	else if(ut->getEOFValue() == true){
-		qDebug() << "packet audio - get - eof";
-		/* se la coda è vuota, controllo il flag di eof, se è true
-		allora abbiamo letto e visualizzato tutti i pachetti. Allora
-		solo in questo momento devo settare quit*/
-		ut->setStopValue(true);
+		*pkt = prelevato;									//ottengo un puntatore all'oggetto prelevato
+		ret = 1;
 	}
 	else if (!block) {										//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
-		return -1;
+		ret = 0;
 	}
 	else{													//caso lista vuota, mi metto in attesa
 		SDL_CondWait(_cond, _mutex);
@@ -61,7 +60,7 @@ int PacketQueueAudio::Get(AVPacket* pkt, int block){
 	
 	SDL_UnlockMutex(_mutex);	
 
-	return 0;
+	return ret;
 }
 
 /**
@@ -99,9 +98,9 @@ void PacketQueueAudio::quit(){
 
 	SDL_LockMutex(_mutex);
 
-	SDL_CondSignal(_cond);		//Sveglio eventualmente il processo addormentato
 	queue.clear();				//Libero la coda
-
+	SDL_CondSignal(_cond);		//Sveglio eventualmente il processo addormentato
+	
 	SDL_UnlockMutex(_mutex);
 }
 

@@ -204,7 +204,7 @@ void DecodeThread::run(){
 
 		//qui lui inzialmente usava un peso proprio totale della lista in byte, noi usiamo solo numero di elementi
 		//bisogna ridurre le 2 costanti
-		if(_is->audioq.getSize() > MAX_AUDIOQ_SIZE || _is->videoq.GetSize() > MAX_VIDEOQ_SIZE) {
+		if(_is->audioq.getSize() > MAX_AUDIOQ_SIZE || _is->videoq.getSize() > MAX_VIDEOQ_SIZE) {
 			//SDL_Delay(10);	//faccio una sleep
 			this->usleep(10000);
 			continue;
@@ -222,7 +222,7 @@ void DecodeThread::run(){
 				_is->videoq.Put(_packet);
             }
 			this->usleep(10000);
-            if(_is->audioq.getSize() + _is->videoq.GetSize() == 0){
+            if(_is->audioq.getSize() + _is->videoq.getSize() == 0){
 
 				//TODO - possibile implementazione del loop
 				

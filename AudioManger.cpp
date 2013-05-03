@@ -5,25 +5,25 @@
 /* AUDIO */
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* decode one audio frame and returns its uncompressed size */
 int audio_decode_frame(VideoState *is, double *pts_ptr) {
 
-	AVPacket pkt;							//Pacchetto audio da mandare in output
-	int n, len1, data_size = 0;
+	AVPacket *pkt = &is->audio_pkt;							//Pacchetto audio in cui copiare quello della coda
+	int n = 0;
+	int len1 = -1; 
+	int data_size = 0;
 	double pts;
 
-	while(is->audioq.Get(&pkt, 1) < 0 && (is->ut.getStopValue() == false)){;		
-		//Prelevo il primo pacchetto dalla coda,
-		//attende fino a che non c'è un pacchetto, è inutile proseguire...
-	}
-	is->audio_pkt_data = pkt.data;
-	is->audio_pkt_size = pkt.size;
-
 	while(1) {
-		while(&is->audio_pkt_size > 0) {
+
+		/* questo perchè in un pacchetto audio posso essere presenti + frame audio */
+		while(is->audio_pkt_size > 0) {
 			int got_frame = 0;
-			len1 = avcodec_decode_audio4(is->audio_st->codec, &is->audio_frame, &got_frame, &pkt);		//Decode the audio frame of size avpkt->size from avpkt->data into frame
-			if(len1 < 0)
-			{
+
+			//Decode the audio frame of size avpkt->size from avpkt->data into frame
+			len1 = avcodec_decode_audio4(is->audio_st->codec, &is->audio_frame, &got_frame, pkt);
+
+			if(len1 < 0){
 				/* if error, skip frame */
 				is->audio_pkt_size = 0;
 				break;
@@ -54,29 +54,30 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			return data_size;
 		}
 
-		if(pkt.data)
-			av_free_packet(&pkt);
+		if(pkt->data)
+			av_free_packet(pkt);
 
 		if((is->ut.getStopValue() == true) || (is->ut.getPauseValue() == true)){
 			return -1;
 		}
 
 		/* read next packet */
-		if(is->audioq.Get(&pkt, 1) < 0){
-		  return -1;
+		if(is->audioq.Get(pkt, 1) < 0){
+			return -1;
 		}
 
-		if(pkt.data == is->flush_pkt->data){
+		if(pkt->data == is->flush_pkt->data){
+			qDebug() << "AudioManager - letto FLUSH PKT";
 			avcodec_flush_buffers(is->audio_st->codec);
 			continue;
 		}
 
-		is->audio_pkt_data = pkt.data;
-		is->audio_pkt_size = pkt.size;
+		is->audio_pkt_data = pkt->data;
+		is->audio_pkt_size = pkt->size;
 
 		/* if update, update the audio clock with the pts */
-		if(pkt.pts != AV_NOPTS_VALUE){
-			is->audio_clock = av_q2d(is->audio_st->time_base)*pkt.pts;
+		if(pkt->pts != AV_NOPTS_VALUE){
+			is->audio_clock = av_q2d(is->audio_st->time_base)*pkt->pts;
 		}
 	}
 }
@@ -111,6 +112,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
 		if(len1 > len){
 			len1 = len;
 		}
+		//copio in audio bug una parte di audio buf index di grandezza len1
 		memcpy(stream, (uint8_t *)is->audio_buf  + is->audio_buf_index, len1);
 		len -= len1;
 		stream += len1;

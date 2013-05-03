@@ -3,6 +3,7 @@
 //COSTRUTTORE
 videoplayer::videoplayer(QWidget *parent)
 {
+
 	signalMapper = new QSignalMapper(this);
 
 	createMenu();	
@@ -232,7 +233,7 @@ void videoplayer::stop(){
 	qDebug() << "STOP";
 
 	pauseAction->setDisabled(true);
-	playAction->setDisabled(false);
+	playAction->setDisabled(true);
 	stopAction->setDisabled(true);
 	skipforwardAction->setDisabled(true);
 	skipbackwardAction->setDisabled(true);

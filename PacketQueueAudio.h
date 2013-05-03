@@ -29,8 +29,8 @@ public:
 	PacketQueueAudio(void);
 	~PacketQueueAudio(void);
 
-	int Get(AVPacket* pkt, int block);
-	int Put(AVPacket* pkt);
+	int Get(AVPacket *pkt, int block);
+	int Put(AVPacket *pkt);
 
 	/**
 	metodo per svuotare la lista
@@ -46,11 +46,6 @@ public:
 
 	SDL_mutex* getMutex();
 	SDL_cond* getCond();
-
-	/**
-	metodo per settare il riferimento al pacchetto di FLUSH
-	*/
-	void setFlushPkt(AVPacket *pkt);
 
 	void setUtility(Status *ut);
 };

@@ -39,11 +39,13 @@ public:
 
 	void quit();
 
-	//ritorna la dimensione della lista
-	int GetSize();
+	/**
+	ritorna la dimensione della lista (numero pacchetti)
+	*/
+	int getSize();
 
 	QMutex* getMutex();
-	QWaitCondition* GetCond();
+	QWaitCondition* getCond();
 
 	void setUtility(Status *ut);
 };
