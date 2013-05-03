@@ -9,11 +9,17 @@
 
 //FFMPEG
 extern "C"	{
-	#include "ffmpeg\include\libavcodec\avcodec.h"
-	#include "ffmpeg\include\libavformat\avformat.h"
-	#include "ffmpeg\include\libswscale\swscale.h"
-	#include "ffmpeg\include\libavutil\avutil.h"
+	#include "dev\include\libavcodec\avcodec.h"
+	#include "dev\include\libavformat\avformat.h"
+	#include "dev\include\libswscale\swscale.h"
+	#include "dev\include\libavutil\avutil.h"
 }
+
+#pragma comment(lib, "dev\\lib\\avcodec.lib")
+#pragma comment(lib, "dev\\lib\\avutil.lib")
+#pragma comment(lib, "dev\\lib\\avformat.lib")
+#pragma comment(lib, "dev\\lib\\swscale.lib")
+
 
 class Video: public QGLWidget {
 

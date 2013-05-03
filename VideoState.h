@@ -13,8 +13,8 @@
 #include "VideoPicture.h"
 #include "Video.h"
 
-#include <SDL.h>
-#include <SDL_thread.h>
+#include "SDL\include\SDL.h"
+#include "SDL\include\SDL_thread.h"
 
 
 /**
@@ -59,7 +59,8 @@ public:
 	//AUDIO
 	double			audio_clock;
 	AVStream        *audio_st;
-	uint8_t         audio_buf[(AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2];
+	//uint8_t         audio_buf[(AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2];
+	uint8_t  		audio_buf[(192000*3)/2];
 	unsigned int    audio_buf_size;
 	unsigned int    audio_buf_index;
 	AVFrame         audio_frame;

@@ -46,9 +46,6 @@
     <ClCompile Include="GeneratedFiles\qrc_videoplayer.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VideoState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -128,9 +125,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bitmap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VideoState.h">
       <Filter>Header Files</Filter>
     </ClInclude>

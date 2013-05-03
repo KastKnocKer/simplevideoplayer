@@ -2,6 +2,7 @@
 
 //QT
 #include <QDebug>
+
 #include "SDL\include\SDL.h"
 #include "SDL\include\SDL_thread.h"
 

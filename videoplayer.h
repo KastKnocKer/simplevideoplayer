@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <thread>
+#include <inttypes.h>
 
 #include <QDialog>
 #include <QWidget>
@@ -16,7 +17,7 @@
 #include "DecodeThread.h"
 #include "VideoState.h"
 #include "AVClock2.h"
-#include <inttypes.h>
+
 
 
 class QMenu;
