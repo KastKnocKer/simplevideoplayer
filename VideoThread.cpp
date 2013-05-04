@@ -41,13 +41,17 @@ void VideoThread::run(){
 		// leggo i paccehtti dalla coda
 		if(_is->videoq.Get(packet, 1) < 0){
 			// means we quit getting packets
+			if(_is->debug){
 			qDebug() << "quitting getting packets - videothread";
+			}
 			break;
 		}
 
 		//controllo se ho letto pacchetto di FLUSH
 		if(packet->data == _is->flush_pkt->data){
+			if(_is->debug){
 			qDebug() << "VideoThread - letto FLUSH PKT";
+			}
 			avcodec_flush_buffers(_is->video_st->codec);
 			continue;
 		}
@@ -95,7 +99,9 @@ void VideoThread::run(){
 
 			/* aggiunta del frame RGB alla nuova coda */
 			if(_is->pictq.Put(pFrameRGB, pts) < 0) {
+				if(_is->debug){
 				qDebug() << "quitting putting frame - videothread";
+				}
 				break;
 			}
 

@@ -26,7 +26,7 @@
  * external API header
  */
 
-/**
+/*
  * @mainpage
  *
  * @section ffmpeg_intro Introduction
@@ -35,13 +35,12 @@
  * provided by FFmpeg.
  *
  * @li @ref libavc "libavcodec" encoding/decoding library
- * @li @ref lavfi "libavfilter" graph based frame editing library
+ * @li @subpage libavfilter graph based frame editing library
  * @li @ref libavf "libavformat" I/O and muxing/demuxing library
  * @li @ref lavd "libavdevice" special devices muxing/demuxing library
  * @li @ref lavu "libavutil" common utility library
- * @li @ref lswr "libswresample" audio resampling, format conversion and mixing
- * @li @ref lpp  "libpostproc" post processing library
- * @li @ref lsws "libswscale" color conversion and scaling library
+ * @li @subpage libpostproc post processing library
+ * @li @subpage libswscale  color conversion and scaling library
  */
 
 /**
@@ -251,27 +250,6 @@ static inline void *av_x_if_null(const void *p, const void *x)
 {
     return (void *)(intptr_t)(p ? p : x);
 }
-
-/**
- * Compute the length of an integer list.
- *
- * @param elsize  size in bytes of each list element (only 1, 2, 4 or 8)
- * @param term    list terminator (usually 0 or -1)
- * @param list    pointer to the list
- * @return  length of the list, in elements, not counting the terminator
- */
-unsigned av_int_list_length_for_size(unsigned elsize,
-                                     const void *list, uint64_t term) av_pure;
-
-/**
- * Compute the length of an integer list.
- *
- * @param term  list terminator (usually 0 or -1)
- * @param list  pointer to the list
- * @return  length of the list, in elements, not counting the terminator
- */
-#define av_int_list_length(list, term) \
-    av_int_list_length_for_size(sizeof(*(list)), list, term)
 
 /**
  * @}

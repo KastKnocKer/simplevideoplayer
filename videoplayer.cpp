@@ -3,6 +3,7 @@
 //COSTRUTTORE
 videoplayer::videoplayer(QWidget *parent)
 {
+	debug = false;
 
 	signalMapper = new QSignalMapper(this);
 
@@ -207,7 +208,9 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
 
 	double pos = positionSlider->value();
  
+	if(debug){
 	qDebug() << "slider seek: " << pos;
+	}
 
 	double incr = pos - _clock->get_master_clock();
 
@@ -230,7 +233,9 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  */
 void videoplayer::stop(){
 
-	qDebug() << "STOP";
+	if(debug){
+		qDebug() << "STOP";
+	}
 
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(true);
@@ -252,7 +257,9 @@ SLOT chiamata in seguito alla pressione di QUIT
 */
 void videoplayer::quit(){
 
-	qDebug() << "Quit";
+	if(debug){
+		qDebug() << "Quit";
+	}
 
 	is.ut.setStopValue(true);
 	is.ut.setPauseValue(false);
@@ -267,7 +274,9 @@ SLOT per metter in pausa la riproduzione
 */
 void videoplayer::pause(void){
 
+	if(debug){
 	qDebug() << "PAUSE pressed";
+	}
 
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(false);
@@ -287,7 +296,9 @@ SLOT utilizzato solo quando un video gia iniziato, deve riprendere la riproduzio
 */
 void videoplayer::resume(){
 
+	if(debug){
 	qDebug() << "RESUME";
+	}
 
 	if(is.ut.getPauseValue() == true){
 		is.frame_timer += av_gettime()/1000000.0 + is.video_current_pts_drift - is.video_current_pts;
@@ -325,7 +336,9 @@ void videoplayer::playing(){
  */
 void videoplayer::seek(int incr){
 
-	 qDebug() << "seek" << incr;
+	 if(debug){
+		qDebug() << "seek" << incr;
+	 }
 
 	 /**
 	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
@@ -334,7 +347,9 @@ void videoplayer::seek(int incr){
 	 double pos = _clock->get_master_clock();
 	 pos += (double) incr;	
 
-	 qDebug() << "seek pos: " << pos;
+	 if(debug){
+		qDebug() << "seek pos: " << pos;
+	 }
 
 	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
 	 //(che e unita di avcodec)
@@ -388,7 +403,9 @@ void videoplayer::loadFile(){
 	
 	//inizializzazione di SDL audio interface
 	if(initializeSDL() == -1){
-		qDebug() << "error initializing SDL AUDIO";
+		if(debug){
+			qDebug() << "error initializing SDL AUDIO";
+		}
 		exit(1);
 	}
 
@@ -414,7 +431,9 @@ void videoplayer::loadFile(){
 
 	//nota: VideoState di default dovrebbe avere un riferimento al thread....
 	if(!is.parse_tid) {
-		qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
+		if(debug){
+			qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
+		}
 		exit(1);
 	}
 

@@ -13,6 +13,7 @@ extern "C"	{
 	#include "dev\include\libavformat\avformat.h"
 	#include "dev\include\libswscale\swscale.h"
 	#include "dev\include\libavutil\avutil.h"
+	#undef main
 }
 
 #pragma comment(lib, "dev\\lib\\avcodec.lib")
@@ -65,6 +66,7 @@ private:
 	bool count;
 
 	bool _extClose;
+	bool debug;
 
 };
 #endif  /* _GLWIDGET_H */

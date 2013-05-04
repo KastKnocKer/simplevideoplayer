@@ -13,6 +13,8 @@ extern "C"	{
 	#include "dev\include\libswscale\swscale.h"
 	#include "dev\include\libavutil\avutil.h"
 	#include "dev\include\libavutil\time.h"
+
+	#undef main
 }
 
 #pragma comment(lib, "dev\\lib\\avcodec.lib")
@@ -30,6 +32,7 @@ private:
 	bool _pause;
 	bool _lastpause;
 	bool _eof;
+	bool debug;
 
 	AVPacket flush_pkt;	//pacchetto di flush usato durante il seek
 

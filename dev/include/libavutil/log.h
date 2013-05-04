@@ -40,8 +40,6 @@ typedef enum {
     AV_CLASS_CATEGORY_NB, ///< not part of ABI/API
 }AVClassCategory;
 
-struct AVOptionRanges;
-
 /**
  * Describe the class of an AVClass context structure. That is an
  * arbitrary struct of which the first field is a pointer to an
@@ -82,11 +80,10 @@ typedef struct AVClass {
     int log_level_offset_offset;
 
     /**
-     * Offset in the structure where a pointer to the parent context for
-     * logging is stored. For example a decoder could pass its AVCodecContext
-     * to eval as such a parent context, which an av_log() implementation
-     * could then leverage to display the parent context.
-     * The offset can be NULL.
+     * Offset in the structure where a pointer to the parent context for loging is stored.
+     * for example a decoder that uses eval.c could pass its AVCodecContext to eval as such
+     * parent context. And a av_log() implementation could then display the parent context
+     * can be NULL of course
      */
     int parent_log_context_offset;
 
@@ -96,7 +93,7 @@ typedef struct AVClass {
     void* (*child_next)(void *obj, void *prev);
 
     /**
-     * Return an AVClass corresponding to the next potential
+     * Return an AVClass corresponding to next potential
      * AVOptions-enabled child.
      *
      * The difference between child_next and this is that
@@ -117,12 +114,6 @@ typedef struct AVClass {
      * available since version (51 << 16 | 59 << 8 | 100)
      */
     AVClassCategory (*get_category)(void* ctx);
-
-    /**
-     * Callback to return the supported/allowed ranges.
-     * available since version (52.12)
-     */
-    int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
 } AVClass;
 
 /* av_log API */

@@ -79,9 +79,6 @@
     <ClCompile Include="Video.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Refresh2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AVClock2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

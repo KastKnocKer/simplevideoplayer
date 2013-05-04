@@ -67,7 +67,9 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		}
 
 		if(pkt->data == is->flush_pkt->data){
-			qDebug() << "AudioManager - letto FLUSH PKT";
+			if(is->debug){
+				qDebug() << "AudioManager - letto FLUSH PKT";
+			}
 			avcodec_flush_buffers(is->audio_st->codec);
 			continue;
 		}

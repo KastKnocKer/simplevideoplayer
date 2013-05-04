@@ -23,7 +23,6 @@ void DecodeThread::set(DecodeThread *t){
 }
 
 int decode_interrupt_cb(void *opaque){
-	qDebug() << "decode interrupt cb";
 	return (global_video_state && global_video_state->ut.getStopValue());
 }
 
@@ -79,14 +78,18 @@ void DecodeThread::run(){
 	//inizializzo io_context passandogli il file da riprodurre
 	//if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &callback, &io_dict)){	
 	if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &_pFormatCtx->interrupt_callback, &io_dict)){	
-		qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
+		if(_is->debug){
+			qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
+		}
 		fail();
 		return;
 	}
 
 	/* APERTURA FILE VIDEO */
 	if(avformat_open_input(&_pFormatCtx, _is->getSourceFilename().c_str(), NULL, NULL) != 0){	//Apro il file
-		qDebug() << "Impossibile aprire il file";		
+		if(_is->debug){
+			qDebug() << "Impossibile aprire il file";
+		}
 		fail();
 		return;
 	}
@@ -96,7 +99,9 @@ void DecodeThread::run(){
 	
 
 	if(avformat_find_stream_info(_pFormatCtx, NULL)<0){											//Leggo le informazioni sullo stream
-		qDebug() << "Impossibile leggere le info sullo stream";	
+		if(_is->debug){
+			qDebug() << "Impossibile leggere le info sullo stream";	
+		}
 		fail();
 		return;
 	}
@@ -120,7 +125,9 @@ void DecodeThread::run(){
 	}   
 
 	if(_is->videoStream < 0 || _is->audioStream < 0) {
-		qDebug() << "could not open codecs " << QString::fromStdString(_is->getSourceFilename());
+		if(_is->debug){
+			qDebug() << "could not open codecs " << QString::fromStdString(_is->getSourceFilename());
+		}
 		fail();		//richiamo la funzione che mi va a chiudere la finestra
 		return;
 	}
@@ -133,7 +140,9 @@ void DecodeThread::run(){
 
 		//controllo per STOP
 		if(_is->ut.getStopValue() == true){
+			if(_is->debug){
 			qDebug() << "decodethread - stopvalue";
+			}
 			break;
 		}
 
@@ -141,10 +150,14 @@ void DecodeThread::run(){
 		if(_is->ut.isPauseChanged()){
 			_is->ut.setLastPauseValue(_is->ut.getPauseValue());
 			if(_is->ut.getPauseValue() == true){
+				if(_is->debug){
 				qDebug() << "DecodeThread - av_read_pause";
+				}
 				_is->read_pause_return = av_read_pause(_pFormatCtx);
 			} else {
+				if(_is->debug){
 				qDebug() << "DecodeThread - av_read_play";
+				}
 				av_read_play(_pFormatCtx);
 			}
 		};
@@ -181,10 +194,14 @@ void DecodeThread::run(){
 			//if(avformat_seek_file(_is->pFormatCtx, stream_index, INT64_MIN, seek_target, seek_target, _is->seek_flags) < 0) {
 			if(avformat_seek_file(_is->pFormatCtx, stream_index, 0, DesiredFrameNumber, DesiredFrameNumber, AVSEEK_FLAG_FRAME) < 0) {
 			//if(avformat_seek_file(_is->pFormatCtx, stream_index, seek_min, seek_target, seek_max, _is->seek_flags)<0){
+				if(_is->debug){
 				qDebug() << "SEEKING ERROR" << (long long) DesiredFrameNumber;
+				}
 			} 
 			else {
+				if(_is->debug){
 				qDebug() << "SEEKING SUCCESS" << (long long) DesiredFrameNumber;
+				}
 
 				//svuoto le liste e inserisco pacchetto di flush
 				if(_is->audioStream >= 0) {
@@ -212,7 +229,9 @@ void DecodeThread::run(){
 
 		if(_is->ut.getEOFValue() == true){
 
+			if(_is->debug){
 			qDebug() << "END OF FILE - DECODING";
+			}
 
 			if(_is->videoStream >= 0){
 				av_init_packet(_packet);
@@ -223,10 +242,10 @@ void DecodeThread::run(){
             }
 			this->usleep(10000);
             if(_is->audioq.getSize() + _is->videoq.getSize() == 0){
-
-				//TODO - possibile implementazione del loop
 				
+				if(_is->debug){
 				qDebug() << "EOF - liste vuote";
+				}
 				fail();
 				return;
 			}
@@ -264,7 +283,9 @@ void DecodeThread::run(){
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	//FINE CICLO DECODIFICA
 
+	if(_is->debug){
 	qDebug() << "DecodeThread - esco dal ciclo di decodifica";
+	}
 
 	/* all done - wait for it*/
 	while(_is->ut.getStopValue() != true){
@@ -280,8 +301,9 @@ void DecodeThread::run(){
 
 //funzione eseguita in caso di errore/chiusura
 void DecodeThread::fail(void){
-
+	if(_is->debug){
 	qDebug() << "fail!!";
+	}
 	emit eof();
 }
 
@@ -321,7 +343,9 @@ int DecodeThread::stream_component_open(int stream_index){
 		wanted_spec.userdata = _clock;
     
 		if(SDL_OpenAudio(&wanted_spec, &spec) < 0) {				//apertura backend audio
+			if(_is->debug){
 			qDebug() << "SDL_OpenAudio: " << SDL_GetError();
+			}
 			return -1;
 		}
 
@@ -331,7 +355,9 @@ int DecodeThread::stream_component_open(int stream_index){
 	//sia nel caso VIDEO che AUDIO vado a caricare rispettivo codec
 	codec = avcodec_find_decoder(codecCtx->codec_id);
 	if(!codec || (avcodec_open2(codecCtx, codec, &optionsDict) < 0)) {
+		if(_is->debug){
 		qDebug() << "Unsupported codec!";
+		}
 		return -1;
 	}
 
@@ -344,8 +370,10 @@ int DecodeThread::stream_component_open(int stream_index){
 			_is->audio_buf_size = 0;
 			_is->audio_buf_index = 0;
 
+			if(_is->debug){
 			qDebug() << "sample rate: " << codecCtx->sample_rate;
 			qDebug() << "channels: " << codecCtx->channels;
+			}
 
 			 /* averaging filter for audio sync */
 			_is->audio_diff_avg_coef = exp(log(0.01 / AUDIO_DIFF_AVG_NB));
@@ -365,7 +393,9 @@ int DecodeThread::stream_component_open(int stream_index){
 
 			//ottengo il numero totale di frame dello stream video
 			_is->totalFramesNumber = _is->video_st->nb_frames;
+			if(_is->debug){
 			qDebug() << "num TOT frame video" << (long long) _is->video_st->nb_frames;
+			}
 
 			//reperisco informazioni sulla durata e le vado a impostare allo slider
 			//CASO FAVOREVOLE: trovo direttamente il valore della durata del video
@@ -376,12 +406,13 @@ int DecodeThread::stream_component_open(int stream_index){
 					_pFormatCtx->streams[stream_index]->time_base.den);
 				duration = duration/AV_TIME_BASE;
 			}
-			qDebug() << "durata del video: " << duration;
 			emit setSliderRange(0, duration);		//durata max del video
 
+			if(_is->debug){
+			qDebug() << "durata del video: " << duration;
 			qDebug() << "time_base: " << (double) av_q2d(_is->video_st->time_base);
-
 			qDebug() << "avg_frame_rate: " << av_q2d(_is->video_st->avg_frame_rate);
+			}
 
 			//imposto le dimensioni della pagina
 			_is->window->setSize(_is->video_st->codec->width, _is->video_st->codec->height);

@@ -36,6 +36,8 @@ class videoplayer : public QWidget
 
 private:
 
+	bool debug;
+
 	QString _fileName;														//nome del file video
 
     QMenuBar *menuBar;
@@ -62,6 +64,7 @@ private:
 
 	DecodeThread *_demuxer;									//puntatore al thread di decodifica
 	AVClock2 *_clock;
+
 
 	void stream_seek(int64_t pos, int64_t rel);
 

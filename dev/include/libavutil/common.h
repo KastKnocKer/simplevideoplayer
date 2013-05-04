@@ -26,6 +26,7 @@
 #ifndef AVUTIL_COMMON_H
 #define AVUTIL_COMMON_H
 
+#include <ctype.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
@@ -87,6 +88,12 @@ av_const int av_log2(unsigned v);
 av_const int av_log2_16bit(unsigned v);
 #endif
 
+//TODO roba aggiunta da me
+#ifndef INT64_C
+#define INT64_C(c) (c ## LL)
+#define UINT64_C(c) (c ## ULL)
+#endif
+
 /**
  * Clip a signed integer value into the amin-amax range.
  * @param a value to clip
@@ -96,9 +103,6 @@ av_const int av_log2_16bit(unsigned v);
  */
 static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
     if      (a < amin) return amin;
     else if (a > amax) return amax;
     else               return a;
@@ -113,9 +117,6 @@ static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
  */
 static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
     if      (a < amin) return amin;
     else if (a > amax) return amax;
     else               return a;
@@ -221,26 +222,6 @@ static av_always_inline int av_sat_dadd32_c(int a, int b)
  */
 static av_always_inline av_const float av_clipf_c(float a, float amin, float amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
-}
-
-/**
- * Clip a double value into the amin-amax range.
- * @param a value to clip
- * @param amin minimum value of the clip range
- * @param amax maximum value of the clip range
- * @return clipped value
- */
-static av_always_inline av_const double av_clipd_c(double a, double amin, double amax)
-{
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
     if      (a < amin) return amin;
     else if (a > amax) return amax;
     else               return a;
@@ -296,17 +277,16 @@ static av_always_inline av_const int av_popcount64_c(uint64_t x)
 #define GET_UTF8(val, GET_BYTE, ERROR)\
     val= GET_BYTE;\
     {\
-        uint32_t top = (val & 128) >> 1;\
-        if ((val & 0xc0) == 0x80 || val >= 0xFE)\
+        int ones= 7 - av_log2(val ^ 255);\
+        if(ones==1)\
             ERROR\
-        while (val & top) {\
+        val&= 127>>ones;\
+        while(--ones > 0){\
             int tmp= GET_BYTE - 128;\
             if(tmp>>6)\
                 ERROR\
             val= (val<<6) + tmp;\
-            top <<= 5;\
         }\
-        val &= (top << 1) - 1;\
     }
 
 /**
@@ -444,9 +424,6 @@ static av_always_inline av_const int av_popcount64_c(uint64_t x)
 #endif
 #ifndef av_clipf
 #   define av_clipf         av_clipf_c
-#endif
-#ifndef av_clipd
-#   define av_clipd         av_clipd_c
 #endif
 #ifndef av_popcount
 #   define av_popcount      av_popcount_c
