@@ -35,6 +35,8 @@ public:
 
 	std::pair<AVFrame*, double> Get();
 
+	void Flush();
+
 	int getSize();
 
 	void setUtility(Status *ut);

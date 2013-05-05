@@ -16,7 +16,7 @@
 
 #include "DecodeThread.h"
 #include "VideoState.h"
-#include "AVClock2.h"
+#include "AVClock.h"
 
 
 
@@ -35,8 +35,6 @@ class videoplayer : public QWidget
 	Q_OBJECT
 
 private:
-
-	bool debug;
 
 	QString _fileName;														//nome del file video
 
@@ -63,10 +61,15 @@ private:
 	int initializeSDL();									//inizializzazione di SDL per audio
 
 	DecodeThread *_demuxer;									//puntatore al thread di decodifica
-	AVClock2 *_clock;
+	AVClock *_clock;
 
 
 	void stream_seek(int64_t pos, int64_t rel);
+
+protected:
+
+	//ridefinizione dell'evento di chiusura della finestra
+	void closeEvent(QCloseEvent *event);
 
 signals:
 

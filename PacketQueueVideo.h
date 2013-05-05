@@ -42,10 +42,22 @@ public:
 	/**
 	ritorna la dimensione della lista (numero pacchetti)
 	*/
-	int getSize();
+	inline int getSize();
 
 	QMutex* getMutex();
 	QWaitCondition* getCond();
 
 	void setUtility(Status *ut);
+};
+
+//////////////////////////////////////////////////////////////////////
+// METODI INLINE
+
+/**
+ritorna la dimensione della lista
+*/
+int PacketQueueVideo::getSize(){
+
+	return queue.size();
+
 };

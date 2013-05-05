@@ -76,6 +76,17 @@ std::pair<AVFrame*, double> VideoPicture::Get(){
 	return read;
 }
 
+void VideoPicture::Flush(){
+
+	_mutex_data->lock();
+
+	/*_cond_maxsize->wakeAll();
+	_cond_data->wakeAll();*/
+	queue.clear();
+
+	_mutex_data->unlock();
+}
+
 
 /* ritorna le dimensioni della coda di frame */
 int VideoPicture::getSize(void){

@@ -41,18 +41,24 @@ void VideoThread::run(){
 		// leggo i paccehtti dalla coda
 		if(_is->videoq.Get(packet, 1) < 0){
 			// means we quit getting packets
-			if(_is->debug){
-			qDebug() << "quitting getting packets - videothread";
-			}
+			
+			//qDebug() << "quitting getting packets - videothread";
 			break;
 		}
 
 		//controllo se ho letto pacchetto di FLUSH
 		if(packet->data == _is->flush_pkt->data){
-			if(_is->debug){
-			qDebug() << "VideoThread - letto FLUSH PKT";
-			}
+			
+			//qDebug() << "VideoThread - letto FLUSH PKT";
+			
 			avcodec_flush_buffers(_is->video_st->codec);
+
+			/*_is->pictq.Flush();
+
+			_is->frame_last_pts = AV_NOPTS_VALUE;
+			_is->frame_last_delay = 0;
+			_is->frame_timer = (double)av_gettime() / 1000000.0;*/
+
 			continue;
 		}
 
@@ -64,7 +70,8 @@ void VideoThread::run(){
 		// Decode video frame
 		avcodec_decode_video2(_is->video_st->codec, pFrame, &frameFinished, packet);
 
-		//nota: opaque è una variabile interna a pFrame lasciata libera per essere usata dall'utente come variabile di appoggio per dei dati
+		//nota: opaque è una variabile interna a pFrame lasciata libera
+		//per essere usata dall'utente come variabile di appoggio per dei dati
 		
 		/* caso in cui NON RIESCO a reperire DTS */
 		if (packet->dts == (int64_t)AV_NOPTS_VALUE && pFrame->opaque && *(uint64_t*)pFrame->opaque != AV_NOPTS_VALUE)
@@ -99,9 +106,9 @@ void VideoThread::run(){
 
 			/* aggiunta del frame RGB alla nuova coda */
 			if(_is->pictq.Put(pFrameRGB, pts) < 0) {
-				if(_is->debug){
-				qDebug() << "quitting putting frame - videothread";
-				}
+				
+				//qDebug() << "quitting putting frame - videothread";
+				
 				break;
 			}
 

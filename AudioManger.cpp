@@ -67,9 +67,9 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 		}
 
 		if(pkt->data == is->flush_pkt->data){
-			if(is->debug){
-				qDebug() << "AudioManager - letto FLUSH PKT";
-			}
+			
+				//qDebug() << "AudioManager - letto FLUSH PKT";
+			
 			avcodec_flush_buffers(is->audio_st->codec);
 			continue;
 		}
@@ -91,7 +91,7 @@ prepare a new audio buffer
 */
 void audio_callback(void *userdata, Uint8 *stream, int len) {
 
-	AVClock2 *clock = (AVClock2 *) userdata;
+	AVClock *clock = (AVClock *) userdata;
 	VideoState *is = clock->GetVideoState();
 	int len1, audio_size;
 	double pts;
@@ -134,7 +134,7 @@ la chiamero consecutivamente un numero minimo di volte
 Add or subtract samples to get a better sync, return new
    audio buffer size
 */
-int synchronize_audio(AVClock2 *clock, VideoState *is, short *samples, int samples_size, double pts) {
+int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int samples_size, double pts) {
 
   int n = 0;
   double ref_clock = 0.0;

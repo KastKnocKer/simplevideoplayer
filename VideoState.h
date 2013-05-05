@@ -38,7 +38,6 @@ public:
 	Status			ut;
 	AVPacket		*flush_pkt;
 	int				read_pause_return;
-	bool			debug;
 
 
 	//SEEK

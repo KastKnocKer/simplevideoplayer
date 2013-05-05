@@ -77,15 +77,6 @@ int PacketQueueAudio::Flush(){
 	return 0;
 }
 
-/**
-ritorna la dimensione della lista
-*/
-int PacketQueueAudio::getSize(){
-
-	return queue.size();
-
-}
-
 SDL_mutex* PacketQueueAudio::getMutex(){
 	return _mutex;	
 };

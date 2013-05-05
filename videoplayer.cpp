@@ -3,7 +3,6 @@
 //COSTRUTTORE
 videoplayer::videoplayer(QWidget *parent)
 {
-	debug = false;
 
 	signalMapper = new QSignalMapper(this);
 
@@ -104,9 +103,9 @@ videoplayer::videoplayer(QWidget *parent)
     QHBoxLayout *controlButton = new QHBoxLayout;
     controlButton->addWidget(bar);
     controlButton->addStretch();
-    controlButton->addWidget(volumeLabel);
-    controlButton->addWidget(volumeSlider);
-    controlButton->addSpacing(0);// questa serve per spostare il volume a destra e di quanto dal bordo
+    //controlButton->addWidget(volumeLabel);
+    //controlButton->addWidget(volumeSlider);
+    //controlButton->addSpacing(0);// questa serve per spostare il volume a destra e di quanto dal bordo
     mainLayout->addLayout(controlButton);
 
 
@@ -117,10 +116,10 @@ videoplayer::videoplayer(QWidget *parent)
 
     setFixedSize(400,100);
 
-	_clock = new AVClock2();										//inizializzazione del clock
+	_clock = new AVClock();										//inizializzazione del clock
 
 	//connect sullo SLIDER
-	connect(_clock, &AVClock2::needupdate, this, &videoplayer::tick);
+	connect(_clock, &AVClock::needupdate, this, &videoplayer::tick);
 	connect(positionSlider, &QSlider::sliderReleased, this, &videoplayer::slider_seek);
 }
 
@@ -172,7 +171,8 @@ funzione grafica che permette di creare la menubar e i suoi sottomenu
  void videoplayer::about(void)
  {
     QMessageBox msgbox;
-    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> è stato implementato utilizzando Qt 5, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
+    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> implementato"
+    " utilizzando Qt5, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
  }
 
  /**
@@ -207,10 +207,6 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  void videoplayer::slider_seek(){
 
 	double pos = positionSlider->value();
- 
-	if(debug){
-	qDebug() << "slider seek: " << pos;
-	}
 
 	double incr = pos - _clock->get_master_clock();
 
@@ -233,10 +229,6 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  */
 void videoplayer::stop(){
 
-	if(debug){
-		qDebug() << "STOP";
-	}
-
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(true);
 	stopAction->setDisabled(true);
@@ -257,10 +249,6 @@ SLOT chiamata in seguito alla pressione di QUIT
 */
 void videoplayer::quit(){
 
-	if(debug){
-		qDebug() << "Quit";
-	}
-
 	is.ut.setStopValue(true);
 	is.ut.setPauseValue(false);
 	/*is.audioq.quit();
@@ -273,10 +261,6 @@ void videoplayer::quit(){
 SLOT per metter in pausa la riproduzione
 */
 void videoplayer::pause(void){
-
-	if(debug){
-	qDebug() << "PAUSE pressed";
-	}
 
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(false);
@@ -295,10 +279,6 @@ void videoplayer::pause(void){
 SLOT utilizzato solo quando un video gia iniziato, deve riprendere la riproduzione
 */
 void videoplayer::resume(){
-
-	if(debug){
-	qDebug() << "RESUME";
-	}
 
 	if(is.ut.getPauseValue() == true){
 		is.frame_timer += av_gettime()/1000000.0 + is.video_current_pts_drift - is.video_current_pts;
@@ -336,20 +316,12 @@ void videoplayer::playing(){
  */
 void videoplayer::seek(int incr){
 
-	 if(debug){
-		qDebug() << "seek" << incr;
-	 }
-
 	 /**
 	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
 	 il tempo di seek a quello del master clock
 	 */
 	 double pos = _clock->get_master_clock();
 	 pos += (double) incr;	
-
-	 if(debug){
-		qDebug() << "seek pos: " << pos;
-	 }
 
 	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
 	 //(che e unita di avcodec)
@@ -387,7 +359,7 @@ void videoplayer::loadFile(){
 	connect(window, &Video::Xpressed, this, &videoplayer::quit);
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL
-	connect(_clock, &AVClock2::needupdate, window, &Video::updateGL);
+	connect(_clock, &AVClock::needupdate, window, &Video::updateGL);
 
 	_clock->reset();												//resetto il clock
 
@@ -403,9 +375,7 @@ void videoplayer::loadFile(){
 	
 	//inizializzazione di SDL audio interface
 	if(initializeSDL() == -1){
-		if(debug){
-			qDebug() << "error initializing SDL AUDIO";
-		}
+		
 		exit(1);
 	}
 
@@ -431,9 +401,9 @@ void videoplayer::loadFile(){
 
 	//nota: VideoState di default dovrebbe avere un riferimento al thread....
 	if(!is.parse_tid) {
-		if(debug){
-			qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
-		}
+		
+			//qDebug() << "ERRORE: riferimento al thread di decompressione mancante";
+		
 		exit(1);
 	}
 
@@ -449,11 +419,21 @@ inizializzaizone SDL AUDIO
 int videoplayer::initializeSDL(){
 
 	if(SDL_Init(SDL_INIT_AUDIO)) {							//Inizializzo SDL per visualizzazione
-		qDebug() << "Impossibile inizializzare le SDL per AUDIO " << SDL_GetError();
+		//qDebug() << "Impossibile inizializzare le SDL per AUDIO " << SDL_GetError();
 		return -1;
 	}
 
 	return 0;
+}
+
+
+//ridefinizione dell'evento di chiusura della finestra
+void videoplayer::closeEvent(QCloseEvent *event){
+	
+	if(window != NULL){
+		window->close();
+	}
+	event->accept();
 }
 
 

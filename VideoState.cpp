@@ -64,8 +64,6 @@ VideoState::VideoState(){
 	totalFramesNumber = 0;
 	duration = 0;
 	read_pause_return = 0;
-
-	debug = false;
 }
 
 //DISTRUTTORE

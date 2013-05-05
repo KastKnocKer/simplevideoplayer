@@ -85,15 +85,6 @@ int PacketQueueVideo::Flush(){
 	return 0;
 }
 
-/**
-ritorna la dimensione della lista
-*/
-int PacketQueueVideo::getSize(){
-
-	return queue.size();
-
-}
-
 QMutex* PacketQueueVideo::getMutex(){
 	return _mutex;	
 };

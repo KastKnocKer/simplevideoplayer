@@ -9,9 +9,12 @@ Video::Video(QWidget *parent) : QGLWidget(parent) {
 	h = 0;
 	display = false;
 
-	count = true;
+	first_frame = true;
 	_extClose = false;
 	debug = false;
+}
+
+Video::~Video(){
 
 }
 
@@ -58,10 +61,11 @@ void Video::paintGL() {
 	};
 
     //dentro a questo if ci adrò una volta sola!
-	if(count == true){
+	if(first_frame){
 		this->initializeGL();
+		first_frame = false;
+		return;
 	}
-	count = false;
 
 	glBindTexture( GL_TEXTURE_2D, _texture_video );									//associo la texture corrente						
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
@@ -87,26 +91,15 @@ void Video::paintGL() {
 	//swapBuffers(); viene richiamaa in automatico alla fine del paintGL
 }
 
-void Video::mousePressEvent(QMouseEvent *event) {
-}
-void Video::mouseMoveEvent(QMouseEvent *event) {
-}
-
 void Video::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
     case Qt::Key_Escape:
-        if(debug){
-		qDebug() << "Video - X pressed";
-		}
 		emit Xpressed();
         break;
     default:
         event->ignore();
         break;
     }
-}
-Video::~Video(){
-
 }
 
 void Video::setSize(int w, int h){
@@ -140,16 +133,16 @@ void Video::closeEvent(QCloseEvent *event){
 	
 	//CASO PREMO CHIUDI FINESTRA
 	if(!_extClose){
-		if(debug){
-		qDebug() << "VIDEO - WINDOW CLOSING INT";
-		}
+		
+		//qDebug() << "VIDEO - WINDOW CLOSING INT";
+		
 		emit Xpressed();
 		event->ignore();
 	}
 	else{
-		if(debug){
-		qDebug() << "VIDEO - WINDOW CLOSING ext";
-		}
+		
+		//qDebug() << "VIDEO - WINDOW CLOSING ext";
+		
 		emit windowClosing();
 	}
 	_extClose = false;

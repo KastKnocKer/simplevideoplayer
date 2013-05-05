@@ -5,7 +5,7 @@
 #include <gl\GL.h>
 #include <gl\GLU.h>
 #include <QtGui/QMouseEvent>
-#include <QtCore>
+#include <QDebug>
 
 //FFMPEG
 extern "C"	{
@@ -21,40 +21,63 @@ extern "C"	{
 #pragma comment(lib, "dev\\lib\\avformat.lib")
 #pragma comment(lib, "dev\\lib\\swscale.lib")
 
+class QGLWidget;
+class QDebug;
 
+/**
+classe per mostrare a monitor i frame decompressi,
+sfruttando OPENGL
+*/
 class Video: public QGLWidget {
 
-    Q_OBJECT // must include this if you use Qt signals/slots
+    Q_OBJECT
 
 public:
 
     explicit Video(QWidget *parent = 0);
 	~Video();
+
+	//metodo per ridimensionare la finestra
 	void setSize(int w, int h);
+
+	//metodo per impostare il frame corrente alla finestra
 	void setFrame(AVFrame* pFrameRGB);
 
+	//vado a impostare la flag in modo da permettere la riproduzione sulla finestra
 	void startdisplay(void);
+
 
 signals:
 
-	void windowClosing();	//segnale emesso quando la finestra è stata forzatamente chiusa
+	//segnale emesso quando la finestra si sta chiudendo
+	void windowClosing();
+
+	//segnale emesso quando premo sul bottone per chiuedere la finestra
 	void Xpressed();
 
 public slots:
-
-	/** 
-	metodo richiamato a fine riproduzione per forzare la chiusura della finestra
-	*/
+ 
+	//metodo richiamato a fine riproduzione per forzare la chiusura della finestra
 	void closeWindow();
 
 protected:
 
+	/**
+	metodo per inizializzazione della finestra
+	viene richiamato di default alla richiesta del prima paintGL
+	*/
     void initializeGL();
+
+	//metodo per ridimensionare la finestra 
     void resizeGL(int w, int h);
+
+	//metodo per disegnare sulla finestra
     void paintGL();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+
+	//gestione evento pressione tasto X
     void keyPressEvent(QKeyEvent *event);
+
+	//ridefinizione dell'evento di chiusura della finestra
 	void closeEvent(QCloseEvent *event);
 
 private:
@@ -62,8 +85,10 @@ private:
 	AVFrame *pFrameRGB;
 	int w,h;
 	GLuint _texture_video;
+
 	bool display;
-	bool count;
+
+	bool first_frame;
 
 	bool _extClose;
 	bool debug;

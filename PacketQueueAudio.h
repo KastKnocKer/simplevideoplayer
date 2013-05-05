@@ -43,10 +43,23 @@ public:
 	/**
 	ritorna la dimensione della lista (numero pacchetti)
 	*/
-	int getSize();
+	inline int getSize();
 
 	SDL_mutex* getMutex();
 	SDL_cond* getCond();
 
 	void setUtility(Status *ut);
+};
+
+
+///////////////////////////////////////////////////////////////////////
+// METODI INLINE
+
+/**
+ritorna la dimensione della lista
+*/
+int PacketQueueAudio::getSize(){
+
+	return queue.size();
+
 };

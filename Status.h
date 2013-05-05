@@ -32,7 +32,6 @@ private:
 	bool _pause;
 	bool _lastpause;
 	bool _eof;
-	bool debug;
 
 	AVPacket flush_pkt;	//pacchetto di flush usato durante il seek
 
@@ -41,20 +40,58 @@ public:
 	Status();
 	~Status();
 
+	inline bool isPlaying();
+
 	void setStopValue(bool quit);
-	bool getStopValue();
+	inline bool getStopValue();
 
 	void setPauseValue(bool pause);
-	bool getPauseValue(); 
+	inline bool getPauseValue(); 
 
 	void setLastPauseValue(bool lastpause);
-	bool getLastPauseValue();
+	inline bool getLastPauseValue();
 
-	bool isPauseChanged();
+	inline bool isPauseChanged();
 
 	void setEOFValue(bool eof);
-	bool getEOFValue();
+	inline bool getEOFValue();
 
 	AVPacket* getFlushPkt();
 
 };
+
+////////////////////////////////////////////////////////////////////////////////
+// METODI INLINE
+
+bool Status::getStopValue(){
+	return this->_quit;
+};
+
+bool Status::getPauseValue(){	
+	return this->_pause;
+};
+
+bool Status::getLastPauseValue(){	
+	return this->_lastpause;
+};
+
+bool Status::isPauseChanged(){
+	if(_pause != _lastpause){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool Status::getEOFValue(){
+	return _eof;
+}
+
+bool Status::isPlaying(){
+
+	if(_quit || _eof){
+		return false;
+	}
+	else return true;
+}
+

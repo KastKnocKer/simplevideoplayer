@@ -7,7 +7,7 @@
 
 #include "AudioManager.h"
 #include "VideoThread.h"
-#include "AVClock2.h"
+#include "AVClock.h"
 
 //definisco una costante che rapresenta il formato dei pixel voluto commento perché è già definita in videothread
 //const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;	
@@ -21,7 +21,7 @@ class DecodeThread : public QThread
 
 private:
 
-	AVClock2* _clock;
+	AVClock* _clock;
 	VideoState *_is;
 	
 	AVPacket _pkt1, *_packet;
@@ -43,9 +43,6 @@ private:
 	suddivisione dello stream in pacchetti e distinzione audio o video
 	*/
 	void run();
-
-	//int our_get_buffer(struct AVCodecContext *c, AVFrame *pic);
-	//void our_release_buffer(struct AVCodecContext *c, AVFrame *pic);
 
 signals:
 
@@ -74,8 +71,8 @@ public:
 	void SetVideoState(VideoState *is);
 	VideoState* GetVideoState();
 
-	AVClock2* GetAVClock();
-	void SetAVClock(AVClock2 *c);
+	AVClock* GetAVClock();
+	void SetAVClock(AVClock *c);
 
 	void fail(void);
 

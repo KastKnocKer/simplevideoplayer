@@ -1,4 +1,4 @@
-#include "AVClock2.h"
+#include "AVClock.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* AUDIO */
@@ -18,4 +18,4 @@ void audio_callback(void *userdata, Uint8 *stream, int len);
 /**
 Add or subtract samples to get a better sync, return new audio buffer size 
 */
-int synchronize_audio(AVClock2 *clock, VideoState *is, short *samples, int samples_size, double pts);
+int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int samples_size, double pts);
