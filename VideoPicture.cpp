@@ -58,15 +58,16 @@ std::pair<AVFrame*, double> VideoPicture::Get(){
 
 	_mutex_data->lock();
 
-	if(!queue.empty()){
-		read = queue.front();	//prelevo primo elemento
-		queue.pop_front();		//elimino elemento prelevato
-
-	} else {
-		_cond_data->wait(_mutex_data);
+	while(true){
+		if(!queue.empty()){
+			read = queue.front();	//prelevo primo elemento
+			queue.pop_front();		//elimino elemento prelevato
+			break;
+		} else {
+			_cond_data->wait(_mutex_data);
+		}
 	}
 	_mutex_data->unlock();
-
 
 	/* una volta prelevato, vado a svegliare la coda dei frame che devono essere depositati */
 	_mutex_maxsize->lock();

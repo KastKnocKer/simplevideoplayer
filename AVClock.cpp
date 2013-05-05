@@ -52,6 +52,9 @@ void AVClock::video_refresh_timer(void){
 			frame_current_pts = p.second;
 			pFrameRGB = p.first;
 
+			//setto il frame alla finestra
+			_is->window->setFrame(pFrameRGB);
+
 			_is->video_current_pts = frame_current_pts;
 			_is->video_current_pts_time = av_gettime();
 			_is->video_current_pts_drift = _is->video_current_pts - (_is->video_current_pts_time/1000000.0);
@@ -115,9 +118,6 @@ void AVClock::video_refresh_timer(void){
 			//////////////////////////////////////////////////////////////////////////////
 
 			schedule_refresh((int) (actual_delay * 1000 + 0.5));
-
-            //setto il frame alla finestra
-			_is->window->setFrame(pFrameRGB);
 
             /* show the picture! */
             emit needupdate();

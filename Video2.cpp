@@ -1,14 +1,19 @@
 #include "Video2.h"
 
 Video2::Video2(QWidget *parent) : QGLWidget(parent) {
+
     setMouseTracking(true);
 
-	img = QImage();
+	data = NULL;
 	w = 0;
 	h = 0;
 	display = false;
 
-	count = true;
+	first_frame = true;
+	_extClose = false;
+}
+
+Video2::~Video2(){
 
 }
 
@@ -17,27 +22,23 @@ void Video2::initializeGL() {
     /* devo sempre controllare che l'inizializzazione 
 	non venga fatta prima di aver letto almeno un frame */
 	/** non faccio niente fino a quando non avrò un riferimento con valore */
-	if(img.isNull()){
+	if(data == NULL){
 		return;
 	}
 
-	glClearColor (0.0,0.0,0.0,1.0);
-	glDisable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();        
-	gluOrtho2D(0, w, 0, h);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();        
-
+	// Start Of User Initialization
 	glEnable(GL_TEXTURE_2D);
-	glGenTextures(3,&_texture_video);
-	glBindTexture(GL_TEXTURE_2D,_texture_video);       
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);          
-	glBindTexture(GL_TEXTURE_2D,_texture_video);               
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, GL_UNSIGNED_BYTE, GL_RGBA, NULL );    
+	glClearColor(1.0f, 0.0f, 0.0f, 0.2f);
 
-	glDisable(GL_TEXTURE_2D);
+	this->resize(w, h);
+	
+	glShadeModel( GL_SMOOTH );
+
+	glGenTextures(1, &_texture_Video2);
+	glBindTexture(GL_TEXTURE_2D, _texture_Video2); 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 }
 
@@ -54,55 +55,57 @@ void Video2::resizeGL(int w, int h) {
 void Video2::paintGL() {
 
 	/** non faccio niente fino a quando non avrò un riferimento con valore */
-	if(img.isNull()){
+	if(data == NULL){
 		return;
 	};
 
     //dentro a questo if ci adrò una volta sola!
-	if(count == true){
+	if(first_frame){
 		this->initializeGL();
+		first_frame = false;
+		return;
 	}
-	count = false;
 
-	glClear (GL_COLOR_BUFFER_BIT);       
-	glDisable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();        
-	//gluOrtho2D(0, win.width(),0, win.height());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();        
-	glEnable(GL_TEXTURE_2D);
+	glBindTexture( GL_TEXTURE_2D, _texture_Video2 );									//associo la texture corrente						
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-	glBindTexture(GL_TEXTURE_2D,_texture_video); 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0 , img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.bits() );       
-	glBegin(GL_QUADS);   // in theory triangles are better
-	glTexCoord2i(0,0); glVertex2i(0, img.height());
-	glTexCoord2i(0,1); glVertex2i(0,0);
-	glTexCoord2i(1,1); glVertex2i(img.width(),0);
-	glTexCoord2i(1,0); glVertex2i(img.width(),img.height());
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindTexture( GL_TEXTURE_2D, _texture_Video2 );
+	glScalef(1.0f, -1.0f, 1.0f);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-1.0f, -1.0f, 0.0f); 
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-1.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(1.0f, -1.0f, 0.0f);
+	glEnd();
+	glScalef(1.0f, -1.0f, 1.0f);
 
 	//swapBuffers(); viene richiamaa in automatico alla fine del paintGL
 }
 
-void Video2::mousePressEvent(QMouseEvent *event) {
+void Video2::showFrame(uint8_t *data){
 
-}
-void Video2::mouseMoveEvent(QMouseEvent *event) {
-    printf("%d, %d\n", event->x(), event->y());
+	this->data = data;
+
+	paintGL();
 }
 
 void Video2::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
     case Qt::Key_Escape:
-        close();
+		emit Xpressed();
         break;
     default:
         event->ignore();
         break;
     }
-}
-Video2::~Video2(){
-
 }
 
 void Video2::setSize(int w, int h){
@@ -110,10 +113,39 @@ void Video2::setSize(int w, int h){
 	this->h = h;
 }
 
-void Video2::setImg(QImage img){
-	this->img = QGLWidget::convertToGLFormat(img);
-}
-
 void Video2::startdisplay(void){
 	display = true;	
 };
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+/**
+SLOT per imporre la chiusura della finestra
+*/
+void Video2::closeWindow(){
+	_extClose = true;
+	this->close();
+}
+
+/**
+ridefinizione dell'avvento di chiusura della finestra, emetto uno specifico segnale
+*/
+void Video2::closeEvent(QCloseEvent *event){
+	
+	//CASO PREMO CHIUDI FINESTRA
+	if(!_extClose){
+		
+		//qDebug() << "Video2 - WINDOW CLOSING INT";
+		
+		emit Xpressed();
+		event->ignore();
+	}
+	else{
+		
+		//qDebug() << "Video2 - WINDOW CLOSING ext";
+		
+		emit windowClosing();
+	}
+	_extClose = false;
+}

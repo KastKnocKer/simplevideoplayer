@@ -46,24 +46,22 @@ int PacketQueueVideo::Get(AVPacket *pkt, int block){
 																				
 	_mutex->lock();														//Entro nella sezione critica per accedere in modo esclusivo alla lista
 
-	if(!queue.empty()) {
-		prelevato = queue.front();										//ottengo il primo elemento
-		queue.pop_front();												//elimino dalla lista elemento preso
-		*pkt = prelevato;												//ottengo un puntatore all'oggetto prelevato
-		ret = 1;
-	}
-	//else if(ut->getEOFValue() == true){
-	//	/* se la coda è vuota, controllo il flag di eof, se è true
-	//	allora abbiamo letto e visualizzato tutti i pachetti. Allora
-	//	solo in questo momento devo settare quit*/
-	//	ut->setStopValue(true);
-	//	ret = 0;
-	//}
-	else if (!block) {													//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
-		ret = 0;
-	}
-	else{																//caso lista vuota, mi metto in attesa
-		_cond->wait(_mutex);
+	while (true)
+	{
+		if(!queue.empty()) {
+			prelevato = queue.front();										//ottengo il primo elemento
+			queue.pop_front();												//elimino dalla lista elemento preso
+			*pkt = prelevato;												//ottengo un puntatore all'oggetto prelevato
+			ret = 1;
+			break;
+		}
+		else if (!block) {													//Questo è un modo per evitare la wait, se nella chiamata di funzione si mette 1 nel parametro block nel caso non trovi 
+			ret = 0;
+			break;
+		}
+		else{																//caso lista vuota, mi metto in attesa
+			_cond->wait(_mutex);
+		}
 	}
 	
 	_mutex->unlock();
