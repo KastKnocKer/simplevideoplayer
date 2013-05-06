@@ -63,8 +63,11 @@ private:
 	DecodeThread *_demuxer;									//puntatore al thread di decodifica
 	AVClock *_clock;
 
-
+	// metodo che va a impostare le flag di seek
 	void stream_seek(int64_t pos, int64_t rel);
+
+	bool stoptick;											//variabile per evitare aggiornamento dello slider
+	int64_t time;
 
 protected:
 
@@ -98,6 +101,7 @@ public slots:
 	inline void tick();											//metodo di refresh del timer
 	void resetSlider();										//metodo per resettare a 0 slider e LCD
 	void slider_seek();										//a differenza di seek io non ho un incremento ma un nuovo tempo
+	inline void stop_tick();
 
 public:
 
@@ -121,12 +125,24 @@ public:
 /**
 SLOT: funzione per aggiornamento del timer digitale e dello slider
 */
- void videoplayer::tick()
- {
-	 int64_t time = (int64_t) (_clock->get_master_clock()+0.5);
+void videoplayer::tick()
+{
+	 if(stoptick){
+		 return;
+	 }
+
+	 time = (int64_t) (_clock->get_master_clock()+0.5);
 	 positionSlider->setValue((int) time);
 
 	 //QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
 	 QTime displayTime(0, (time / 60) % 60, (time) % 60);
      panelLCD->display(displayTime.toString("mm:ss"));
- }
+}
+
+/**
+SLOT: quando premo sullo slider, devo evitare aggiornamento di essa
+*/
+void videoplayer::stop_tick()
+{
+	stoptick = true;
+}

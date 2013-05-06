@@ -3,6 +3,7 @@
 //COSTRUTTORE
 videoplayer::videoplayer(QWidget *parent)
 {
+	stoptick = false;
 
 	signalMapper = new QSignalMapper(this);
 
@@ -121,6 +122,7 @@ videoplayer::videoplayer(QWidget *parent)
 	//connect sullo SLIDER
 	connect(_clock, &AVClock::needupdate, this, &videoplayer::tick);
 	connect(positionSlider, &QSlider::sliderReleased, this, &videoplayer::slider_seek);
+	connect(positionSlider, &QSlider::sliderPressed, this, &videoplayer::stop_tick);
 }
 
 //DISTRUTTORE
@@ -192,12 +194,15 @@ std::string videoplayer::getSourceFilename(){
  */
  void videoplayer::slider_seek(){
 
+
 	double pos = positionSlider->value();
 	double incr = pos - _clock->get_master_clock();
 
 	//mentre passo il nuovo tempo, lo converto da secondi a microsecondi
 	//(che e unita di avcodec -> timebase)
 	stream_seek((int64_t) (pos*AV_TIME_BASE), (int64_t) (incr*AV_TIME_BASE));
+
+	stoptick = false;
  }
 
   /**
