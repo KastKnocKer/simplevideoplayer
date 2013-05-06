@@ -185,21 +185,7 @@ std::string videoplayer::getSourceFilename(){
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LCD PANEL e SLIDER
-
-/**
-SLOT: funzione per aggiornamento del timer digitale e dello slider
-*/
- void videoplayer::tick()
- {
-	 int64_t time = (int64_t) (_clock->get_master_clock()+0.5);
-
-	 positionSlider->setValue((int) time);
-
-	 //QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
-	 QTime displayTime(0, (time / 60) % 60, (time) % 60);
-     panelLCD->display(displayTime.toString("mm:ss"));
- }
+// SEEK
 
  /**
  SLOT: funzione per settare i parametri di seek, dal valore ottenuto dallo slider
@@ -207,13 +193,42 @@ SLOT: funzione per aggiornamento del timer digitale e dello slider
  void videoplayer::slider_seek(){
 
 	double pos = positionSlider->value();
-
 	double incr = pos - _clock->get_master_clock();
 
 	//mentre passo il nuovo tempo, lo converto da secondi a microsecondi
 	//(che e unita di avcodec -> timebase)
-	stream_seek((int64_t) (pos*AV_TIME_BASE), incr);
+	stream_seek((int64_t) (pos*AV_TIME_BASE), (int64_t) (incr*AV_TIME_BASE));
  }
+
+  /**
+ SLOT chiamata in seguito alla pressione di uno dei tasti di SEEK
+ */
+void videoplayer::seek(int incr){
+
+	 /**
+	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
+	 il tempo di seek a quello del master clock
+	 */
+	 double pos = _clock->get_master_clock();
+	 pos += (double) incr;	
+
+	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
+	 //(che e unita di avcodec)
+	 stream_seek((int64_t) (pos*AV_TIME_BASE), (int64_t) (incr* AV_TIME_BASE)); 
+ }
+
+/**
+funzione utilizzata per impostare le variabili di seek
+*/
+void videoplayer::stream_seek(int64_t pos, int64_t rel){
+
+	if(!is.seek_req){
+		is.seek_pos = pos; //abbiamo convertito il tempo nell'avcodec timestamp
+		is.seek_rel = rel;
+		is.seek_flags = AVSEEK_FLAG_FRAME;
+		is.seek_req = 1;
+	}
+};
 
  void videoplayer::resetSlider(){
 
@@ -307,39 +322,6 @@ void videoplayer::playing(){
 	seekforwardAction->setDisabled(false);
 	seekbackwardAction->setDisabled(false);
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// SEEK
-
- /**
- SLOT chiamata in seguito alla pressione di uno dei tasti di SEEK
- */
-void videoplayer::seek(int incr){
-
-	 /**
-	 vado a calcolare il nuovo tempo, andando a sommare (nel caso backward sottrarre)
-	 il tempo di seek a quello del master clock
-	 */
-	 double pos = _clock->get_master_clock();
-	 pos += (double) incr;	
-
-	 //mentre passo il nuovo tempo, lo converto da secondi a microsecondi
-	 //(che e unita di avcodec)
-	 stream_seek((int64_t) (pos*AV_TIME_BASE), (int64_t) (incr* AV_TIME_BASE)); 
- }
-
-/**
-funzione utilizzata per impostare le variabili di seek
-*/
-void videoplayer::stream_seek(int64_t pos, int64_t rel){
-
-	if(!is.seek_req){
-		is.seek_pos = pos; //abbiamo convertito il tempo nell'avcodec timestamp
-		is.seek_rel = rel;
-		is.seek_flags = AVSEEK_FLAG_FRAME;
-		is.seek_req = 1;
-	}
-};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 

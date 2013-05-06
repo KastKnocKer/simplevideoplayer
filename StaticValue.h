@@ -3,10 +3,8 @@
 A/V sync as SDL does not have hardware buffer fullness info. */
 #define SDL_AUDIO_BUFFER_SIZE 1024
 
-#define VIDEO_PICTURE_QUEUE_SIZE 2
+#define VIDEO_PICTURE_QUEUE_SIZE 1
 
-//#define MAX_AUDIOQ_SIZE (256)
-//#define MAX_VIDEOQ_SIZE (256)
 #define MAX_AUDIOQ_SIZE (64)
 #define MAX_VIDEOQ_SIZE (64)
 

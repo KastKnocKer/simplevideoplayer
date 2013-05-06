@@ -44,6 +44,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 				continue;
 			}
 
+			/* if no pts, than compute it */
 			pts = is->audio_clock;
 			*pts_ptr = pts;
 
@@ -54,6 +55,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			return data_size;
 		}
 
+		/* free the current packet */
 		if(pkt->data)
 			av_free_packet(pkt);
 
@@ -66,6 +68,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			return -1;
 		}
 
+		/* if we read a flush pkt */
 		if(pkt->data == is->flush_pkt->data){
 			
 				//qDebug() << "AudioManager - letto FLUSH PKT";
@@ -145,7 +148,7 @@ int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int sample
   if(clock->clockType() != clock->AudioClock) {
 
 		double diff, avg_diff;
-		int wanted_size, min_size, max_size /*, nb_samples */;
+		int wanted_size, min_size, max_size , nb_samples;
 		
 		/* calcolo della diff = audio_clock - video_clock */
 		ref_clock = clock->get_master_clock();
@@ -171,9 +174,12 @@ int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int sample
 				if(fabs(avg_diff) >= is->audio_diff_threshold) {
 
 					/* calcoliamo quanti samples dobbiamo aggiungere o togliere */
+					/* stiamo stimando la diffrenza A-V*/
 					wanted_size = samples_size + ((int)(diff * is->audio_st->codec->sample_rate) * n);
-					min_size = samples_size * ((100 - SAMPLE_CORRECTION_PERCENT_MAX) / 100);
-					max_size = samples_size * ((100 + SAMPLE_CORRECTION_PERCENT_MAX) / 100);
+					nb_samples = samples_size/n;
+
+					min_size = ((nb_samples * (100 - SAMPLE_CORRECTION_PERCENT_MAX)) / 100) * n;
+					max_size = ((nb_samples * (100 + SAMPLE_CORRECTION_PERCENT_MAX)) / 100) * n;
 					if(wanted_size < min_size) {
 						wanted_size = min_size;
 					} else if (wanted_size > max_size) {

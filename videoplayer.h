@@ -95,7 +95,7 @@ public slots:
 	@param: tempo in millisecondi
 	*/
 	void seek(int incr);
-	void tick();											//metodo di refresh del timer
+	inline void tick();											//metodo di refresh del timer
 	void resetSlider();										//metodo per resettare a 0 slider e LCD
 	void slider_seek();										//a differenza di seek io non ho un incremento ma un nuovo tempo
 
@@ -117,3 +117,16 @@ public:
 };
 
 #endif // VIDEOPLAYER_H
+
+/**
+SLOT: funzione per aggiornamento del timer digitale e dello slider
+*/
+ void videoplayer::tick()
+ {
+	 int64_t time = (int64_t) (_clock->get_master_clock()+0.5);
+	 positionSlider->setValue((int) time);
+
+	 //QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
+	 QTime displayTime(0, (time / 60) % 60, (time) % 60);
+     panelLCD->display(displayTime.toString("mm:ss"));
+ }

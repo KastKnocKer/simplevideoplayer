@@ -119,7 +119,7 @@ void AVClock::video_refresh_timer(void){
 
 			schedule_refresh((int) (actual_delay * 1000 + 0.5));
 
-            /* show the picture! */
+            /* show the picture and update the timer*/
             emit needupdate();
 			
         }
