@@ -10,34 +10,60 @@
 #include "Status.h"
 
 /**
-classe che mantiene la coda dei frame gia convertiti in RGB e del rispettivo
-PTS (suo o assegnato)
+	Classe che mantiene la coda dei frame gia convertiti in RGB e del rispettivo
+	PTS (suo o assegnato)
 */
 class VideoPicture
 {
 private:
 
-	QWaitCondition	*_cond;
-	QMutex			*_mutex;
+	QWaitCondition	*_cond;		/* Condition per wait */
+	QMutex			*_mutex;	/* Mutex per accesso esclusivo */
 
-	//std::list<AVFrame> queue;
-	std::list<std::pair<AVFrame*, double>> queue;
+	std::list<std::pair<AVFrame*, double>> queue;	/* Lista per memorizzazione frame rgb e pts */
 
-	Status *ut;
+	Status *ut;					/*  */
 
 public:
-
+	
+	/**
+		Costruttore
+	*/
 	VideoPicture(void);
 
+	/**
+		Distruttore
+	*/
 	~VideoPicture(void);
 
+	/**
+		Inserisce un frame con relativo pts nella lista.
+		@param pFrameRGB frame RGB da inserire
+		@param pts pts associato al frame RGB
+		@return -1 in caso di errore, 0 se tutto ok
+	*/
 	int Put(AVFrame *pFrameRGB, double pts);
 
+	/**
+		Restituisce un frame RGB con il suo pts.
+		@return frame RGB con relativo PTS
+	*/
 	std::pair<AVFrame*, double> Get();
 
+	/**
+		Svuota la lista
+	*/
 	void Flush();
-
+	
+	/**
+		Ritorna il numero di frame presenti nella lista
+		@return numero di frame presenti nella lista
+	*/
 	int getSize();
 
+	/**
+		
+		@param ut
+	*/
 	void setUtility(Status *ut);
 };

@@ -25,8 +25,8 @@ class QGLWidget;
 class QDebug;
 
 /**
-classe per mostrare a monitor i frame decompressi,
-sfruttando OPENGL
+	Classe per mostrare a monitor i frame decompressi,
+	sfruttando OPENGL
 */
 class Video: public QGLWidget {
 
@@ -34,64 +34,100 @@ class Video: public QGLWidget {
 
 public:
 
+	/**
+		Costruttore
+		@param parent
+	*/
     explicit Video(QWidget *parent = 0);
+
+	/**
+		Distruttore
+	*/
 	~Video();
 
-	//metodo per ridimensionare la finestra
+	/**
+		Metodo per ridimensionare la finestra
+		@param w larghezza
+		@param h altezza
+	*/
 	void setSize(int w, int h);
 
-	//metodo per impostare il frame corrente alla finestra
+	/**
+		Metodo per impostare il frame corrente alla finestra
+		@param pFrameRGB frame da mostrare
+	*/
 	void setFrame(AVFrame* pFrameRGB);
 
-	//vado a impostare la flag in modo da permettere la riproduzione sulla finestra
+	/**
+		Vado a impostare la flag in modo da permettere la riproduzione sulla finestra
+	*/
 	void startdisplay(void);
 
 
 signals:
 
-	//segnale emesso quando la finestra si sta chiudendo
+	/**
+		Segnale emesso quando la finestra si sta chiudendo
+	*/
 	void windowClosing();
 
-	//segnale emesso quando premo sul bottone per chiuedere la finestra
+	/**
+		Segnale emesso quando premo sul bottone per chiuedere la finestra
+	*/
 	void Xpressed();
 
 public slots:
  
-	//metodo richiamato a fine riproduzione per forzare la chiusura della finestra
+	/**
+		Metodo richiamato a fine riproduzione per forzare la chiusura della finestra
+	*/
 	void closeWindow();
 
 protected:
 
 	/**
-	metodo per inizializzazione della finestra
-	viene richiamato di default alla richiesta del prima paintGL
+		Metodo per inizializzazione della finestra.
+		Viene richiamato di default alla richiesta del prima paintGL
 	*/
     void initializeGL();
 
-	//metodo per ridimensionare la finestra 
+	/**
+		Metodo per ridimensionare la finestra 
+		@param w larghezza
+		@param h altezza
+	*/
     void resizeGL(int w, int h);
 
-	//metodo per disegnare sulla finestra
+	/**
+		Metodo per disegnare sulla finestra
+	*/
     void paintGL();
 
-	//gestione evento pressione tasto X
+	/**
+		Gestione evento pressione tasto X
+		@param event evento pressione tasto
+	*/
     void keyPressEvent(QKeyEvent *event);
 
-	//ridefinizione dell'evento di chiusura della finestra
+	/**
+		Ridefinizione dell'evento di chiusura della finestra
+		@param event evento chiusura finestra
+	*/
 	void closeEvent(QCloseEvent *event);
 
 private:
 
-	AVFrame *pFrameRGB;
-	int w,h;
-	GLuint _texture_video;
+	AVFrame *pFrameRGB;		/* Frame da mostrare a video */
+	int w;					/* Larghezza finestra */
+	int h;					/* Altezza finestra */
+	GLuint _texture_video;	/*  */
 
-	bool display;
+	bool display;			/*  */
 
-	bool first_frame;
+	bool first_frame;		/*  */
 
-	bool _extClose;
-	bool debug;
+	bool _extClose;			/*  */
+	bool debug;				/*  */
 
 };
 #endif  /* _GLWIDGET_H */

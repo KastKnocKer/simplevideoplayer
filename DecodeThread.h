@@ -14,66 +14,107 @@
 
 class QThread;
 
-
+/**
+	Classe che si occupa di estrarre dal file i pacchetti audio e video
+*/
 class DecodeThread : public QThread
 {
 	Q_OBJECT
 
 private:
 
-	AVClock* _clock;
-	VideoState *_is;
+	AVClock* _clock;					/* */
+	VideoState *_is;					/* Puntatore allo stato globale delvideo */
 	
-	AVPacket _pkt1, *_packet;
+	AVPacket _pkt1;						/* */
+	AVPacket *_packet;					/* */
 
-	AVFormatContext *_pFormatCtx;
+	AVFormatContext *_pFormatCtx;		/* */
 
-	int video_index;
-	int audio_index;
+	int video_index;					/* */
+	int audio_index;					/* */
 	
-	AVDictionary *io_dict;
+	AVDictionary *io_dict;				/* */
 
-	VideoThread *_video_th;
+	VideoThread *_video_th;				/* */
 
-	int duration;
+	int duration;						/* */
 
-	/*
-	corpo del thread,
-	viene inizializzato FFMPEG
-	suddivisione dello stream in pacchetti e distinzione audio o video
+	/**
+		Corpo del thread.
+		In questo metodo viene inizializzato FFMPEG e viene effettuata la
+		suddivisione dello stream in pacchetti e la distinzione audio o video
 	*/
 	void run();
 
 signals:
 
-	//per settare il range dello slider
+	/**
+		Per settare il range dello slider
+		@param start
+		@param end
+	*/
 	void setSliderRange(int start, int end);
+
+	/**
+	
+	*/
 	void eof();
 
 public:
-
+	/**
+		Costruttore
+		@param parent
+	*/
 	DecodeThread(QObject *parent = 0);
 
-	/* questo metodo e usato sia per lo stream audio che video, ed esegue:
-	- apertura codec
-	- setting codec a VideoState
-	- [nel caso audio apertura di SDL_OpenAudio]
-	- inizializzazione delle rispettive queue
-	- inizializzazione del rispettivo thread di riproduzione audio/video
+	/**
+		Questo metodo e usato sia per lo stream audio che video, ed esegue:
+		- apertura codec
+		- setting codec a VideoState
+		- [nel caso audio apertura di SDL_OpenAudio]
+		- inizializzazione delle rispettive queue
+		- inizializzazione del rispettivo thread di riproduzione audio/video
+
+		@param stream_index
+		@return
 	*/
 	int stream_component_open(int stream_index);
 
 	/**
-	metodo per settare la variabile globale decompressionThread
+		Metodo per settare la variabile globale decompressionThread
+
+		@param t variabile globale decompressionThread
 	*/
 	void set(DecodeThread *t);
 
+	/**
+		Imposta il riferimento all'oggetto che mantiene lo stato del video
+		@param is riferimento all'oggetto che mantiene lo stato del video
+	*/
 	void SetVideoState(VideoState *is);
+
+	/**
+		Metodo per ottenere lo stato del video.
+		@return lo stato del video.
+	*/
 	VideoState* GetVideoState();
 
+	/**
+		Metodo per leggere il clock
+		@return il clock
+	*/
 	AVClock* GetAVClock();
+
+	/**
+		Metodo per settare il clock
+		@param c
+	*/
 	void SetAVClock(AVClock *c);
 
+	/*
+		
+	*/
 	void fail(void);
 
 };

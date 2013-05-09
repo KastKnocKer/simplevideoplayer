@@ -30,90 +30,165 @@ class QThread;
 class QSignalMapper;
 class QTime;
 
+/*
+	Classe che implementa l'interfaccia grafica
+*/
 class videoplayer : public QWidget
 {
 	Q_OBJECT
 
 private:
 
-	QString _fileName;														//nome del file video
+	QString _fileName;			/* Nome del file video */
 
-    QMenuBar *menuBar;
-    QMenu *fileMenu;
-    QMenu *About;
-    QAction *actionOpen;
-    QAction *exitAction;
-    QAction *actionInfo;
-    QLCDNumber *panelLCD;
-    QSlider *positionSlider;
-    QSlider *volumeSlider;
-    QAction *playAction;
-    QAction *pauseAction;
-    QAction *stopAction;
-	QAction *skipforwardAction;
-	QAction *skipbackwardAction;
-	QAction *seekforwardAction;
-	QAction *seekbackwardAction;
-	QSignalMapper *signalMapper;							//fa da mapping per particolari signal
+    QMenuBar *menuBar;			/* Barra che contiene i pulsanti */
+    QMenu *fileMenu;			/* Menù file */
+    QMenu *About;				/* Menù about */
+    QAction *actionOpen;		/* Azione apri */
+    QAction *exitAction;		/* Azione esci */
+    QAction *actionInfo;		/* Azione info */
+    QLCDNumber *panelLCD;		/* Pannello LCD che mostra avanzamento video */
+    QSlider *positionSlider;	/* Barra che mostra avanzamento video */
+    QSlider *volumeSlider;		/* Regolazione volume */
+    QAction *playAction;		/* Pulsante play */
+    QAction *pauseAction;		/* Pulsante pausa */
+    QAction *stopAction;		/* Pulsante stop */
+	QAction *skipforwardAction;	/* Pulsante avanti */
+	QAction *skipbackwardAction;/* Pulsante indietro */
+	QAction *seekforwardAction;	/* Seek avanti */
+	QAction *seekbackwardAction;/* Seek indietro */
+	QSignalMapper *signalMapper;/* Fa da mapping per particolari signal */
+	DecodeThread *_demuxer;		/* Puntatore al thread di decodifica */
+	AVClock *_clock;			/*  */
+	bool stoptick;				/* Variabile per evitare aggiornamento dello slider */
+	int64_t time;				/*  */
 
+	/**
+		Crea il menù
+	*/
 	void createMenu();
+
+	/**
+		Effettua lo stop del video
+	*/
 	void stop();
-	int initializeSDL();									//inizializzazione di SDL per audio
 
-	DecodeThread *_demuxer;									//puntatore al thread di decodifica
-	AVClock *_clock;
+	/**
+		Inizializzazione di SDL per audio
+		@return -1 in caso di errore, altrimenti 0
+	*/
+	int initializeSDL();
 
-	// metodo che va a impostare le flag di seek
+	
+
+	/**
+		Metodo che va a impostare le flag di seek
+		@param pos
+		@param rel
+	*/
 	void stream_seek(int64_t pos, int64_t rel);
 
-	bool stoptick;											//variabile per evitare aggiornamento dello slider
-	int64_t time;
+	
 
 protected:
 
-	//ridefinizione dell'evento di chiusura della finestra
+	/**
+		Ridefinizione dell'evento di chiusura della finestra
+		@param event evento chiusura finestra
+	*/
 	void closeEvent(QCloseEvent *event);
 
 signals:
-
+	/**
+	
+	*/
 	void first_play();
 	
 
 public slots:
-
+	/**
+		Apertura video
+	*/
     void open(void);
+
+	/**
+		Finestra about
+	*/
     void about(void);
     
+	/**
+		Metodo che dopo che ho scelto il file fa partire la riproduzione
+	*/
+	void loadFile();
 
-	void loadFile();										//metodo una volta che ho scelto il file, che fa partire la riproduzione
-	void quit();											//Metodo per fermare la riproduzione
+	/**
+		Metodo per fermare la riproduzione
+	*/
+	void quit();
+
+	/**
+		Metodo per mettere in pausa la riproduzione
+	*/
 	void pause();
 
-	void resume();											//richiama playing e fa ripartire audio
+	/**
+		Richiama playing e fa ripartire audio
+	*/
+	void resume();
+
+	/**
+		
+	*/
 	void playing();
 
 	//SLIDER E LCD
+	
 	/**
-	metodo per richiamare il seek
-	@param: tempo in millisecondi
+		Metodo per richiamare il seek
+		@param incr tempo in millisecondi
 	*/
 	void seek(int incr);
-	inline void tick();											//metodo di refresh del timer
-	void resetSlider();										//metodo per resettare a 0 slider e LCD
-	void slider_seek();										//a differenza di seek io non ho un incremento ma un nuovo tempo
+
+	/**
+		Metodo di refresh del timer
+	*/
+	inline void tick();
+	
+	/**
+		Metodo per resettare a 0 slider e LCD
+	*/
+	void resetSlider();
+	
+	/**
+		A differenza di seek io non ho un incremento ma un nuovo tempo
+	*/
+	void slider_seek();
+	
+	/**
+	
+	*/
 	inline void stop_tick();
 
 public:
 
-	Video *window;														//finestra di riproduzione
-	VideoState is;														//classe contente tutti i dati sul video in riproduzione
+	Video *window;		/* Finestra di riproduzione */
+	VideoState is;		/* Classe contente tutti i dati sul video in riproduzione */
 
-	//COSTRUTTORE
+	/**
+		Costruttore
+		@param parent
+	*/
 	videoplayer(QWidget *parent = 0);
-	//DISTRUTTORE
+	
+	/**
+		Distruttore
+	*/
 	~videoplayer();
 
-	//ritorna il nome del file selezionato
+	/**
+		Metodo per ottenere il nome del file selezionato
+		@return Ritorna il nome del file selezionato
+	*/
 	std::string getSourceFilename();
 
 	
@@ -123,7 +198,7 @@ public:
 #endif // VIDEOPLAYER_H
 
 /**
-SLOT: funzione per aggiornamento del timer digitale e dello slider
+	SLOT: funzione per aggiornamento del timer digitale e dello slider
 */
 void videoplayer::tick()
 {
@@ -140,7 +215,7 @@ void videoplayer::tick()
 }
 
 /**
-SLOT: quando premo sullo slider, devo evitare aggiornamento di essa
+	SLOT: quando premo sullo slider, devo evitare aggiornamento di essa
 */
 void videoplayer::stop_tick()
 {

@@ -8,14 +8,14 @@
 
 #include "VideoState.h"
 
-const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;	//definisco una costante che rapresenta il formato dei pixel voluto
+const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;	/* Definisco una costante che rapresenta il formato dei pixel voluto */
 
 class QThread;
 /**
-questo thread esegue in sequenza le seguenti azioni:
-- preleva/legge i pacchetti dalla video_queue
-- decodifica i pacchetti in frame
-- mette i frame in una queue_picture
+	Questo thread esegue in sequenza le seguenti azioni:
+		- preleva/legge i pacchetti dalla video_queue
+		- decodifica i pacchetti in frame
+		- mette i frame in una queue_picture
 */
 class VideoThread : public QThread
 {
@@ -23,35 +23,45 @@ class VideoThread : public QThread
 
 private:
 
-	VideoState *_is;
-	AVPacket pkt1;
-	AVPacket *packet;
-	int len1;
-	int frameFinished;
-	double pts;				//il pts letto dal frame corrente
-	AVFrame *pFrame, *pFrameRGB;
+	VideoState *_is;	/* Riferimento allo stato globale del video */
+	AVPacket pkt1;		/*  */
+	AVPacket *packet;	/*  */
+	int len1;			/*  */
+	int frameFinished;	/*  */
+	double pts;			/* Il pts letto dal frame corrente */
+	AVFrame *pFrame;	/* Frame corrente */
+	AVFrame *pFrameRGB;	/* Frame RGB corrente */
 
-	int bytes;				//memoria necessaria per allocare il frame convertito in RGB
+	int bytes;			/* 	Memoria necessaria per allocare il frame convertito in RGB */
 
 	void run();
 
 	/**
-	funzione che aggiorna i PTS in modo tale che siano sincronizzati con tutto
-	devo quindi occuparsi di 2 problemi:
-	1) la ripetizione di uno stesso frame
-	2) sincronizzazione del video all'audio
+		Funzione che aggiorna i PTS in modo tale che siano sincronizzati con tutto
+		devo quindi occuparsi di 2 problemi:
+			1) la ripetizione di uno stesso frame
+			2) sincronizzazione del video all'audio
 	*/
 	void synchronize_video();
 
 signals:
 
-	/* signal che attiverà lo slot nella finestra per un update della grafica */
+	/**
+		Signal che attiverà lo slot nella finestra per un update della grafica
+	*/
 	void frame_pronto();
 
 public:
-
+	/**
+		Costruttore
+		@param parent
+	*/
 	VideoThread(QObject *parent = 0);
 
+	/*
+		Metodo per impostare il riferimento allo stato del video
+		@param is stato del video
+	*/
 	void SetVideoState(VideoState *is);
 
 };
