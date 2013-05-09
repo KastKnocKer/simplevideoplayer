@@ -17,8 +17,8 @@ class VideoPicture
 {
 private:
 
-	QWaitCondition	*_cond_maxsize, *_cond_data;
-	QMutex			*_mutex_maxsize, *_mutex_data;
+	QWaitCondition	*_cond;
+	QMutex			*_mutex;
 
 	//std::list<AVFrame> queue;
 	std::list<std::pair<AVFrame*, double>> queue;

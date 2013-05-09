@@ -2,10 +2,8 @@
 
 VideoPicture::VideoPicture(void)
 {
-	_cond_maxsize = new QWaitCondition();
-	_cond_data = new QWaitCondition();
-	_mutex_data = new QMutex();
-	_mutex_maxsize = new QMutex();
+	_cond = new QWaitCondition();
+	_mutex = new QMutex();
 
 	ut = nullptr;
 }
@@ -17,33 +15,16 @@ VideoPicture::~VideoPicture(void)
 
 int VideoPicture::Put(AVFrame *pFrameRGB, double pts){
 
-	/*abbiamo bisogno che la coda non superi una determinata
-	dimensione, per non dover così rallentare il processo di display a video
-	nel caso la coda(buffer) fosse pieno mi metto in attesa che si liberi
-	scelgo di ripartire appena si libera anche un solo posto
-	*/
-	_mutex_maxsize->lock();
-
-	while(queue.size() >= VIDEO_PICTURE_QUEUE_SIZE && (ut->getStopValue() == false)) {
-		_cond_maxsize->wait(_mutex_maxsize);	//wait for our buffer to clear
-	}
-
-	_mutex_maxsize->unlock();
-
-	if(ut->getStopValue() == true){
-		return -1;
-	}
-
 	/* questa seconda lock viene invece eseguita 
 	per avere un accesso mutuamente esclusivo alla lista */
-	_mutex_data->lock();
+	_mutex->lock();
 
 	std::pair<AVFrame*, double> p(pFrameRGB, pts);
 	queue.push_back(p);						//aggiungo il frame RGB alla coda
 
-	_cond_data->wakeOne();					//sveglio un processo in coda se c'è
+	_cond->wakeOne();					//sveglio un processo in coda se c'è
 
-	_mutex_data->unlock();
+	_mutex->unlock();
 
 	if(ut->getStopValue() == true) {
 		return -1;
@@ -56,7 +37,7 @@ std::pair<AVFrame*, double> VideoPicture::Get(){
 	
 	std::pair<AVFrame*, double> read;
 
-	_mutex_data->lock();
+	_mutex->lock();
 
 	while(true){
 		if(!queue.empty()){
@@ -64,28 +45,23 @@ std::pair<AVFrame*, double> VideoPicture::Get(){
 			queue.pop_front();		//elimino elemento prelevato
 			break;
 		} else {
-			_cond_data->wait(_mutex_data);
+			_cond->wait(_mutex);
 		}
 	}
-	_mutex_data->unlock();
-
-	/* una volta prelevato, vado a svegliare la coda dei frame che devono essere depositati */
-	_mutex_maxsize->lock();
-	_cond_maxsize->wakeOne();
-	_mutex_maxsize->unlock();
+	_mutex->unlock();
 
 	return read;
 }
 
 void VideoPicture::Flush(){
 
-	_mutex_data->lock();
+	_mutex->lock();
 
 	/*_cond_maxsize->wakeAll();
 	_cond_data->wakeAll();*/
 	queue.clear();
 
-	_mutex_data->unlock();
+	_mutex->unlock();
 }
 
 

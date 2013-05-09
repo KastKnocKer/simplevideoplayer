@@ -9,6 +9,7 @@
 int audio_decode_frame(VideoState *is, double *pts_ptr) {
 
 	AVPacket *pkt = &is->audio_pkt;							//Pacchetto audio in cui copiare quello della coda
+	AVCodecContext *dec= is->audio_st->codec;
 	int n = 0;
 	int len1 = -1; 
 	int data_size = 0;
@@ -21,7 +22,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			int got_frame = 0;
 
 			//Decode the audio frame of size avpkt->size from avpkt->data into frame
-			len1 = avcodec_decode_audio4(is->audio_st->codec, &is->audio_frame, &got_frame, pkt);
+			len1 = avcodec_decode_audio4(dec, &is->audio_frame, &got_frame, pkt);
 
 			if(len1 < 0){
 				/* if error, skip frame */
@@ -31,7 +32,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			
 			if(got_frame)
 			{
-				data_size = av_samples_get_buffer_size(NULL, is->audio_st->codec->channels, is->audio_frame.nb_samples, is->audio_st->codec->sample_fmt, 1);
+				data_size = av_samples_get_buffer_size(NULL, dec->channels, is->audio_frame.nb_samples, dec->sample_fmt, 1);
 				memcpy(is->audio_buf, is->audio_frame.data[0], data_size);
 			}
 
@@ -48,8 +49,8 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			pts = is->audio_clock;
 			*pts_ptr = pts;
 
-			n = 2 * is->audio_st->codec->channels;
-			is->audio_clock += (double) data_size / (double) (n*is->audio_st->codec->sample_rate);
+			n = 2 * dec->channels;
+			is->audio_clock += (double) data_size / (double) (n*dec->sample_rate);
 
 			/* We have data, return it and come back for more later */
 			return data_size;
@@ -73,7 +74,7 @@ int audio_decode_frame(VideoState *is, double *pts_ptr) {
 			
 				//qDebug() << "AudioManager - letto FLUSH PKT";
 			
-			avcodec_flush_buffers(is->audio_st->codec);
+			avcodec_flush_buffers(dec);
 			continue;
 		}
 
@@ -176,7 +177,7 @@ int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int sample
 					/* calcoliamo quanti samples dobbiamo aggiungere o togliere */
 					/* stiamo stimando la diffrenza A-V*/
 					wanted_size = samples_size + ((int)(diff * is->audio_st->codec->sample_rate) * n);
-					nb_samples = samples_size/n;
+					nb_samples = samples_size/n;	//dimensione per ogni canale
 
 					min_size = ((nb_samples * (100 - SAMPLE_CORRECTION_PERCENT_MAX)) / 100) * n;
 					max_size = ((nb_samples * (100 + SAMPLE_CORRECTION_PERCENT_MAX)) / 100) * n;

@@ -7,7 +7,7 @@ AVClock::AVClock(QObject *parent) :QObject(parent)
 	timer = new QTimer(this);
 
 	//inizializzazione di default del tipo di clock
-	setClockType(VideoClock);
+	setClockType(AudioClock);
 
 	//ogni volta che viene emesso un timeout, eseguo un video_refresh_timer
 	connect(timer, &QTimer::timeout, this, &AVClock::video_refresh_timer);

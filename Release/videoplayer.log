@@ -1,0 +1,56 @@
+﻿Build started 5/9/2013 9:44:37 AM.
+     1>Project "C:\Users\Matteo\Documents\ videoplayer\videoplayer.vcxproj" on node 2 (Rebuild target(s)).
+     1>CustomBuild:
+         Moc'ing videoplayer.h...
+         Moc'ing AVClock.h...
+         Moc'ing DecodeThread.h...
+         Moc'ing Video.h...
+         Moc'ing VideoThread.h...
+         Rcc'ing videoplayer.qrc...
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\qt5\qtbase\include /I.\GeneratedFiles\Release /IC:\Qt\qt5\qtbase\..\qtmultimedia\include\QtMultimedia /IC:\Qt\qt5\qtbase\..\qtmultimedia\include /IC:\Qt\qt5\qtbase\..\qttools\include /IC:\Qt\qt5\qtbase\..\qttools\include\QtHelp /IC:\Qt\qt5\qtbase\..\qtdeclarative\include\QtDeclarative /IC:\Qt\qt5\qtbase\..\qtdeclarative\include /IC:\Qt\qt5\qtbase\include\QtGui /IC:\Qt\qt5\qtbase\include\QtOpenGL /IC:\Qt\qt5\qtbase\include\QtWidgets /IC:\Qt\qt5\qtbase\include\QtConcurrent /IC:\Qt\qt5\qtbase\include\QtCore /I"C:\Users\Matteo\Documents\ videoplayer\\dev\include" /I"C:\Users\Matteo\Documents\ videoplayer\\SDL\include" /nologo /W1 /WX- /O2 /Oy- /D UNICODE /D WIN32 /D QT_DLL /D QT_NO_DEBUG /D NDEBUG /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /D QT_CONCURRENT_LIB /D QT_CORE_LIB /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt AudioManger.cpp AVClock.cpp DecodeThread.cpp GeneratedFiles\Release\moc_AVClock.cpp GeneratedFiles\Release\moc_DecodeThread.cpp GeneratedFiles\Release\moc_Video.cpp GeneratedFiles\Release\moc_videoplayer.cpp GeneratedFiles\Release\moc_VideoThread.cpp main.cpp PacketQueueVideo.cpp PacketQueueAudio.cpp Status.cpp Video.cpp VideoPicture.cpp videoplayer.cpp VideoState.cpp VideoThread.cpp
+         AudioManger.cpp
+         AVClock.cpp
+         DecodeThread.cpp
+         moc_AVClock.cpp
+         moc_DecodeThread.cpp
+         moc_Video.cpp
+         moc_videoplayer.cpp
+         moc_VideoThread.cpp
+         main.cpp
+         PacketQueueVideo.cpp
+         PacketQueueAudio.cpp
+         Status.cpp
+         Video.cpp
+         VideoPicture.cpp
+         videoplayer.cpp
+         VideoState.cpp
+         VideoThread.cpp
+         Generating Code...
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\qt5\qtbase\include /I.\GeneratedFiles\Release /IC:\Qt\qt5\qtbase\..\qtmultimedia\include\QtMultimedia /IC:\Qt\qt5\qtbase\..\qtmultimedia\include /IC:\Qt\qt5\qtbase\..\qttools\include /IC:\Qt\qt5\qtbase\..\qttools\include\QtHelp /IC:\Qt\qt5\qtbase\..\qtdeclarative\include\QtDeclarative /IC:\Qt\qt5\qtbase\..\qtdeclarative\include /IC:\Qt\qt5\qtbase\include\QtGui /IC:\Qt\qt5\qtbase\include\QtOpenGL /IC:\Qt\qt5\qtbase\include\QtWidgets /IC:\Qt\qt5\qtbase\include\QtConcurrent /IC:\Qt\qt5\qtbase\include\QtCore /I"C:\Users\Matteo\Documents\ videoplayer\\dev\include" /I"C:\Users\Matteo\Documents\ videoplayer\\SDL\include" /nologo /W1 /WX- /O2 /Oy- /D UNICODE /D WIN32 /D QT_DLL /D QT_NO_DEBUG /D NDEBUG /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /D QT_CONCURRENT_LIB /D QT_CORE_LIB /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt GeneratedFiles\qrc_videoplayer.cpp
+         qrc_videoplayer.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matteo\Documents\ videoplayer\Win32\Release\\videoplayer.exe" /NOLOGO /LIBPATH:C:\Qt\qt5\qtbase\lib /LIBPATH:"C:\Users\Matteo\Documents\ videoplayer\\dev\lib" /LIBPATH:"C:\Users\Matteo\Documents\ videoplayer\\SDL\lib" qtmain.lib Qt5Core5.lib Qt5Gui5.lib Qt5Multimedia5.lib Qt5MultimediaWidgets5.lib Qt5OpenGL5.lib Qt5Widgets5.lib Qt5Concurrent5.lib Qt5Test5.lib Qt5Help5.lib Qt5Declarative5.lib Qt5Gui.lib Qt5OpenGL.lib opengl32.lib glu32.lib Qt5Widgets.lib Qt5Concurrent.lib Qt5Core.lib avcodec.lib avdevice.lib avfilter.lib avformat.lib avutil.lib postproc.lib swresample.lib swscale.lib SDL.lib SDLmain.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\Users\Matteo\Documents\ videoplayer\Win32\Release\videoplayer.pdb" /SUBSYSTEM:WINDOWS /OPT:NOREF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matteo\Documents\ videoplayer\Win32\Release\videoplayer.lib" /MACHINE:X86 /SAFESEH:NO Release\AudioManger.obj
+         Release\AVClock.obj
+         Release\DecodeThread.obj
+         Release\qrc_videoplayer.obj
+         Release\moc_AVClock.obj
+         Release\moc_DecodeThread.obj
+         Release\moc_Video.obj
+         Release\moc_videoplayer.obj
+         Release\moc_VideoThread.obj
+         Release\main.obj
+         Release\PacketQueueVideo.obj
+         Release\PacketQueueAudio.obj
+         Release\Status.obj
+         Release\Video.obj
+         Release\VideoPicture.obj
+         Release\videoplayer.obj
+         Release\VideoState.obj
+         Release\VideoThread.obj
+         videoplayer.vcxproj -> C:\Users\Matteo\Documents\ videoplayer\Win32\Release\videoplayer.exe
+     1>Done Building Project "C:\Users\Matteo\Documents\ videoplayer\videoplayer.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:19.88

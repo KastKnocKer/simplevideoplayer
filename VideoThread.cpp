@@ -53,11 +53,11 @@ void VideoThread::run(){
 			
 			avcodec_flush_buffers(_is->video_st->codec);
 
-			/*_is->pictq.Flush();
+			_is->pictq.Flush();
 
 			_is->frame_last_pts = AV_NOPTS_VALUE;
 			_is->frame_last_delay = 0;
-			_is->frame_timer = (double)av_gettime() / 1000000.0;*/
+			_is->frame_timer = (double)av_gettime() / 1000000.0;
 
 			continue;
 		}
@@ -73,10 +73,12 @@ void VideoThread::run(){
 		//nota: opaque è una variabile interna a pFrame lasciata libera
 		//per essere usata dall'utente come variabile di appoggio per dei dati
 		
-		/* caso in cui NON RIESCO a reperire DTS */
+		/* caso in cui NON RIESCO a reperire DTS, ma sho allocato il buffer */
 		if (packet->dts == (int64_t)AV_NOPTS_VALUE && pFrame->opaque && *(uint64_t*)pFrame->opaque != AV_NOPTS_VALUE)
         {
-            pts = *(uint64_t *) pFrame->opaque;	//vado a reperire il PTS del primo pacchetto
+			//vado a reperire il PTS del primo pacchetto, messo in opaque dalla nostra funzione
+			//di allocazione del buffer
+            pts = *(uint64_t *) pFrame->opaque;	
         }
 		/* caso in cui RIESCO a reperire DTS */
         else if (packet->dts != (int64_t)AV_NOPTS_VALUE)
@@ -103,6 +105,10 @@ void VideoThread::run(){
 			sws_scale(_is->sws_ctx, (uint8_t const * const *)pFrame->data,
 				pFrame->linesize, 0, _is->video_st->codec->height, pFrameRGB->data, 
 						pFrameRGB->linesize);
+
+			while(_is->pictq.getSize() > VIDEO_PICTURE_QUEUE_SIZE && (_is->ut.getStopValue() == false)){
+				this->usleep(1000);
+			}
 
 			/* aggiunta del frame RGB alla nuova coda */
 			if(_is->pictq.Put(pFrameRGB, pts) < 0) {

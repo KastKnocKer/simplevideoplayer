@@ -77,18 +77,14 @@ void DecodeThread::run(){
 	//inizializzo io_context passandogli il file da riprodurre
 	//if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &callback, &io_dict)){	
 	if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &_pFormatCtx->interrupt_callback, &io_dict)){	
-		
 			//qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
-		
 		fail();
 		return;
 	}
 
 	/* APERTURA FILE VIDEO */
 	if(avformat_open_input(&_pFormatCtx, _is->getSourceFilename().c_str(), NULL, NULL) != 0){	//Apro il file
-		
-			//qDebug() << "Impossibile aprire il file";
-		
+			//qDebug() << "Impossibile aprire il file";		
 		fail();
 		return;
 	}
@@ -98,9 +94,7 @@ void DecodeThread::run(){
 	
 
 	if(avformat_find_stream_info(_pFormatCtx, NULL)<0){											//Leggo le informazioni sullo stream
-		
 			//qDebug() << "Impossibile leggere le info sullo stream";	
-		
 		fail();
 		return;
 	}
@@ -167,8 +161,8 @@ void DecodeThread::run(){
 			int stream_index = -1;	//reset variabile identifica lo stream
 
 			int64_t seek_target = _is->seek_pos; //nuovo tempo desiderato
-			int64_t seek_min= _is->seek_rel > 0 ? seek_target - _is->seek_rel + 2: INT64_MIN;
-	        int64_t seek_max= _is->seek_rel < 0 ? seek_target - _is->seek_rel - 2: INT64_MAX;
+			/*int64_t seek_min= _is->seek_rel > 0 ? seek_target - _is->seek_rel + 2: INT64_MIN;
+	        int64_t seek_max= _is->seek_rel < 0 ? seek_target - _is->seek_rel - 2: INT64_MAX;*/
 			int64_t DesiredFrameNumber;
 
 			if(_is->videoStream >= 0){
