@@ -11,7 +11,6 @@ Video::Video(QWidget *parent) : QGLWidget(parent) {
 
 	first_frame = true;
 	_extClose = false;
-	debug = false;
 }
 
 Video::~Video(){

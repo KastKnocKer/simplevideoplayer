@@ -156,7 +156,7 @@ int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int sample
 		diff = clock->get_audio_clock() - ref_clock;
 
 		/*
-		la differenza tra audio e video non deve essere esatta
+		la differenza tra audio e video
 		abbiamo un valore entro il quale è considerata accettabile
 		*/
 		if(diff < AV_NOSYNC_THRESHOLD) {
@@ -171,7 +171,7 @@ int synchronize_audio(AVClock *clock, VideoState *is, short *samples, int sample
 
 				avg_diff = is->audio_diff_cum * (1.0 - is->audio_diff_avg_coef);
 			
-				/* controllo se la differenza supera la soglia */
+				/* controllo se la differenza (valore assoluto) supera la soglia, se no e inutile sincronizzare */
 				if(fabs(avg_diff) >= is->audio_diff_threshold) {
 
 					/* calcoliamo quanti samples dobbiamo aggiungere o togliere */

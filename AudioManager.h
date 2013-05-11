@@ -3,10 +3,11 @@
 
 /**
 	Classe per la gestione dell'audio
+	@Matteo Renzi
 */
 
 /**
-	Metodo per decodificare i pacchetti audio e ottenre così un sample rate che andrà aggiunto alla audioq (PacketQueue)
+	Metodo per decodificare i pacchetti audio e ottenere così un sample rate che andrà aggiunto alla audioq (PacketQueue)
 
 	@param is puntatore alla classe che mantiene le informazioni sullo stato di riproduzione del video
 	@param pts_ptr

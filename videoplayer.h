@@ -32,6 +32,7 @@ class QTime;
 
 /*
 	Classe che implementa l'interfaccia grafica
+	@author Giovanni Esposito
 */
 class videoplayer : public QWidget
 {
@@ -59,7 +60,7 @@ private:
 	QAction *seekbackwardAction;/* Seek indietro */
 	QSignalMapper *signalMapper;/* Fa da mapping per particolari signal */
 	DecodeThread *_demuxer;		/* Puntatore al thread di decodifica */
-	AVClock *_clock;			/*  */
+	AVClock *_clock;			/* Puntatore alla classe di refresh */
 	bool stoptick;				/* Variabile per evitare aggiornamento dello slider */
 	int64_t time;				/*  */
 
@@ -79,8 +80,6 @@ private:
 	*/
 	int initializeSDL();
 
-	
-
 	/**
 		Metodo che va a impostare le flag di seek
 		@param pos
@@ -88,7 +87,6 @@ private:
 	*/
 	void stream_seek(int64_t pos, int64_t rel);
 
-	
 
 protected:
 
@@ -99,6 +97,7 @@ protected:
 	void closeEvent(QCloseEvent *event);
 
 signals:
+
 	/**
 	
 	*/
@@ -137,7 +136,7 @@ public slots:
 	void resume();
 
 	/**
-		
+		metodo usato per abilitare/disabilitare i pulsanti durante la riproduzione
 	*/
 	void playing();
 
@@ -165,7 +164,7 @@ public slots:
 	void slider_seek();
 	
 	/**
-	
+		metodo per fermare il refresh dello slider
 	*/
 	inline void stop_tick();
 
@@ -191,11 +190,14 @@ public:
 	*/
 	std::string getSourceFilename();
 
-	
-
 };
 
 #endif // VIDEOPLAYER_H
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// INLINE
+
 
 /**
 	SLOT: funzione per aggiornamento del timer digitale e dello slider

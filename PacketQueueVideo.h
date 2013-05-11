@@ -14,7 +14,9 @@
 
 /*
 	Classe che implementa la coda per la gestione
-	dei pacchetti video.
+	dei pacchetti video. Accesso alla coda mutuamente esclusivo.
+
+	@author Luca Gagliardelli
 */
 class PacketQueueVideo{
 

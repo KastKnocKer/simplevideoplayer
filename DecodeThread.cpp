@@ -30,9 +30,9 @@ int decode_interrupt_cb(void *opaque){
 // in particolare, ogni volta che leggiamo un PACCHETTO viene salvato il valore PTS
 
 /**
- * These are called whenever we allocate a frame
- * buffer. We use this to store the global_pts in
- * a frame at the time it is allocated.
+ * Metodo richiamato in automatico da @see avcodec_decode_video()
+ * ogni volta che viene allocato un frame buffer, ovvero al prima pacchetto del buffer.
+ * Lo facciamo per ottenere il PTS del pacchetto e inserirlo nel frame.
  */
 int our_get_buffer(struct AVCodecContext *c, AVFrame *pic)
 {
@@ -43,6 +43,9 @@ int our_get_buffer(struct AVCodecContext *c, AVFrame *pic)
     return ret;
 }
 
+/**
+ * Metodo di rilascio del buffer contenente il frame
+*/
 void our_release_buffer(struct AVCodecContext *c, AVFrame *pic)
 {
     if(pic){
@@ -75,16 +78,15 @@ void DecodeThread::run(){
 	_pFormatCtx->interrupt_callback.opaque = _is;
 
 	//inizializzo io_context passandogli il file da riprodurre
-	//if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &callback, &io_dict)){	
 	if (avio_open2(&_is->io_context, _is->getSourceFilename().c_str(), AVIO_FLAG_READ, &_pFormatCtx->interrupt_callback, &io_dict)){	
-			//qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
+		//qDebug() << "Unable to open I/O for " << QString::fromStdString(_is->getSourceFilename());
 		fail();
 		return;
 	}
 
 	/* APERTURA FILE VIDEO */
 	if(avformat_open_input(&_pFormatCtx, _is->getSourceFilename().c_str(), NULL, NULL) != 0){	//Apro il file
-			//qDebug() << "Impossibile aprire il file";		
+		//qDebug() << "Impossibile aprire il file";		
 		fail();
 		return;
 	}
@@ -94,7 +96,7 @@ void DecodeThread::run(){
 	
 
 	if(avformat_find_stream_info(_pFormatCtx, NULL)<0){											//Leggo le informazioni sullo stream
-			//qDebug() << "Impossibile leggere le info sullo stream";	
+		//qDebug() << "Impossibile leggere le info sullo stream";	
 		fail();
 		return;
 	}
@@ -119,8 +121,7 @@ void DecodeThread::run(){
 
 	if(_is->videoStream < 0 || _is->audioStream < 0) {
 		
-			//qDebug() << "could not open codecs " << QString::fromStdString(_is->getSourceFilename());
-		
+		//qDebug() << "could not open codecs " << QString::fromStdString(_is->getSourceFilename());
 		fail();		//richiamo la funzione che mi va a chiudere la finestra
 		return;
 	}
@@ -144,13 +145,11 @@ void DecodeThread::run(){
 			_is->ut.setLastPauseValue(_is->ut.getPauseValue());
 			if(_is->ut.getPauseValue() == true){
 				
-				//qDebug() << "DecodeThread - av_read_pause";
-				
+				//qDebug() << "DecodeThread - av_read_pause";				
 				_is->read_pause_return = av_read_pause(_pFormatCtx);
 			} else {
 				
 				//qDebug() << "DecodeThread - av_read_play";
-				
 				av_read_play(_pFormatCtx);
 			}
 		};
@@ -161,8 +160,6 @@ void DecodeThread::run(){
 			int stream_index = -1;	//reset variabile identifica lo stream
 
 			int64_t seek_target = _is->seek_pos; //nuovo tempo desiderato
-			/*int64_t seek_min= _is->seek_rel > 0 ? seek_target - _is->seek_rel + 2: INT64_MIN;
-	        int64_t seek_max= _is->seek_rel < 0 ? seek_target - _is->seek_rel - 2: INT64_MAX;*/
 			int64_t DesiredFrameNumber;
 
 			if(_is->videoStream >= 0){
@@ -209,11 +206,10 @@ void DecodeThread::run(){
 			continue;
 		}
 
+		// EOF
 		if(_is->ut.getEOFValue() == true){
-
 			
 			//qDebug() << "END OF FILE - DECODING";
-			
 
 			if(_is->videoStream >= 0){
 				av_init_packet(_packet);
@@ -265,7 +261,7 @@ void DecodeThread::run(){
 
 	//qDebug() << "DecodeThread - esco dal ciclo di decodifica";
 	
-	/* all done - wait for it*/
+	/* all done - wait for it */
 	while(_is->ut.getStopValue() != true){
 		this->usleep(100000);
 	}
@@ -289,7 +285,6 @@ void DecodeThread::fail(void){
 	- apertura codec
 	- setting codec a VideoState
 	- [nel caso audio apertura di SDL_OpenAudio]
-	- inizializzazione delle rispettive queue
 	- inizializzazione del rispettivo thread di riproduzione audio/video
 */
 int DecodeThread::stream_component_open(int stream_index){

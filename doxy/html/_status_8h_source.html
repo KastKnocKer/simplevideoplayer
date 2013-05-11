@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3.1"/>
-<title>Simple Video Player:  File sorgente C:/Nuova cartella/Status.h</title>
+<title>Simple Video Player:  File sorgente C:/Users/Matteo/Documents/ videoplayer/Status.h</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('_status_8h_source.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">C:/Nuova cartella/Status.h</div>  </div>
+<div class="title">C:/Users/Matteo/Documents/ videoplayer/Status.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
@@ -127,88 +127,89 @@ $(document).ready(function(){initNavTree('_status_8h_source.html','');});
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">class </span>QDebug;</div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="code" href="class_status.html">   27</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_status.html">Status</a>{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">bool</span> _quit;         <span class="comment">/* True se si lancia il quit */</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">bool</span> _pause;        <span class="comment">/* True se si mette in pausa */</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">bool</span> _lastpause;    <span class="comment">/*  */</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">bool</span> _eof;          <span class="comment">/* Diventa true se il video è finito */</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    AVPacket flush_pkt; <span class="comment">/* Pacchetto di flush usato durante il seek */</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="class_status.html#a944586fb328a3524805748c8f7b17f32">Status</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="class_status.html#a1b24d90ef2560afffe9d7183e279c63c">~Status</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a4dfcc4bbe705b42fa0675bf8cf1acc87">isPlaying</a>();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#ac845034eed92c0ce48e4a69974a57ba8">setStopValue</a>(<span class="keywordtype">bool</span> quit);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a0de523b7593d4ebd3b888e3907253b30">getStopValue</a>();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#a78841fc80e89d850f81ca4a4af7982bc">setPauseValue</a>(<span class="keywordtype">bool</span> pause);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a851b2a3a5da40b6319ca13ef87e5a37d">getPauseValue</a>(); </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#a2eaa5a2a2fc00a5fb4fe49362e036d77">setLastPauseValue</a>(<span class="keywordtype">bool</span> lastpause);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a13dbfd17e3f0e62f7ea5d11569dc45fd">getLastPauseValue</a>();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#af29628c87eaef734748ff275f5ba91ec">isPauseChanged</a>();</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#af7c2bec39eabf640240067ed802ebe53">setEOFValue</a>(<span class="keywordtype">bool</span> eof);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#accc89ba87940c85d0114b8221cae2709">getEOFValue</a>();</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    AVPacket* <a class="code" href="class_status.html#ab617b0f513300353a9c18929b02bd613">getFlushPkt</a>();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;};</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">// METODI INLINE</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="code" href="class_status.html">   30</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_status.html">Status</a>{</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">bool</span> _quit;         <span class="comment">/* True se si lancia il quit */</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">bool</span> _pause;        <span class="comment">/* True se si mette in pausa */</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">bool</span> _lastpause;    <span class="comment">/* variabile di controllo per il decodethread */</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> _eof;          <span class="comment">/* Diventa true se il video è finito */</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    AVPacket flush_pkt; <span class="comment">/* Pacchetto di flush usato durante il seek */</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="class_status.html#a944586fb328a3524805748c8f7b17f32">Status</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="class_status.html#a1b24d90ef2560afffe9d7183e279c63c">~Status</a>();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a4dfcc4bbe705b42fa0675bf8cf1acc87">isPlaying</a>();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#ac845034eed92c0ce48e4a69974a57ba8">setStopValue</a>(<span class="keywordtype">bool</span> quit);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a0de523b7593d4ebd3b888e3907253b30">getStopValue</a>();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#a78841fc80e89d850f81ca4a4af7982bc">setPauseValue</a>(<span class="keywordtype">bool</span> pause);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a851b2a3a5da40b6319ca13ef87e5a37d">getPauseValue</a>(); </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#a2eaa5a2a2fc00a5fb4fe49362e036d77">setLastPauseValue</a>(<span class="keywordtype">bool</span> lastpause);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#a13dbfd17e3f0e62f7ea5d11569dc45fd">getLastPauseValue</a>();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#af29628c87eaef734748ff275f5ba91ec">isPauseChanged</a>();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_status.html#af7c2bec39eabf640240067ed802ebe53">setEOFValue</a>(<span class="keywordtype">bool</span> eof);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="class_status.html#accc89ba87940c85d0114b8221cae2709">getEOFValue</a>();</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    AVPacket* <a class="code" href="class_status.html#ab617b0f513300353a9c18929b02bd613">getFlushPkt</a>();</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;};</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="code" href="class_status.html#a0de523b7593d4ebd3b888e3907253b30">  121</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a0de523b7593d4ebd3b888e3907253b30">Status::getStopValue</a>(){</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> this-&gt;_quit;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;};</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="code" href="class_status.html#a851b2a3a5da40b6319ca13ef87e5a37d">  125</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a851b2a3a5da40b6319ca13ef87e5a37d">Status::getPauseValue</a>(){   </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">return</span> this-&gt;_pause;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;};</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="code" href="class_status.html#a13dbfd17e3f0e62f7ea5d11569dc45fd">  129</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a13dbfd17e3f0e62f7ea5d11569dc45fd">Status::getLastPauseValue</a>(){   </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> this-&gt;_lastpause;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;};</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno"><a class="code" href="class_status.html#af29628c87eaef734748ff275f5ba91ec">  133</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#af29628c87eaef734748ff275f5ba91ec">Status::isPauseChanged</a>(){</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">if</span>(_pause != _lastpause){</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    }</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;}</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00141"></a><span class="lineno"><a class="code" href="class_status.html#accc89ba87940c85d0114b8221cae2709">  141</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#accc89ba87940c85d0114b8221cae2709">Status::getEOFValue</a>(){</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">return</span> _eof;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;}</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno"><a class="code" href="class_status.html#a4dfcc4bbe705b42fa0675bf8cf1acc87">  145</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a4dfcc4bbe705b42fa0675bf8cf1acc87">Status::isPlaying</a>(){</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">if</span>(_quit || _eof){</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    }</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">// METODI INLINE</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="code" href="class_status.html#a0de523b7593d4ebd3b888e3907253b30">  124</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a0de523b7593d4ebd3b888e3907253b30">Status::getStopValue</a>(){</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">return</span> this-&gt;_quit;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;};</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="code" href="class_status.html#a851b2a3a5da40b6319ca13ef87e5a37d">  128</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a851b2a3a5da40b6319ca13ef87e5a37d">Status::getPauseValue</a>(){   </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">return</span> this-&gt;_pause;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;};</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno"><a class="code" href="class_status.html#a13dbfd17e3f0e62f7ea5d11569dc45fd">  132</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a13dbfd17e3f0e62f7ea5d11569dc45fd">Status::getLastPauseValue</a>(){   </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">return</span> this-&gt;_lastpause;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;};</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno"><a class="code" href="class_status.html#af29628c87eaef734748ff275f5ba91ec">  136</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#af29628c87eaef734748ff275f5ba91ec">Status::isPauseChanged</a>(){</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">if</span>(_pause != _lastpause){</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno"><a class="code" href="class_status.html#accc89ba87940c85d0114b8221cae2709">  144</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#accc89ba87940c85d0114b8221cae2709">Status::getEOFValue</a>(){</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">return</span> _eof;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;}</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno"><a class="code" href="class_status.html#a4dfcc4bbe705b42fa0675bf8cf1acc87">  148</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_status.html#a4dfcc4bbe705b42fa0675bf8cf1acc87">Status::isPlaying</a>(){</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">if</span>(_quit || _eof){</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;}</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Status.h</b></li>
-    <li class="footer">Generato Gio 9 Mag 2013 17:00:56 per Simple Video Player da
+    <li class="footer">Generato Sab 11 Mag 2013 15:36:25 per Simple Video Player da
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
   </ul>

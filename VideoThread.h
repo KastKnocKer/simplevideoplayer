@@ -11,11 +11,14 @@
 const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;	/* Definisco una costante che rapresenta il formato dei pixel voluto */
 
 class QThread;
+
 /**
 	Questo thread esegue in sequenza le seguenti azioni:
 		- preleva/legge i pacchetti dalla video_queue
 		- decodifica i pacchetti in frame
 		- mette i frame in una queue_picture
+
+	@author Matteo Renzi
 */
 class VideoThread : public QThread
 {
@@ -27,7 +30,7 @@ private:
 	AVPacket pkt1;		/*  */
 	AVPacket *packet;	/*  */
 	int len1;			/*  */
-	int frameFinished;	/*  */
+	int frameFinished;	/* indica se ho finito di decodificare un frame */
 	double pts;			/* Il pts letto dal frame corrente */
 	AVFrame *pFrame;	/* Frame corrente */
 	AVFrame *pFrameRGB;	/* Frame RGB corrente */
@@ -40,7 +43,7 @@ private:
 		Funzione che aggiorna i PTS in modo tale che siano sincronizzati con tutto
 		devo quindi occuparsi di 2 problemi:
 			1) la ripetizione di uno stesso frame
-			2) sincronizzazione del video all'audio
+			2) aggiornamento del video_clock
 	*/
 	void synchronize_video();
 

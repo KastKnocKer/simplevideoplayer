@@ -20,6 +20,7 @@
 
 /**
 	Classe che mantiene informazioni sullo stato della riproduzione
+	@author Matteo Renzi
 */
 class VideoState {
 
@@ -34,8 +35,8 @@ public:
 	//UTILITY
 	int64_t			duration;					/* Lunghezza del video in riproduzione */
 	int64_t			totalFramesNumber;			/* Numero totale di frame */
-	Status			ut;							/*  */
-	AVPacket		*flush_pkt;					/*  */
+	Status			ut;							/* puntatore alla classe stato riproduzione */
+	AVPacket		*flush_pkt;					/* pacchetto di flush utilizzato in caso di seek */
 	int				read_pause_return;			/*  */
 
 
@@ -58,7 +59,7 @@ public:
 
 	//AUDIO
 	double			audio_clock;				/*  */
-	AVStream        *audio_st;					/*  */
+	AVStream        *audio_st;					/* puntatore allo stream audio */
 	uint8_t         audio_buf[(AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2];	/*  */
 	unsigned int    audio_buf_size;				/* Dimensione buffer audio */
 	unsigned int    audio_buf_index;			/*  */
@@ -67,9 +68,9 @@ public:
 	uint8_t         *audio_pkt_data;			/* Dati contenuti nel pacchetto audio corrente */
 	int             audio_pkt_size;				/* Dimensione pacchetto audio corrente */
 	int				audio_hw_buf_size;			/* Dimensione del buffer audio hardware */
-	double			frame_timer;				/*  */
-	double			frame_last_pts;				/*  */
-	double			frame_last_delay;			/*  */
+	double			frame_timer;				/* tempo trascorso dall'ultimo frame */
+	double			frame_last_pts;				/* PTS ultimo frame */
+	double			frame_last_delay;			/* delay tra ultimo frame e adesso, utilizzato per PAUSE */
 
 	double			audio_diff_cum;				/* Used for AV difference average computation */
     double			audio_diff_avg_coef;		/*  */
@@ -85,19 +86,19 @@ public:
 	int64_t			video_current_pts_time;		/* time (av_gettime) at which we updated video_current_pts - used to have running video pts */
 
 
-	AVIOContext     *io_context;				/*  */
-	SwsContext		*sws_ctx;					/*  */
+	AVIOContext     *io_context;				/* Context AVIO */
+	SwsContext		*sws_ctx;					/* Context SWS */
 
 	//STREAM
-	int             videoStream;				/*  */
-	int				audioStream;				/*  */
+	int             videoStream;				/* indice di stream video */
+	int				audioStream;				/* indice di stream audio */
 
 	//RIFERIMENTO THREAD
-	QThread			*parse_tid;					/*  */
-	QThread			*video_tid;					/*  */
+	QThread			*parse_tid;					/* rifetimento al thread di decodifica */
+	QThread			*video_tid;					/* riferimento al thread video */
 
 	//RIFERIMENTO FINESTRA RIPRODUZIONE
-	Video			*window;					/*  */
+	Video			*window;					/* puntatore alla finestra di riproduzione */
 
 	/**
 		Costruttore

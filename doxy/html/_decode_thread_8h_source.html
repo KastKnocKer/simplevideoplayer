@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3.1"/>
-<title>Simple Video Player:  File sorgente C:/Nuova cartella/DecodeThread.h</title>
+<title>Simple Video Player:  File sorgente C:/Users/Matteo/Documents/ videoplayer/DecodeThread.h</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('_decode_thread_8h_source.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">C:/Nuova cartella/DecodeThread.h</div>  </div>
+<div class="title">C:/Users/Matteo/Documents/ videoplayer/DecodeThread.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef DECODETHREAD_H</span></div>
@@ -116,72 +116,70 @@ $(document).ready(function(){initNavTree('_decode_thread_8h_source.html','');});
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;VideoThread.h&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;AVClock.h&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//definisco una costante che rapresenta il formato dei pixel voluto commento perché è già definita in videothread</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;    </span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>QThread;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>QThread;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="class_decode_thread.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_decode_thread.html">DecodeThread</a> : <span class="keyword">public</span> QThread</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    Q_OBJECT</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="class_a_v_clock.html">AVClock</a>* _clock;                    <span class="comment">/* */</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="class_video_state.html">VideoState</a> *_is;                    <span class="comment">/* Puntatore allo stato globale delvideo */</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    AVPacket _pkt1;                     <span class="comment">/* */</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    AVPacket *_packet;                  <span class="comment">/* */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    AVFormatContext *_pFormatCtx;       <span class="comment">/* */</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">int</span> video_index;                    <span class="comment">/* */</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">int</span> audio_index;                    <span class="comment">/* */</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    AVDictionary *io_dict;              <span class="comment">/* */</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="class_video_thread.html">VideoThread</a> *_video_th;             <span class="comment">/* */</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">int</span> duration;                       <span class="comment">/* */</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> run();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;signals:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#a6a9db24c515bc678c962449fb493d918">setSliderRange</a>(<span class="keywordtype">int</span> start, <span class="keywordtype">int</span> end);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> eof();</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="class_decode_thread.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_decode_thread.html">DecodeThread</a> : <span class="keyword">public</span> QThread</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    Q_OBJECT</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="class_a_v_clock.html">AVClock</a>* _clock;                    <span class="comment">/* puntatore alla classe clock */</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="class_video_state.html">VideoState</a> *_is;                    <span class="comment">/* Puntatore allo stato globale del video */</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    AVPacket _pkt1;                     <span class="comment">/* */</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    AVPacket *_packet;                  <span class="comment">/* */</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    AVFormatContext *_pFormatCtx;       <span class="comment">/* */</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">int</span> video_index;                    <span class="comment">/* indice dello stream video */</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">int</span> audio_index;                    <span class="comment">/* indice dello stream audio */</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    AVDictionary *io_dict;              <span class="comment">/* */</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="class_video_thread.html">VideoThread</a> *_video_th;             <span class="comment">/* */</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">int</span> duration;                       <span class="comment">/* durata in secondi */</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> run();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;signals:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#a6a9db24c515bc678c962449fb493d918">setSliderRange</a>(<span class="keywordtype">int</span> start, <span class="keywordtype">int</span> end);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="class_decode_thread.html#ab4844d7fcc3b7ed6f179944b48f7afca">DecodeThread</a>(QObject *parent = 0);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="class_decode_thread.html#a196afa3623241ef43ac5938fca9262fa">stream_component_open</a>(<span class="keywordtype">int</span> stream_index);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> <span class="keyword">set</span>(<a class="code" href="class_decode_thread.html">DecodeThread</a> *t);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#ae89e53a68909de1d12b9aec4428b1261">SetVideoState</a>(<a class="code" href="class_video_state.html">VideoState</a> *is);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="class_video_state.html">VideoState</a>* <a class="code" href="class_decode_thread.html#a1ad4ed74d42ab697c0ee082c8385d469">GetVideoState</a>();</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="class_a_v_clock.html">AVClock</a>* <a class="code" href="class_decode_thread.html#a746a52d58b80905c5964b6447f67ea31">GetAVClock</a>();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#a4239701c0d91ab55a344b806c62f0a59">SetAVClock</a>(<a class="code" href="class_a_v_clock.html">AVClock</a> *c);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">        </span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">    */</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> fail(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#a26b42568920866dfae2716080b54f8e1">eof</a>();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="class_decode_thread.html#ab4844d7fcc3b7ed6f179944b48f7afca">DecodeThread</a>(QObject *parent = 0);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="class_decode_thread.html#a196afa3623241ef43ac5938fca9262fa">stream_component_open</a>(<span class="keywordtype">int</span> stream_index);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> <span class="keyword">set</span>(<a class="code" href="class_decode_thread.html">DecodeThread</a> *t);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#ae89e53a68909de1d12b9aec4428b1261">SetVideoState</a>(<a class="code" href="class_video_state.html">VideoState</a> *is);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="class_video_state.html">VideoState</a>* <a class="code" href="class_decode_thread.html#a1ad4ed74d42ab697c0ee082c8385d469">GetVideoState</a>();</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="class_a_v_clock.html">AVClock</a>* <a class="code" href="class_decode_thread.html#a746a52d58b80905c5964b6447f67ea31">GetAVClock</a>();</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_decode_thread.html#a4239701c0d91ab55a344b806c62f0a59">SetAVClock</a>(<a class="code" href="class_a_v_clock.html">AVClock</a> *c);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">        Metodo richiamato ogni volta che finisce la riproduzione EOF o STOP o ERROR</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">    */</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">void</span> fail(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>DecodeThread.h</b></li>
-    <li class="footer">Generato Gio 9 Mag 2013 17:00:56 per Simple Video Player da
+    <li class="footer">Generato Sab 11 Mag 2013 15:36:25 per Simple Video Player da
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
   </ul>

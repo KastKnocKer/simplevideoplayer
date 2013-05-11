@@ -194,7 +194,6 @@ std::string videoplayer::getSourceFilename(){
  */
  void videoplayer::slider_seek(){
 
-
 	double pos = positionSlider->value();
 	double incr = pos - _clock->get_master_clock();
 
@@ -205,7 +204,7 @@ std::string videoplayer::getSourceFilename(){
 	stoptick = false;
  }
 
-  /**
+ /**
  SLOT chiamata in seguito alla pressione di uno dei tasti di SEEK
  */
 void videoplayer::seek(int incr){
@@ -343,6 +342,7 @@ void videoplayer::loadFile(){
 	connect(window, &Video::windowClosing, this, &videoplayer::stop);
 	/* collego il bottone stop alla rispettiva SLOT */
 	connect(stopAction, &QAction::triggered, this, &videoplayer::quit);
+	/* evento di chiusura della finestra da X finestra */
 	connect(window, &Video::Xpressed, this, &videoplayer::quit);
 
 	//ogni volta che dal clock viene richiesto un update della finestra, richiamo lo slot updateGL

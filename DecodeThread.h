@@ -9,13 +9,16 @@
 #include "VideoThread.h"
 #include "AVClock.h"
 
-//definisco una costante che rapresenta il formato dei pixel voluto commento perché è già definita in videothread
-//const PixelFormat CONV_FORMAT = PIX_FMT_RGB24;	
 
 class QThread;
 
 /**
-	Classe che si occupa di estrarre dal file i pacchetti audio e video
+	Thread che si occupa del flusso di decodifica,
+	apre i codec audio e video se li trova
+	estrae dal file i pacchetti audio e video,
+	manda in esecuzione 2 nuovi thread rispettivamente per lo stream Audio e Video,
+	gestione eventi di SEEK, PAUSE, STOP, EOF
+	@author Luca Gagliardelli
 */
 class DecodeThread : public QThread
 {
@@ -23,22 +26,22 @@ class DecodeThread : public QThread
 
 private:
 
-	AVClock* _clock;					/* */
-	VideoState *_is;					/* Puntatore allo stato globale delvideo */
+	AVClock* _clock;					/* puntatore alla classe clock */
+	VideoState *_is;					/* Puntatore allo stato globale del video */
 	
 	AVPacket _pkt1;						/* */
 	AVPacket *_packet;					/* */
 
 	AVFormatContext *_pFormatCtx;		/* */
 
-	int video_index;					/* */
-	int audio_index;					/* */
+	int video_index;					/* indice dello stream video */
+	int audio_index;					/* indice dello stream audio */
 	
 	AVDictionary *io_dict;				/* */
 
 	VideoThread *_video_th;				/* */
 
-	int duration;						/* */
+	int duration;						/* durata in secondi */
 
 	/**
 		Corpo del thread.
@@ -50,14 +53,16 @@ private:
 signals:
 
 	/**
-		Per settare il range dello slider
+		Per settare il range dello slider.
+		il valore della durata viene, se presente, ottenuto dall'header,
+		se no calcolato n_frame*FPS
 		@param start
 		@param end
 	*/
 	void setSliderRange(int start, int end);
 
 	/**
-	
+		emette un segnale che abbiamo raggiunta la fine del file
 	*/
 	void eof();
 
@@ -77,7 +82,7 @@ public:
 		- inizializzazione del rispettivo thread di riproduzione audio/video
 
 		@param stream_index
-		@return
+		@return 0 OK, -1 ERROR
 	*/
 	int stream_component_open(int stream_index);
 
@@ -113,7 +118,7 @@ public:
 	void SetAVClock(AVClock *c);
 
 	/*
-		
+		Metodo richiamato ogni volta che finisce la riproduzione EOF o STOP o ERROR
 	*/
 	void fail(void);
 

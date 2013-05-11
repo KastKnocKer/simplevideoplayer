@@ -5,7 +5,6 @@
 #include <gl\GL.h>
 #include <gl\GLU.h>
 #include <QtGui/QMouseEvent>
-#include <QDebug>
 
 //FFMPEG
 extern "C"	{
@@ -22,11 +21,11 @@ extern "C"	{
 #pragma comment(lib, "dev\\lib\\swscale.lib")
 
 class QGLWidget;
-class QDebug;
 
 /**
 	Classe per mostrare a monitor i frame decompressi,
-	sfruttando OPENGL
+	sfruttando OPENGL, basata su una struttura di finestra OpenGL predefinita di Qt.
+	@author Giovanni Esposito
 */
 class Video: public QGLWidget {
 
@@ -120,14 +119,13 @@ private:
 	AVFrame *pFrameRGB;		/* Frame da mostrare a video */
 	int w;					/* Larghezza finestra */
 	int h;					/* Altezza finestra */
-	GLuint _texture_video;	/*  */
+	GLuint _texture_video;	/* indice necessario a openGL per indicare il frame */
 
-	bool display;			/*  */
+	bool display;			/* boolean per mostrare a schermo o meno */
 
-	bool first_frame;		/*  */
+	bool first_frame;		/* true se mi è arrivato il primo frame */
 
-	bool _extClose;			/*  */
-	bool debug;				/*  */
+	bool _extClose;			/* true se ho una richiesta da altri thread di chiudere la finestra */
 
 };
 #endif  /* _GLWIDGET_H */

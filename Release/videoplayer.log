@@ -1,4 +1,4 @@
-﻿Build started 5/9/2013 9:44:37 AM.
+﻿Build started 5/11/2013 9:24:06 AM.
      1>Project "C:\Users\Matteo\Documents\ videoplayer\videoplayer.vcxproj" on node 2 (Rebuild target(s)).
      1>CustomBuild:
          Moc'ing videoplayer.h...
@@ -53,4 +53,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:19.88
+Time Elapsed 00:00:19.93

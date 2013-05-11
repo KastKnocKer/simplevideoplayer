@@ -12,6 +12,8 @@
 /**
 	Classe che mantiene la coda dei frame gia convertiti in RGB e del rispettivo
 	PTS (suo o assegnato)
+
+	@author Luca Gagliardelli
 */
 class VideoPicture
 {
@@ -22,7 +24,7 @@ private:
 
 	std::list<std::pair<AVFrame*, double>> queue;	/* Lista per memorizzazione frame rgb e pts */
 
-	Status *ut;					/*  */
+	Status *ut;					/* puntatore alla classe di stato riproduzione */
 
 public:
 	
@@ -59,11 +61,19 @@ public:
 		Ritorna il numero di frame presenti nella lista
 		@return numero di frame presenti nella lista
 	*/
-	int getSize();
+	inline int getSize();
 
 	/**
-		
+		per settare il puntatore alla classe di stato riproduzione
 		@param ut
 	*/
 	void setUtility(Status *ut);
 };
+
+
+////////////////////////////////////////////////////////////////////////////
+// METOOD INLINE
+
+int VideoPicture::getSize(void){
+	return queue.size();
+}

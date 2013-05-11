@@ -161,8 +161,7 @@ Membri pubblici</h2></td></tr>
 <tr class="separator:a29a067281d675ed92e2a29b682cd6e81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c236198bdd7cc3dc9a90c74c6cbf367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_v_clock.html#a3c236198bdd7cc3dc9a90c74c6cbf367">setClockType</a> (ClockType ct)</td></tr>
 <tr class="separator:a3c236198bdd7cc3dc9a90c74c6cbf367"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83354f63b3e4eb73f20555dd4a7d798e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83354f63b3e4eb73f20555dd4a7d798e"></a>
-AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockType</b> () const </td></tr>
+<tr class="memitem:a83354f63b3e4eb73f20555dd4a7d798e"><td class="memItemLeft" align="right" valign="top">AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_v_clock.html#a83354f63b3e4eb73f20555dd4a7d798e">clockType</a> () const </td></tr>
 <tr class="separator:a83354f63b3e4eb73f20555dd4a7d798e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7263fc5b180cc4ded38c5682f5601e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_v_clock.html#ad7263fc5b180cc4ded38c5682f5601e4">schedule_refresh</a> (int delay)</td></tr>
 <tr class="separator:ad7263fc5b180cc4ded38c5682f5601e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,7 +173,9 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
 <tr class="separator:a925631b31bd79c2f9f3233ecfd0e28c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
-<div class="textblock"><p>? </p>
+<div class="textblock"><p>Classe che si occupa del refresh (sia del display che dello slider/orologio, viene temporizzata (in base al PTS) una chiamata ciclica alla funzione </p>
+<dl class="section see"><dt>Si veda anche</dt><dd><a class="el" href="class_a_v_clock.html#ac1bfe1ae4f8d1224277805bbd7f9f7c3">video_refresh_timer</a>. Inoltre sono stati implementati i vari metodi per ottenre il tempo di riproduzione dei vari stream</dd></dl>
+<dl class="section author"><dt>Autore</dt><dd>Giovanni Esposito </dd></dl>
 </div><h2 class="groupheader">Documentazione dei costruttori e dei distruttori</h2>
 <a class="anchor" id="ae79c73589f4ec0f32768293919ad116e"></a>
 <div class="memitem">
@@ -217,6 +218,22 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
 </div>
 </div>
 <h2 class="groupheader">Documentazione delle funzioni membro</h2>
+<a class="anchor" id="a83354f63b3e4eb73f20555dd4a7d798e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AVClock::ClockType AVClock::clockType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Setta il tipo di clock desiderato </p>
+
+</div>
+</div>
 <a class="anchor" id="a51be11b2faae4ef6b29bf8f6c65f945d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -229,6 +246,7 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Ritorna il tempo trascorso rispetto lo stream audio </p>
 <dl class="section return"><dt>Restituisce</dt><dd></dd></dl>
 
 </div>
@@ -245,6 +263,7 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Ritorna il tempo trascorso rispetto un clock esterno </p>
 <dl class="section return"><dt>Restituisce</dt><dd></dd></dl>
 
 </div>
@@ -278,6 +297,7 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Ritorna il tempo trascorso rispetto lo stream video </p>
 <dl class="section return"><dt>Restituisce</dt><dd></dd></dl>
 
 </div>
@@ -400,6 +420,7 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Ritorna il tipo di clock utilizzato (default: AudioClock) </p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
     <tr><td class="paramname">ct</td><td></td></tr>
@@ -458,7 +479,7 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
 </div>
 </div>
 <hr/>La documentazione per questa classe è stata generata a partire dal seguente file:<ul>
-<li>C:/Nuova cartella/<a class="el" href="_a_v_clock_8h_source.html">AVClock.h</a></li>
+<li>C:/Users/Matteo/Documents/ videoplayer/<a class="el" href="_a_v_clock_8h_source.html">AVClock.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -466,7 +487,7 @@ AVClock::ClockType&#160;</td><td class="memItemRight" valign="bottom"><b>clockTy
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_a_v_clock.html">AVClock</a></li>
-    <li class="footer">Generato Gio 9 Mag 2013 17:00:56 per Simple Video Player da
+    <li class="footer">Generato Sab 11 Mag 2013 15:36:25 per Simple Video Player da
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
   </ul>

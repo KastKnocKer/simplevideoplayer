@@ -20,9 +20,12 @@ extern "C"	{
 
 
 class QDebug;
+
 /**
 	Classe per la gestione di parametri fondamentali per piu processi dell'applicativo
 	i valori sono privati e accessibili solo tramite apposite chiamate
+
+	@author Giovanni Esposito
 */
 class Status{
 
@@ -30,7 +33,7 @@ private:
 
 	bool _quit;			/* True se si lancia il quit */
 	bool _pause;		/* True se si mette in pausa */
-	bool _lastpause;	/*  */
+	bool _lastpause;	/* variabile di controllo per il decodethread */
 	bool _eof;			/* Diventa true se il video è finito */
 
 	AVPacket flush_pkt;	/* Pacchetto di flush usato durante il seek */
@@ -78,20 +81,20 @@ public:
 	inline bool getPauseValue(); 
 
 	/**
-	
+		setto valore di pausa precedente
 		@param lastpause
 	*/
 	void setLastPauseValue(bool lastpause);
 
 	/**
 		
-		@return
+		@return valore di pausa precedente
 	*/
 	inline bool getLastPauseValue();
 
 	/**
-		
-		@return
+		Metodo utilizzato dal thread di decodifica per sapere se lo stato di pausa e cambiato
+		@return true se dall'ultimo ciclo di decodifica è cambiato stato pausa
 	*/
 	inline bool isPauseChanged();
 

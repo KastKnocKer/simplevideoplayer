@@ -10,7 +10,13 @@ class QTimer;
 class QObject;
 
 /**
-	?
+	Classe che si occupa del refresh (sia del display che dello slider/orologio,
+	viene temporizzata (in base al PTS) una chiamata ciclica alla funzione
+	@see video_refresh_timer.
+	Inoltre sono stati implementati i vari metodi per ottenre il tempo di riproduzione
+	dei vari stream
+
+	@author Giovanni Esposito
 */
 class AVClock : public QObject{
 
@@ -22,11 +28,10 @@ public:
         AudioClock, VideoClock, ExternalClock
 	} ClockType;
 
-
 private:
 
 	VideoState *_is;			/* Puntatore all'elemento che contiene tutte le informazioni sullo stato del video */
-	ClockType clock_type;		/* */
+	ClockType clock_type;		/* Tipo di clock utilizzato */
 	AVFrame *pFrameRGB;			/* Frame RGB */
 	QTimer *timer;				/* Timer per il refresh della finestra */
 
@@ -70,19 +75,19 @@ public:
 	~AVClock(void);
 
 	/**
-		
+		Ritorna il tempo trascorso rispetto lo stream audio
 		@return
 	*/
 	double get_audio_clock();
 
 	/**
-		
+		Ritorna il tempo trascorso rispetto lo stream video
 		@return
 	*/
 	double get_video_clock();
 
 	/**
-		
+		Ritorna il tempo trascorso rispetto un clock esterno
 		@return
 	*/
 	double get_external_clock();
@@ -94,13 +99,13 @@ public:
 	double get_master_clock();
 
 	/**
-		
+		Ritorna il tipo di clock utilizzato (default: AudioClock)
 		@param ct
 	*/
 	void setClockType(ClockType ct);
 
 	/**
-	
+		Setta il tipo di clock desiderato
 	*/
 	AVClock::ClockType clockType() const;
 

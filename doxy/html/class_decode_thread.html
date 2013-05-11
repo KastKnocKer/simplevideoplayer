@@ -127,8 +127,7 @@ Diagramma delle classi per DecodeThread</div>
 Signal</h2></td></tr>
 <tr class="memitem:a6a9db24c515bc678c962449fb493d918"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_decode_thread.html#a6a9db24c515bc678c962449fb493d918">setSliderRange</a> (int start, int end)</td></tr>
 <tr class="separator:a6a9db24c515bc678c962449fb493d918"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26b42568920866dfae2716080b54f8e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26b42568920866dfae2716080b54f8e1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>eof</b> ()</td></tr>
+<tr class="memitem:a26b42568920866dfae2716080b54f8e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_decode_thread.html#a26b42568920866dfae2716080b54f8e1">eof</a> ()</td></tr>
 <tr class="separator:a26b42568920866dfae2716080b54f8e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -152,7 +151,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>fail</b> (void)</td><
 <tr class="separator:a63f0eb8fe63e3e1d8615d9f2b10cf4d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Descrizione dettagliata</h2>
-<div class="textblock"><p>Classe che si occupa di estrarre dal file i pacchetti audio e video </p>
+<div class="textblock"><p>Thread che si occupa del flusso di decodifica, apre i codec audio e video se li trova estrae dal file i pacchetti audio e video, manda in esecuzione 2 nuovi thread rispettivamente per lo stream Audio e <a class="el" href="class_video.html">Video</a>, gestione eventi di SEEK, PAUSE, STOP, EOF </p>
+<dl class="section author"><dt>Autore</dt><dd>Luca Gagliardelli </dd></dl>
 </div><h2 class="groupheader">Documentazione dei costruttori e dei distruttori</h2>
 <a class="anchor" id="ab4844d7fcc3b7ed6f179944b48f7afca"></a>
 <div class="memitem">
@@ -178,6 +178,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>fail</b> (void)</td><
 </div>
 </div>
 <h2 class="groupheader">Documentazione delle funzioni membro</h2>
+<a class="anchor" id="a26b42568920866dfae2716080b54f8e1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DecodeThread::eof </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>emette un segnale che abbiamo raggiunta la fine del file </p>
+
+</div>
+</div>
 <a class="anchor" id="a746a52d58b80905c5964b6447f67ea31"></a>
 <div class="memitem">
 <div class="memproto">
@@ -289,7 +313,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>fail</b> (void)</td><
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Per settare il range dello slider </p>
+<p>Per settare il range dello slider. il valore della durata viene, se presente, ottenuto dall'header, se no calcolato n_frame*FPS </p>
 <dl class="params"><dt>Parametri</dt><dd>
   <table class="params">
     <tr><td class="paramname">start</td><td></td></tr>
@@ -350,12 +374,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>fail</b> (void)</td><
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Restituisce</dt><dd></dd></dl>
+<dl class="section return"><dt>Restituisce</dt><dd>0 OK, -1 ERROR </dd></dl>
 
 </div>
 </div>
 <hr/>La documentazione per questa classe è stata generata a partire dal seguente file:<ul>
-<li>C:/Nuova cartella/<a class="el" href="_decode_thread_8h_source.html">DecodeThread.h</a></li>
+<li>C:/Users/Matteo/Documents/ videoplayer/<a class="el" href="_decode_thread_8h_source.html">DecodeThread.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -363,7 +387,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>fail</b> (void)</td><
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_decode_thread.html">DecodeThread</a></li>
-    <li class="footer">Generato Gio 9 Mag 2013 17:00:56 per Simple Video Player da
+    <li class="footer">Generato Sab 11 Mag 2013 15:36:25 per Simple Video Player da
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.3.1 </li>
   </ul>

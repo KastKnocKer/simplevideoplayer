@@ -15,7 +15,9 @@
 
 /*
 	Classe che implementa la coda per la gestione
-	dei pacchetti audio.
+	dei pacchetti audio. Accesso alla coda mutuamente esclusivo.
+
+	@author Luca Gagliardelli
 */
 class PacketQueueAudio{
 
@@ -26,7 +28,7 @@ private:
 	SDL_mutex	*_mutex;		/* Mutex SDL per consentire un accesso esclusivo alla coda */
 	SDL_cond *_cond;			/* Coda SDL per mettere in wait */
 
-	Status *ut;					/*  */
+	Status *ut;					/* puntantore alla classe stato di riproduzione */
 
 public:
 

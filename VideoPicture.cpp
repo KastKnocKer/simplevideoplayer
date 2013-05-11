@@ -65,12 +65,6 @@ void VideoPicture::Flush(){
 }
 
 
-/* ritorna le dimensioni della coda di frame */
-int VideoPicture::getSize(void){
-	return queue.size();
-}
-
-
 void VideoPicture::setUtility(Status *ut){
 	this->ut = ut;
 }

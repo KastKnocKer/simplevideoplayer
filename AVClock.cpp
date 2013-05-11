@@ -81,8 +81,7 @@ void AVClock::video_refresh_timer(void){
 				ref_clock = get_audio_clock();
 				diff = frame_current_pts - ref_clock;
 
-				/* Skip or repeat the frame. Take delay into account
-				 FFPlay still doesn't "know if this is the best guess." */
+				/* Skip or repeat the frame. */
 				sync_threshold = (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
 
 				if (fabs(diff) < AV_NOSYNC_THRESHOLD)
