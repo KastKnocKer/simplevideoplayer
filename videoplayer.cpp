@@ -380,6 +380,10 @@ void videoplayer::loadFile(){
 	connect(_demuxer, &DecodeThread::eof, window, &Video::closeWindow);
 	_demuxer->start();
 
+	_histo = new histogram();
+	_histo->SetVideoState(&is);
+	_histo->start();
+
 	/**
 	connect per l'aggiornamento del max valore possibile dello slider
 	coincidente con la durata del video in secondi

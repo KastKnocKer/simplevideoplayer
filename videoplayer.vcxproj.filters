@@ -100,6 +100,15 @@
     <ClCompile Include="AVClock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_histogram.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_histogram.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="histogram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="videoplayer.h">
@@ -118,6 +127,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="AVClock.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="histogram.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

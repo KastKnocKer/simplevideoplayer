@@ -53,6 +53,25 @@ std::pair<AVFrame*, double> VideoPicture::Get(){
 	return read;
 }
 
+std::pair<AVFrame*, double> VideoPicture::Get2(){
+	
+	std::pair<AVFrame*, double> read;
+
+	_mutex->lock();
+
+	while(true){
+		if(!queue.empty()){
+			read = queue.front();	//prelevo primo elemento
+			break;
+		} else {
+			_cond->wait(_mutex);
+		}
+	}
+	_mutex->unlock();
+
+	return read;
+}
+
 void VideoPicture::Flush(){
 
 	_mutex->lock();

@@ -17,6 +17,7 @@
 #include "DecodeThread.h"
 #include "VideoState.h"
 #include "AVClock.h"
+#include "histogram.h"
 
 
 
@@ -63,6 +64,7 @@ private:
 	AVClock *_clock;			/* Puntatore alla classe di refresh */
 	bool stoptick;				/* Variabile per evitare aggiornamento dello slider */
 	int64_t time;				/*  */
+	histogram *_histo;			/* Thread dell'istogramma */	
 
 	/**
 		Crea il menù

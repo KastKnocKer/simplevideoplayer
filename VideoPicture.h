@@ -52,6 +52,8 @@ public:
 	*/
 	std::pair<AVFrame*, double> Get();
 
+	std::pair<AVFrame*, double> Get2();
+
 	/**
 		Svuota la lista
 	*/
