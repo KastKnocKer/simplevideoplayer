@@ -384,6 +384,10 @@ void videoplayer::loadFile(){
 	_histo->SetVideoState(&is);
 	_histo->start();
 
+	is.histo_window = new HistoDraw();
+	is.histo_window->setSize(640,480);
+	is.histo_window->show();
+
 	/**
 	connect per l'aggiornamento del max valore possibile dello slider
 	coincidente con la durata del video in secondi

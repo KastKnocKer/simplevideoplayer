@@ -3,12 +3,12 @@
 
 #include <string>
 #include <vector>
-#include <algorithm>
 
 //QT
 #include <QThread>
 
 #include "VideoState.h"
+
 
 class QThread;
 

@@ -12,6 +12,7 @@
 #include "PacketQueueVideo.h"
 #include "VideoPicture.h"
 #include "Video.h"
+#include "HistoDraw.h"
 
 #include "SDL\include\SDL.h"
 #include "SDL\include\SDL_thread.h"
@@ -99,6 +100,9 @@ public:
 
 	//RIFERIMENTO FINESTRA RIPRODUZIONE
 	Video			*window;					/* puntatore alla finestra di riproduzione */
+
+	//RIFERIMENTO FINESTRA PER DISEGNARE L'ISTOGRAMMA
+	HistoDraw *histo_window;
 
 	/**
 		Costruttore

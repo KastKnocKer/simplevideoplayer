@@ -36,6 +36,8 @@ void histogram::run(){
 	}
 	qDebug() << "end";
 
+	_is->histo_window->setValues(R, G, B);			//Setto i valori da visualizzare
+
 }
 
 void histogram::SetVideoState(VideoState *is){
