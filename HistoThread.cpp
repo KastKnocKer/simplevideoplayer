@@ -6,14 +6,20 @@ HistoThread::HistoThread(QObject *parent){
 
 void HistoThread::run(){
 
-	/*
-		Ridimensiono i vettori delle occorrenze e li setto a zero
-	*/
-	R.resize(256, 0);
-	G.resize(256, 0);
-	B.resize(256, 0);
+	
 
 	while(!_is->ut.getStopValue()){
+
+		R.clear();
+		G.clear();
+		B.clear();
+
+		/*
+		Ridimensiono i vettori delle occorrenze e li setto a zero
+		*/
+		R.resize(256, 0);
+		G.resize(256, 0);
+		B.resize(256, 0);
 
 		/*
 			Prelevo il primo frame dalla picture queue

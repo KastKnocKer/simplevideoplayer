@@ -41,14 +41,6 @@ void HistoDraw::paintGL() {
 		return;
 	};
 
-	qDebug() << "paintfinestra";
- //   //dentro a questo if ci adrò una volta sola!
-	//if(first_frame){
-	//	this->initializeGL();
-	//	first_frame = false;
-	//	return;
-	//}
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);     // Clear The Screen And The Depth Buffer
     glLoadIdentity();                       // Reset The View
 	glClearColor(0.0,0.0,0.0,0.0); 
