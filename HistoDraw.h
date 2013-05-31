@@ -56,15 +56,15 @@ public:
 	void setSize(int w, int h);
 
 	/**
-		Metodo per impostare i valori delle occorrenze RGB correnti
-		@param pFrameRGB frame da mostrare
-	*/
-	void setValues(std::vector<int>& R1, std::vector<int>& G1, std::vector<int>& B1);
-
-	/**
 		Vado a impostare la flag in modo da permettere la riproduzione sulla finestra
 	*/
 	void startdisplay(void);
+
+		/**
+		Metodo per impostare i valori delle occorrenze RGB correnti
+		@param pFrameRGB frame da mostrare
+	*/
+	void setValues(std::vector<int> &R1, std::vector<int> &G1, std::vector<int> &B1);
 
 
 signals:

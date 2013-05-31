@@ -104,7 +104,8 @@ void HistoDraw::setSize(int w, int h){
 	this->h = h;
 }
 
-void HistoDraw::setValues(std::vector<int>& R1, std::vector<int>& G1, std::vector<int>& B1){
+void HistoDraw::setValues(std::vector<int> &R1, std::vector<int> &G1, std::vector<int> &B1){
+
 	/*
 		Quando prendo i valori devo riscalarli in modo da dargli un senso a livello dell'istogramma.
 		Quindi li porto nel range in modo che il valore massimo della distribuzione venga portato pari al valore massimo dell'istogramma.

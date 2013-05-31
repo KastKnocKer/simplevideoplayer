@@ -367,7 +367,22 @@ void videoplayer::loadFile(){
 	}
 
 	/* mando in esecuzione il primo refresh, gli altri avverranno in cascata, grazie alla connect */
-	_clock->schedule_refresh(40);									
+	_clock->schedule_refresh(40);	
+
+	/* inizializzazione finestra istogramma */
+	histo_window = new HistoDraw();
+	histo_window->setSize(640,480);
+	histo_window->show();
+
+	is.histo_window = histo_window;
+
+	connect(_histo, &HistoThread::ValuesReady, histo_window, &HistoDraw::updateGL);
+
+	/* inizializzazione thread istogramma */
+	_histo = new HistoThread();
+	_histo->SetVideoState(&is);
+	_histo->start();
+	
 
 	/* lancio il thread di decodifica generale, apre i rispettivi codec,
 	legge stream x stream e genera paccehtti audio e video che eseguiranno i distinti thread
@@ -378,16 +393,9 @@ void videoplayer::loadFile(){
 	_demuxer->set(_demuxer);										//setto puntatore statico all'oggetto
 	is.parse_tid = _demuxer;
 	connect(_demuxer, &DecodeThread::eof, window, &Video::closeWindow);
+	connect(_demuxer, &DecodeThread::eof, histo_window, &HistoDraw::closeWindow);
 	_demuxer->start();
-
-	_histo = new histogram();
-	_histo->SetVideoState(&is);
-	_histo->start();
-
-	is.histo_window = new HistoDraw();
-	is.histo_window->setSize(640,480);
-	is.histo_window->show();
-
+	
 	/**
 	connect per l'aggiornamento del max valore possibile dello slider
 	coincidente con la durata del video in secondi
