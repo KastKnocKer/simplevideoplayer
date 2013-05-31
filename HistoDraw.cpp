@@ -58,25 +58,31 @@ void HistoDraw::paintGL() {
 	glColor3f(0.0,0.0,1.0); 
     glBegin(GL_LINES);
 	for(unsigned i=0; i<B.size(); ++i){
-		glVertex2d(i, 0);
-		glVertex2d(i, B[i]);
+		glVertex2d(i, 1);
+		glVertex2d(i, 1+B[i]);
 	}
+	glVertex2d(1, 1);
+	glVertex2d(256, 1);
     glEnd();
 
-	glColor3f(0.0,1.0,0.0); 
-    glBegin(GL_LINES);
+	glColor3f(0.0,1.0,0.0);
+	glBegin(GL_LINES);
 	for(unsigned i=0; i<G.size(); ++i){
-		glVertex2d(i, 101);
-		glVertex2d(i, 101+G[i]);
+		glVertex2d(i+1, 102);
+		glVertex2d(i+1, 102+G[i]);
 	}
+	glVertex2d(1, 102);
+	glVertex2d(256, 102);
     glEnd();
 
 	glColor3f(1.0,0.0,0.0); 
     glBegin(GL_LINES);
 	for(unsigned i=0; i<R.size(); ++i){
-		glVertex2d(i, 202);
-		glVertex2d(i, 202+R[i]);
+		glVertex2d(i+1, 203);
+		glVertex2d(i+1, 203+R[i]);
 	}
+	glVertex2d(1, 203);
+	glVertex2d(256, 203);
     glEnd();
 	
 
