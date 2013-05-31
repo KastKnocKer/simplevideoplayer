@@ -376,7 +376,7 @@ void videoplayer::loadFile(){
 
 	is.histo_window = histo_window;
 
-	connect(_histo, &HistoThread::ValuesReady, histo_window, &HistoDraw::updateGL);
+	connect(_clock, &AVClock::needupdate, histo_window, &HistoDraw::updateGL);
 
 	/* inizializzazione thread istogramma */
 	_histo = new HistoThread();

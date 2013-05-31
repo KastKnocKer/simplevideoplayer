@@ -14,6 +14,7 @@ void HistoThread::run(){
 	B.resize(256, 0);
 
 	while(!_is->ut.getStopValue()){
+
 		/*
 			Prelevo il primo frame dalla picture queue
 		*/

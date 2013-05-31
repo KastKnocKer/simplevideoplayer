@@ -4,6 +4,7 @@
 #include <QGLWidget>
 #include <gl\GL.h>
 #include <gl\GLU.h>
+#include <QDebug>
 #include <QtGui/QMouseEvent>
 #include <vector>
 #include <algorithm>
