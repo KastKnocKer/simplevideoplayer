@@ -172,5 +172,8 @@
     <Image Include="images\volume.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="images\histogram.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -78,7 +78,7 @@ signals:
 	/**
 		Segnale emesso quando premo sul bottone per chiuedere la finestra
 	*/
-	void Xpressed();
+	void XHistopressed();
 
 public slots:
  

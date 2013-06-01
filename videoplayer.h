@@ -13,6 +13,7 @@
 #include <QtWidgets>
 #include <QSignalMapper>
 #include <QTime>
+#include <QIcon>
 
 #include "DecodeThread.h"
 #include "VideoState.h"
@@ -30,6 +31,7 @@ class QSlider;
 class QThread;
 class QSignalMapper;
 class QTime;
+class QIcon;
 
 /*
 	Classe che implementa l'interfaccia grafica
@@ -64,7 +66,8 @@ private:
 	AVClock *_clock;			/* Puntatore alla classe di refresh */
 	bool stoptick;				/* Variabile per evitare aggiornamento dello slider */
 	int64_t time;				/*  */
-	HistoThread *_histo;			/* Thread dell'istogramma */	
+	HistoThread *_histo;			/* Thread dell'istogramma */
+	QAction *histoAction;		/* bottone per attivare/disattivare istogramma */
 
 	/**
 		Crea il menù
@@ -169,6 +172,11 @@ public slots:
 		metodo per fermare il refresh dello slider
 	*/
 	inline void stop_tick();
+
+	/**
+		metodo per gestire la la visualizzazione o meno istogramma
+	*/
+	void histoClicked();
 
 public:
 

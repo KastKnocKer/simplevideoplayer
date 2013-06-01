@@ -63,10 +63,13 @@ videoplayer::videoplayer(QWidget *parent)
     seekbackwardAction->setShortcut(tr("Ctrl+B"));
     seekbackwardAction->setDisabled(true);
 
+	histoAction = new QAction(QIcon(":/images/volume.png"), tr("histo"), this);
+
 	//event listener dei pulsanti
-	connect(playAction, &QAction::triggered, this, &videoplayer::resume);;
+	connect(playAction, &QAction::triggered, this, &videoplayer::resume);
 	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
 	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
+	connect(histoAction, &QAction::triggered, this, &videoplayer::histoClicked);
 
 	/**
 	utilizzo di un signalMapper per collegare l'evento di pressione dei pulsanti SEEK,
@@ -92,6 +95,7 @@ videoplayer::videoplayer(QWidget *parent)
 	bar->addAction(seekbackwardAction);
 	bar->addAction(seekforwardAction);
 	bar->addAction(skipforwardAction);
+	bar->addAction(histoAction);
 
     QLabel *volumeLabel = new QLabel;
     volumeLabel->setPixmap(QPixmap(":/images/volume.png"));
@@ -325,6 +329,20 @@ void videoplayer::playing(){
 	skipbackwardAction->setDisabled(false);
 	seekforwardAction->setDisabled(false);
 	seekbackwardAction->setDisabled(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//HISTOGRAM
+
+void videoplayer::histoClicked(){
+
+	if(histo_window->isVisible()){
+		histo_window->hide();
+	}
+	else
+		histo_window->show();
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

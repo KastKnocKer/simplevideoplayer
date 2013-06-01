@@ -84,7 +84,7 @@ void HistoDraw::paintGL() {
 void HistoDraw::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
     case Qt::Key_Escape:
-		emit Xpressed();
+		emit XHistopressed();
         break;
     default:
         event->ignore();
@@ -139,7 +139,7 @@ void HistoDraw::closeEvent(QCloseEvent *event){
 		
 		//qDebug() << "VIDEO - WINDOW CLOSING INT";
 		
-		emit Xpressed();
+		emit XHistopressed();
 		event->ignore();
 	}
 	else{

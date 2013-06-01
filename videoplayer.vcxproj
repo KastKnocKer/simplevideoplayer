@@ -380,6 +380,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="images\histogram.png" />
     <Image Include="images\volume.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
