@@ -19,6 +19,7 @@
 #include "VideoState.h"
 #include "AVClock.h"
 #include "HistoThread.h"
+#include "Log.h"
 
 
 
@@ -68,6 +69,8 @@ private:
 	int64_t time;				/*  */
 	HistoThread *_histo;			/* Thread dell'istogramma */
 	QAction *histoAction;		/* bottone per attivare/disattivare istogramma */
+	QAction *logAction;
+	Log *_logDialog;
 
 	/**
 		Crea il menù
@@ -177,6 +180,12 @@ public slots:
 		metodo per gestire la la visualizzazione o meno istogramma
 	*/
 	void histoClicked();
+
+	/**
+		Metodo per aprire il dialog contenente le informazioni
+		di riproduzione del video
+	*/
+	void openDialog();
 
 public:
 

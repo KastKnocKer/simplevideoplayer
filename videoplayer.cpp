@@ -64,12 +64,15 @@ videoplayer::videoplayer(QWidget *parent)
     seekbackwardAction->setDisabled(true);
 
 	histoAction = new QAction(QIcon(":/images/volume.png"), tr("histo"), this);
+	logAction = new QAction(QIcon(":/images/volume.png"), tr("log"), this);
+
 
 	//event listener dei pulsanti
 	connect(playAction, &QAction::triggered, this, &videoplayer::resume);
 	connect(this, &videoplayer::first_play, this, &videoplayer::playing);
 	connect(pauseAction, &QAction::triggered, this, &videoplayer::pause);
 	connect(histoAction, &QAction::triggered, this, &videoplayer::histoClicked);
+	connect(logAction, &QAction::triggered, this, &videoplayer::openDialog);
 
 	/**
 	utilizzo di un signalMapper per collegare l'evento di pressione dei pulsanti SEEK,
@@ -96,6 +99,7 @@ videoplayer::videoplayer(QWidget *parent)
 	bar->addAction(seekforwardAction);
 	bar->addAction(skipforwardAction);
 	bar->addAction(histoAction);
+	bar->addAction(logAction);
 
     QLabel *volumeLabel = new QLabel;
     volumeLabel->setPixmap(QPixmap(":/images/volume.png"));
@@ -189,6 +193,16 @@ std::string videoplayer::getSourceFilename(){
 
 	 return _fileName.toStdString();
  }
+
+/**
+	Metodo per aprire il dialog contenente le informazioni
+	di riproduzione del video
+*/
+void videoplayer::openDialog(){
+
+	_logDialog = new Log();
+	_logDialog->show();
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SEEK
