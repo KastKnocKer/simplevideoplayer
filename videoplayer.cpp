@@ -200,7 +200,7 @@ std::string videoplayer::getSourceFilename(){
 */
 void videoplayer::openDialog(){
 
-	_logDialog = new Log();
+	_logDialog = new Log(&is);
 	_logDialog->show();
 }
 

@@ -4,13 +4,21 @@
 #include <QDialogButtonBox>
 #include <QTabWidget>
 #include <QVBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QTime>
 
 #include <stdint.h>
+
+#include "VideoState.h"
 
 
 class QTabWidget;
 class QDialogButtonBox;
 class QVBoxLayout;
+class QLabel;
+class QLineEdit;
+class QTime;
 
 
 class GeneralTab: public QWidget
@@ -22,14 +30,14 @@ private:
 	//tempo
 	int64_t duration;
 	int hours;
-	int min;
-	int sec;
+	int mins;
+	int secs;
 	int us;
 
 	double bitrate;
 
 public:
-    explicit GeneralTab(QWidget *parent = 0);
+    explicit GeneralTab(VideoState *is, QWidget *parent = 0);
 };
 
 class VideoTab: public QWidget
@@ -41,15 +49,17 @@ private:
 	double fps;
 
 public:
-    explicit VideoTab(QWidget *parent = 0);
+    explicit VideoTab(VideoState *is, QWidget *parent = 0);
 };
 
 class AudioTab: public QWidget
 {
 	Q_OBJECT
 
+private:
+
 public:
-    explicit AudioTab(QWidget *parent = 0);
+    explicit AudioTab(VideoState *is, QWidget *parent = 0);
 };
 
 
@@ -69,8 +79,14 @@ private:
 
 public:
 
-	explicit Log(QWidget *parent = 0);
+	explicit Log(VideoState *is, QWidget *parent = 0);
 	~Log(void);
+
+	/**
+		Imposta il riferimento all'oggetto che mantiene lo stato del video
+		@param is riferimento all'oggetto che mantiene lo stato del video
+	*/
+	void SetVideoState(VideoState *is);
 
 };
 
