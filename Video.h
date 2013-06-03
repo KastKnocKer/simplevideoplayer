@@ -12,6 +12,7 @@ extern "C"	{
 	#include "dev\include\libavformat\avformat.h"
 	#include "dev\include\libswscale\swscale.h"
 	#include "dev\include\libavutil\avutil.h"
+	#include "dev\include\libavutil\pixdesc.h"
 	#undef main
 }
 

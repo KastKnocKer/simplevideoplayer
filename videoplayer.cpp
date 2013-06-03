@@ -169,7 +169,7 @@ funzione grafica che permette di creare la menubar e i suoi sottomenu
  void videoplayer::open(void)
  {
      //carico il file video, ottengo il nome del file selezionato
-     _fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"" ,tr("(*.avi *.mpeg *.flv *.mp4 *.flv)"));	// per aggiungere altri formati aggiungere es. a *.avi *.mpeg *.flv
+     _fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"" ,tr("(*.avi *.mpeg *.flv *.mp4 *.flv *.mkv)"));	// per aggiungere altri formati aggiungere es. a *.avi *.mpeg *.flv
      if (!_fileName.isEmpty()){
 		loadFile();																// richiamo la funione di apertura del video																
      };

@@ -76,6 +76,8 @@ GeneralTab::GeneralTab(VideoState *is, QWidget *parent):QWidget(parent)
 		starttimeEdit = new QLineEdit("N/A");
 	}
 
+	///////////////////////////////////////////////////////
+
 	QLabel *bitrateLabel = new QLabel(tr("BitRate:"));
 	QLineEdit *bitrateEdit;
 	if(is->pFormatCtx->bit_rate){
@@ -83,6 +85,21 @@ GeneralTab::GeneralTab(VideoState *is, QWidget *parent):QWidget(parent)
 	} else {
 		bitrateEdit = new QLineEdit("N/A");
 	}
+
+	///////////////////////////////////////////////////////
+
+	std::vector<QLabel *> labelchapter;
+	std::vector<QLineEdit *> editchapter;
+	for (int i=0; i<is->pFormatCtx->nb_chapters; ++i) {
+        AVChapter *ch = is->pFormatCtx->chapters[i];
+        QString start("start " + QString::number(ch->start * av_q2d(ch->time_base)) + ", ");
+        QString end("end " + QString::number(ch->end   * av_q2d(ch->time_base)));
+
+		labelchapter[i] = new QLabel("Chapter " + QString::number(0) + "." + QString::number(i) + ":");
+		editchapter[i] = new QLineEdit(start + end);
+
+        //dump_metadata(NULL, ch->metadata, "    ");
+    }
 	///////////////////////////////////////////////////////
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -94,6 +111,10 @@ GeneralTab::GeneralTab(VideoState *is, QWidget *parent):QWidget(parent)
 	mainLayout->addWidget(starttimeEdit);
 	mainLayout->addWidget(bitrateLabel);
 	mainLayout->addWidget(bitrateEdit);
+	for (int i=0; i<is->pFormatCtx->nb_chapters; ++i) {
+		mainLayout->addWidget(labelchapter[i]);
+		mainLayout->addWidget(editchapter[i]);
+	}
 
 	mainLayout->addStretch(1);
 
@@ -107,6 +128,98 @@ GeneralTab::GeneralTab(VideoState *is, QWidget *parent):QWidget(parent)
 VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 {
 
+	AVStream *video_st = is->video_st;
+
+	int g = av_gcd(video_st->time_base.num, video_st->time_base.den);
+	QLabel *numFrameDemuxedlabel = new QLabel(tr("Number of Frames Demuxed for Header:"));
+	QLineEdit *numFrameDemuxededit = new QLineEdit(QString::number(video_st->codec_info_nb_frames) + ",  "
+		+ video_st->time_base.num/g + "/" + video_st->time_base.den/g);
+
+
+	///////////////////////////////////////////////////////
+
+	QLabel *codec_type_label = new QLabel(tr("Codec type:"));
+	QLineEdit *codec_type_edit = new QLineEdit(av_get_media_type_string(video_st->codec->codec_type));
+
+	///////////////////////////////////////////////////////
+
+	QLabel *codec_name_label = new QLabel(tr("Codec name:"));
+	QLineEdit *codec_name_edit = new QLineEdit(avcodec_get_name(video_st->codec->codec_id));
+
+	///////////////////////////////////////////////////////
+
+	const AVCodec *p;
+	const char *profile = NULL;
+	QLabel *profile_label;
+	QLineEdit *profile_edit;
+	if (video_st->codec->profile != FF_PROFILE_UNKNOWN) {
+		if (video_st->codec->codec)
+			p = video_st->codec->codec;
+		else
+			p = avcodec_find_decoder(video_st->codec->codec_id);
+		if (p){
+			profile = av_get_profile_name(p, video_st->codec->profile);
+			profile_label = new QLabel(tr("Profile:"));
+			profile_edit = new QLineEdit(tr(profile));
+		}
+    }
+
+	///////////////////////////////////////////////////////
+
+	QLineEdit *codec_tag_edit;
+	QLabel *codec_tag_label;
+	if (is->video_st->codec->codec_tag){
+		char tag_buf[32];
+		av_get_codec_tag_string(tag_buf, sizeof(tag_buf), video_st->codec->codec_tag);
+		codec_tag_label = new QLabel(tr("Codec TAG:"));
+		codec_tag_edit = new QLineEdit(tr(tag_buf) + " / " + video_st->codec->codec_tag);
+    }
+
+	///////////////////////////////////////////////////////
+
+	QLabel *pixelformat_label = NULL;
+	QLineEdit *pixelformat_edit;
+	QLineEdit *pixelformat_edit2 = NULL;
+
+	if (video_st->codec->pix_fmt != AV_PIX_FMT_NONE) {
+		pixelformat_label = new QLabel(tr("Pixel Format:"));
+		pixelformat_edit = new QLineEdit(tr(av_get_pix_fmt_name(video_st->codec->pix_fmt)));
+		if (video_st->codec->bits_per_raw_sample && 
+			video_st->codec->bits_per_raw_sample <= av_pix_fmt_desc_get(video_st->codec->pix_fmt)->comp[0].depth_minus1)
+			pixelformat_edit2 = new QLineEdit(tr("(") + QString::number(video_st->codec->bits_per_raw_sample) + tr(" bpc)"));
+    }
+
+	///////////////////////////////////////////////////////
+
+
+
+	///////////////////////////////////////////////////////
+
+	QVBoxLayout *mainLayout = new QVBoxLayout;
+	mainLayout->addWidget(numFrameDemuxedlabel);
+    mainLayout->addWidget(numFrameDemuxededit);
+	mainLayout->addWidget(codec_type_label);
+    mainLayout->addWidget(codec_type_edit);
+	mainLayout->addWidget(codec_name_label);
+    mainLayout->addWidget(codec_name_edit);
+	if(profile != NULL){
+		mainLayout->addWidget(profile_label);
+		mainLayout->addWidget(profile_edit);
+	}
+	if(codec_tag_edit != NULL){
+		mainLayout->addWidget(codec_tag_label);
+		mainLayout->addWidget(codec_tag_edit);
+	}
+	if (pixelformat_label != NULL) {
+		mainLayout->addWidget(pixelformat_label);
+		mainLayout->addWidget(pixelformat_edit);
+		if(pixelformat_edit2 != NULL){
+			mainLayout->addWidget(pixelformat_edit2);
+		}
+	}
+
+	mainLayout->addStretch(1);
+	setLayout(mainLayout);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +228,34 @@ VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 
 AudioTab::AudioTab(VideoState *is, QWidget *parent):QWidget(parent)
 {
+	AVStream *audio_st = is->audio_st;
+
+	QLabel *numFrameDemuxedlabel = new QLabel(tr("Number of Frames Demuxed for Header:"));
+	QLineEdit *numFrameDemuxededit = new QLineEdit(QString::number(audio_st->codec_info_nb_frames));
+
+	///////////////////////////////////////////////////////
+
+	QLabel *codec_type_label = new QLabel(tr("Codec type:"));
+	QLineEdit *codec_type_edit = new QLineEdit(av_get_media_type_string(audio_st->codec->codec_type));
+
+	///////////////////////////////////////////////////////
+
+	QLabel *codec_name_label = new QLabel(tr("Codec name:"));
+	QLineEdit *codec_name_edit = new QLineEdit(avcodec_get_name(audio_st->codec->codec_id));
+
+
+
+	QVBoxLayout *mainLayout = new QVBoxLayout;
+	mainLayout->addWidget(numFrameDemuxedlabel);
+    mainLayout->addWidget(numFrameDemuxededit);
+	mainLayout->addWidget(codec_type_label);
+    mainLayout->addWidget(codec_type_edit);
+	mainLayout->addWidget(codec_name_label);
+    mainLayout->addWidget(codec_name_edit);
+
+	mainLayout->addStretch(1);
+	setLayout(mainLayout);
+
 
 }
 
