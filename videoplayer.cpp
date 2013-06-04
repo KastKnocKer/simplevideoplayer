@@ -181,7 +181,7 @@ funzione grafica che permette di creare la menubar e i suoi sottomenu
  void videoplayer::about(void)
  {
     QMessageBox msgbox;
-    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> implementato"
+    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> &egrave; implementato"
     " utilizzando Qt5, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
  }
 

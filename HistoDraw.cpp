@@ -15,6 +15,9 @@ HistoDraw::HistoDraw(QWidget *parent) : QGLWidget(parent) {
 	R.resize(256, 0);
 	G.resize(256, 0);
 	B.resize(256, 0);
+
+	setWindowTitle(tr("Histogram RGB"));
+	setFixedSize(400,150);
 }
 
 HistoDraw::~HistoDraw(){
