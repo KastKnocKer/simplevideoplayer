@@ -63,8 +63,8 @@ videoplayer::videoplayer(QWidget *parent)
     seekbackwardAction->setShortcut(tr("Ctrl+B"));
     seekbackwardAction->setDisabled(true);
 
-	histoAction = new QAction(QIcon(":/images/volume.png"), tr("histo"), this);
-	logAction = new QAction(QIcon(":/images/volume.png"), tr("log"), this);
+	histoAction = new QAction(QIcon(":/images/histogram2.png"), tr("histo"), this);
+	logAction = new QAction(QIcon(":/images/log.png"), tr("log"), this);
 
 
 	//event listener dei pulsanti

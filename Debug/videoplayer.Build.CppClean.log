@@ -1,63 +1,84 @@
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\VIDEOTHREAD.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\VIDEOSTATE.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\VIDEOPLAYER.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\VIDEOPICTURE.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\VIDEO.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\STATUS.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\PACKETQUEUEAUDIO.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\PACKETQUEUEVIDEO.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\MAIN.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\MOC_VIDEOTHREAD.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\MOC_VIDEOPLAYER.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\MOC_VIDEO.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\MOC_DECODETHREAD.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\MOC_AVCLOCK.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\DECODETHREAD.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\AVCLOCK.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\AUDIOMANGER.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\VC110.PDB
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\DEBUG\QRC_VIDEOPLAYER.OBJ
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\GENERATEDFILES\DEBUG\MOC_VIDEOPLAYER.CPP
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\GENERATEDFILES\DEBUG\MOC_AVCLOCK.CPP
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\GENERATEDFILES\DEBUG\MOC_DECODETHREAD.CPP
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\GENERATEDFILES\DEBUG\MOC_VIDEO.CPP
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\GENERATEDFILES\DEBUG\MOC_VIDEOTHREAD.CPP
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\GENERATEDFILES\QRC_VIDEOPLAYER.CPP
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\WIN32\DEBUG\VIDEOPLAYER.ILK
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\WIN32\DEBUG\VIDEOPLAYER.EXE
-C:\USERS\MATTEO\DESKTOP\CHIAVETTA PROGETTO\VIDEOPLAYER_GRATTA\WIN32\DEBUG\VIDEOPLAYER.PDB
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\AudioManger.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\AVClock.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\DecodeThread.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\main.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\moc_AVClock.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\moc_DecodeThread.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\moc_Video.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\moc_videoplayer.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\moc_VideoThread.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\PacketQueueAudio.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\PacketQueueVideo.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\qrc_videoplayer.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\Status.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\Video.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\VideoPicture.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\videoplayer.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\VideoState.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\VideoThread.obj
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\cl.command.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\CL.read.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\CL.write.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\custombuild.command.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\custombuild.read.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\custombuild.write.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link-cvtres.read.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link-cvtres.write.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link-rc.read.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link-rc.write.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link.command.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link.read.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\link.write.1.tlog
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Debug\vc110.pdb
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Win32\Debug\videoplayer.pdb
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Win32\Debug\videoplayer.exe
-C:\Users\Matteo\Desktop\Chiavetta Progetto\videoplayer_gratta\Win32\Debug\videoplayer.ilk
+C:\NUOVA CARTELLA (2)\DEBUG\VIDEOPICTURE.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\VIDEO.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\STATUS.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\PACKETQUEUEAUDIO.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\PACKETQUEUEVIDEO.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MAIN.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\LOG.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\HISTOTHREAD.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\HISTODRAW.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_VIDEOTHREAD.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_VIDEOPLAYER.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_VIDEO.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_LOG.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_HISTOTHREAD.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_HISTODRAW.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_DECODETHREAD.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\MOC_AVCLOCK.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\DECODETHREAD.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\AVCLOCK.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\AUDIOMANGER.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\VIDEOTHREAD.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\VIDEOSTATE.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\VIDEOPLAYER.OBJ
+C:\NUOVA CARTELLA (2)\DEBUG\VC110.PDB
+C:\NUOVA CARTELLA (2)\DEBUG\QRC_VIDEOPLAYER.OBJ
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_VIDEOPLAYER.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_AVCLOCK.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_DECODETHREAD.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_HISTOTHREAD.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_HISTODRAW.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_LOG.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_VIDEO.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\DEBUG\MOC_VIDEOTHREAD.CPP
+C:\NUOVA CARTELLA (2)\GENERATEDFILES\QRC_VIDEOPLAYER.CPP
+C:\NUOVA CARTELLA (2)\WIN32\DEBUG\VIDEOPLAYER.ILK
+C:\NUOVA CARTELLA (2)\WIN32\DEBUG\VIDEOPLAYER.EXE
+C:\NUOVA CARTELLA (2)\WIN32\DEBUG\VIDEOPLAYER.PDB
+C:\simplevideoplayer\Debug\AudioManger.obj
+C:\simplevideoplayer\Debug\AVClock.obj
+C:\simplevideoplayer\Debug\DecodeThread.obj
+C:\simplevideoplayer\Debug\HistoDraw.obj
+C:\simplevideoplayer\Debug\HistoThread.obj
+C:\simplevideoplayer\Debug\Log.obj
+C:\simplevideoplayer\Debug\main.obj
+C:\simplevideoplayer\Debug\moc_AVClock.obj
+C:\simplevideoplayer\Debug\moc_DecodeThread.obj
+C:\simplevideoplayer\Debug\moc_HistoDraw.obj
+C:\simplevideoplayer\Debug\moc_HistoThread.obj
+C:\simplevideoplayer\Debug\moc_Log.obj
+C:\simplevideoplayer\Debug\moc_Video.obj
+C:\simplevideoplayer\Debug\moc_videoplayer.obj
+C:\simplevideoplayer\Debug\moc_VideoThread.obj
+C:\simplevideoplayer\Debug\PacketQueueAudio.obj
+C:\simplevideoplayer\Debug\PacketQueueVideo.obj
+C:\simplevideoplayer\Debug\qrc_videoplayer.obj
+C:\simplevideoplayer\Debug\Status.obj
+C:\simplevideoplayer\Debug\Video.obj
+C:\simplevideoplayer\Debug\VideoPicture.obj
+C:\simplevideoplayer\Debug\videoplayer.obj
+C:\simplevideoplayer\Debug\VideoState.obj
+C:\simplevideoplayer\Debug\VideoThread.obj
+C:\simplevideoplayer\Debug\cl.command.1.tlog
+C:\simplevideoplayer\Debug\CL.read.1.tlog
+C:\simplevideoplayer\Debug\CL.write.1.tlog
+C:\simplevideoplayer\Debug\custombuild.command.1.tlog
+C:\simplevideoplayer\Debug\custombuild.read.1.tlog
+C:\simplevideoplayer\Debug\custombuild.write.1.tlog
+C:\simplevideoplayer\Debug\link-cvtres.read.1.tlog
+C:\simplevideoplayer\Debug\link-cvtres.write.1.tlog
+C:\simplevideoplayer\Debug\link-rc.read.1.tlog
+C:\simplevideoplayer\Debug\link-rc.write.1.tlog
+C:\simplevideoplayer\Debug\link.5584-cvtres.read.1.tlog
+C:\simplevideoplayer\Debug\link.5584-cvtres.write.1.tlog
+C:\simplevideoplayer\Debug\link.5584-rc.read.1.tlog
+C:\simplevideoplayer\Debug\link.5584-rc.write.1.tlog
+C:\simplevideoplayer\Debug\link.5584.read.1.tlog
+C:\simplevideoplayer\Debug\link.5584.write.1.tlog
+C:\simplevideoplayer\Debug\link.command.1.tlog
+C:\simplevideoplayer\Debug\link.read.1.tlog
+C:\simplevideoplayer\Debug\link.write.1.tlog
+C:\simplevideoplayer\Debug\vc110.pdb
+C:\simplevideoplayer\Win32\Debug\videoplayer.pdb
+C:\simplevideoplayer\Win32\Debug\videoplayer.exe
+C:\simplevideoplayer\Win32\Debug\videoplayer.ilk

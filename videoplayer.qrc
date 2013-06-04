@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>images/volume.png</file>
+        <file>images/histogram.png</file>
+        <file>images/histogram2.png</file>
+		<file>images/log.png</file>
     </qresource>
 </RCC>
