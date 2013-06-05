@@ -4,8 +4,8 @@ HistoDraw::HistoDraw(QWidget *parent) : QGLWidget(parent) {
 
     setMouseTracking(true);
 
-	w = 0;
-	h = 0;
+	w = 258;
+	h = 304;
 	display = false;
 
 	first_frame = true;
@@ -16,8 +16,10 @@ HistoDraw::HistoDraw(QWidget *parent) : QGLWidget(parent) {
 	G.resize(256, 0);
 	B.resize(256, 0);
 
-	setWindowTitle(tr("Histogram RGB"));
-	setFixedSize(400,150);
+	setWindowTitle(tr("Histogram"));
+
+    setFixedSize(258,304);
+
 }
 
 HistoDraw::~HistoDraw(){

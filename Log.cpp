@@ -21,8 +21,7 @@ Log::Log(VideoState *is, QWidget *parent):QDialog(parent)
     setLayout(mainLayout);
 
     setWindowTitle(tr("Info"));
-	//setMinimumSize(400, 400);
-	setFixedSize(400,400);
+	setMinimumSize(400, 400);
 }
 
 
@@ -131,10 +130,8 @@ VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 
 	AVStream *video_st = is->video_st;
 
-	int g = av_gcd(video_st->time_base.num, video_st->time_base.den);
 	QLabel *numFrameDemuxedlabel = new QLabel(tr("Number of Frames Demuxed for Header:"));
-	QLineEdit *numFrameDemuxededit = new QLineEdit(QString::number(video_st->codec_info_nb_frames) + ",  "
-		+ video_st->time_base.num/g + "/" + video_st->time_base.den/g);
+	QLineEdit *numFrameDemuxededit = new QLineEdit(QString::number(video_st->codec_info_nb_frames));
 
 
 	///////////////////////////////////////////////////////
@@ -192,6 +189,8 @@ VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 
 	///////////////////////////////////////////////////////
 
+	QLabel *fpslabel = new QLabel(tr("FPS:"));
+	QLineEdit * fpsedit = new QLineEdit();
 
 
 	///////////////////////////////////////////////////////
@@ -218,6 +217,8 @@ VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 			mainLayout->addWidget(pixelformat_edit2);
 		}
 	}
+	mainLayout->addWidget(fpslabel);
+	mainLayout->addWidget(fpsedit);
 
 	mainLayout->addStretch(1);
 	setLayout(mainLayout);

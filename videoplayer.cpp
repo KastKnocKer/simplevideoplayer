@@ -66,6 +66,9 @@ videoplayer::videoplayer(QWidget *parent)
 	histoAction = new QAction(QIcon(":/images/histogram2.png"), tr("histo"), this);
 	logAction = new QAction(QIcon(":/images/log.png"), tr("log"), this);
 
+	histoAction->setDisabled(true);
+	logAction->setDisabled(true);
+
 
 	//event listener dei pulsanti
 	connect(playAction, &QAction::triggered, this, &videoplayer::resume);
@@ -181,7 +184,7 @@ funzione grafica che permette di creare la menubar e i suoi sottomenu
  void videoplayer::about(void)
  {
     QMessageBox msgbox;
-    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> &egrave; implementato"
+    msgbox.about(this, tr("Info MediaPlayer"),tr("<center><b>Mediaplayer</b> implementato"
     " utilizzando Qt5, openGL e ffmpeg realizzato da Gagliardelli Luca, Renzi Matteo e Esposito Giovanni</center>"));
  }
 
@@ -273,6 +276,8 @@ void videoplayer::stop(){
 	skipbackwardAction->setDisabled(true);
 	seekforwardAction->setDisabled(true);
 	seekbackwardAction->setDisabled(true);
+	histoAction->setDisabled(true);
+	logAction->setDisabled(true);
 	
 	//is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
 	
@@ -343,6 +348,8 @@ void videoplayer::playing(){
 	skipbackwardAction->setDisabled(false);
 	seekforwardAction->setDisabled(false);
 	seekbackwardAction->setDisabled(false);
+	histoAction->setDisabled(false);
+	logAction->setDisabled(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -402,9 +409,7 @@ void videoplayer::loadFile(){
 	_clock->schedule_refresh(40);	
 
 	/* inizializzazione finestra istogramma */
-	histo_window = new HistoDraw();
-	histo_window->setSize(640,480);
-	histo_window->show();
+	histo_window = new HistoDraw();	
 
 	is.histo_window = histo_window;
 

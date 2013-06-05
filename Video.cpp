@@ -11,6 +11,7 @@ Video::Video(QWidget *parent) : QGLWidget(parent) {
 
 	first_frame = true;
 	_extClose = false;
+	setWindowTitle(tr("Finestra riproduzione"));
 }
 
 Video::~Video(){
