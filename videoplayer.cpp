@@ -4,6 +4,8 @@
 videoplayer::videoplayer(QWidget *parent)
 {
 	stoptick = false;
+	_logDialog = nullptr;
+	
 
 	signalMapper = new QSignalMapper(this);
 
@@ -65,9 +67,6 @@ videoplayer::videoplayer(QWidget *parent)
 
 	histoAction = new QAction(QIcon(":/images/histogram2.png"), tr("histo"), this);
 	logAction = new QAction(QIcon(":/images/log.png"), tr("log"), this);
-
-	histoAction->setDisabled(true);
-	logAction->setDisabled(true);
 
 
 	//event listener dei pulsanti
@@ -203,8 +202,12 @@ std::string videoplayer::getSourceFilename(){
 */
 void videoplayer::openDialog(){
 
+	if(is.ut.isPlaying() == false){
+		return;
+	}
 	_logDialog = new Log(&is);
 	_logDialog->show();
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,6 +272,10 @@ void videoplayer::stream_seek(int64_t pos, int64_t rel){
  */
 void videoplayer::stop(){
 
+	if(_logDialog != nullptr){
+		_logDialog->done(1);
+	};
+
 	pauseAction->setDisabled(true);
 	playAction->setDisabled(true);
 	stopAction->setDisabled(true);
@@ -276,8 +283,6 @@ void videoplayer::stop(){
 	skipbackwardAction->setDisabled(true);
 	seekforwardAction->setDisabled(true);
 	seekbackwardAction->setDisabled(true);
-	histoAction->setDisabled(true);
-	logAction->setDisabled(true);
 	
 	//is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
 	
@@ -348,8 +353,6 @@ void videoplayer::playing(){
 	skipbackwardAction->setDisabled(false);
 	seekforwardAction->setDisabled(false);
 	seekbackwardAction->setDisabled(false);
-	histoAction->setDisabled(false);
-	logAction->setDisabled(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -409,7 +412,9 @@ void videoplayer::loadFile(){
 	_clock->schedule_refresh(40);	
 
 	/* inizializzazione finestra istogramma */
-	histo_window = new HistoDraw();	
+	histo_window = new HistoDraw();
+	histo_window->setSize(640,480);
+	//histo_window->show();
 
 	is.histo_window = histo_window;
 

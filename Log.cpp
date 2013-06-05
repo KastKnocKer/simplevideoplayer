@@ -189,8 +189,45 @@ VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 
 	///////////////////////////////////////////////////////
 
-	QLabel *fpslabel = new QLabel(tr("FPS:"));
-	QLineEdit * fpsedit = new QLineEdit();
+	QLabel *dimlabel = new QLabel(tr("Frame default size: [pixels]"));
+	QLineEdit *dimedit = new QLineEdit(QString::number(video_st->codec->width)
+		+ tr("x") + QString::number(video_st->codec->height));
+
+	///////////////////////////////////////////////////////
+
+	QLabel *fpslabel = new QLabel(tr("FPS (AVG):"));
+	QLineEdit * fpsedit = new QLineEdit(QString::number(av_q2d(video_st->avg_frame_rate)));
+
+	QLabel *tbrlabel = new QLabel(tr("TBR:"));
+	QLineEdit * tbredit = new QLineEdit(QString::number(av_q2d(video_st->r_frame_rate)));
+
+	QLabel *tbnlabel = new QLabel(tr("TBN:"));
+	QLineEdit * tbnedit = new QLineEdit(QString::number(1/av_q2d(video_st->time_base)));
+
+	QLabel *tbclabel = new QLabel(tr("TBC:"));
+	QLineEdit * tbcedit = new QLineEdit(QString::number(1/av_q2d(video_st->codec->time_base)));
+
+	///////////////////////////////////////////////////////
+
+	QLabel *sarlabel;
+	QLineEdit *saredit;
+	QLabel *darlabel;
+	QLineEdit *daredit;
+
+	if (video_st->sample_aspect_ratio.num && av_cmp_q(video_st->sample_aspect_ratio, video_st->codec->sample_aspect_ratio)) {
+        AVRational display_aspect_ratio;
+        av_reduce(&display_aspect_ratio.num, &display_aspect_ratio.den,
+                 video_st->codec->width*video_st->sample_aspect_ratio.num,
+                 video_st->codec->height*video_st->sample_aspect_ratio.den,
+                 1024*1024);
+		sarlabel = new QLabel(tr("SAR: "));
+		saredit = new QLineEdit(QString::number(video_st->sample_aspect_ratio.num) + tr(":")
+			+ QString::number(video_st->sample_aspect_ratio.den));
+		darlabel = new QLabel(tr("DAR: "));
+		daredit = new QLineEdit(QString::number(display_aspect_ratio.num) + tr(":") + QString::number(display_aspect_ratio.den));
+
+    }
+
 
 
 	///////////////////////////////////////////////////////
@@ -217,8 +254,22 @@ VideoTab::VideoTab(VideoState *is, QWidget *parent):QWidget(parent)
 			mainLayout->addWidget(pixelformat_edit2);
 		}
 	}
+	mainLayout->addWidget(dimlabel);
+	mainLayout->addWidget(dimedit);
 	mainLayout->addWidget(fpslabel);
 	mainLayout->addWidget(fpsedit);
+	mainLayout->addWidget(tbrlabel);
+	mainLayout->addWidget(tbredit);
+	mainLayout->addWidget(tbnlabel);
+	mainLayout->addWidget(tbnedit);
+	mainLayout->addWidget(tbclabel);
+	mainLayout->addWidget(tbcedit);
+	if (video_st->sample_aspect_ratio.num && av_cmp_q(video_st->sample_aspect_ratio, video_st->codec->sample_aspect_ratio)) {
+		mainLayout->addWidget(sarlabel);
+		mainLayout->addWidget(saredit);
+		mainLayout->addWidget(darlabel);
+		mainLayout->addWidget(daredit);
+	}
 
 	mainLayout->addStretch(1);
 	setLayout(mainLayout);
@@ -245,6 +296,15 @@ AudioTab::AudioTab(VideoState *is, QWidget *parent):QWidget(parent)
 	QLabel *codec_name_label = new QLabel(tr("Codec name:"));
 	QLineEdit *codec_name_edit = new QLineEdit(avcodec_get_name(audio_st->codec->codec_id));
 
+	///////////////////////////////////////////////////////
+
+	QLabel *sampleratelabel = new QLabel(tr("SAMPLE RATE:"));
+	QLineEdit *samplerateedit = new QLineEdit(QString::number(audio_st->codec->sample_rate));
+
+	///////////////////////////////////////////////////////
+
+	QLabel *channelslabel = new QLabel(tr("CHANNELS:"));
+	QLineEdit *channelsedit = new QLineEdit(QString::number(audio_st->codec->channels));
 
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -254,6 +314,10 @@ AudioTab::AudioTab(VideoState *is, QWidget *parent):QWidget(parent)
     mainLayout->addWidget(codec_type_edit);
 	mainLayout->addWidget(codec_name_label);
     mainLayout->addWidget(codec_name_edit);
+	mainLayout->addWidget(sampleratelabel);
+    mainLayout->addWidget(samplerateedit);
+	mainLayout->addWidget(channelslabel);
+    mainLayout->addWidget(channelsedit);
 
 	mainLayout->addStretch(1);
 	setLayout(mainLayout);
