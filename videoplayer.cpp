@@ -67,6 +67,8 @@ videoplayer::videoplayer(QWidget *parent)
 
 	histoAction = new QAction(QIcon(":/images/histogram2.png"), tr("histo"), this);
 	logAction = new QAction(QIcon(":/images/log.png"), tr("log"), this);
+	histoAction->setDisabled(true);
+	logAction->setDisabled(true);
 
 
 	//event listener dei pulsanti
@@ -283,6 +285,8 @@ void videoplayer::stop(){
 	skipbackwardAction->setDisabled(true);
 	seekforwardAction->setDisabled(true);
 	seekbackwardAction->setDisabled(true);
+	histoAction->setDisabled(true);
+	logAction->setDisabled(true);
 	
 	//is.ut.setStopValue(true);	//imposto il valore di stop alla classe utility
 	
@@ -353,6 +357,8 @@ void videoplayer::playing(){
 	skipbackwardAction->setDisabled(false);
 	seekforwardAction->setDisabled(false);
 	seekbackwardAction->setDisabled(false);
+	histoAction->setDisabled(false);
+	logAction->setDisabled(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -397,6 +403,10 @@ void videoplayer::loadFile(){
 	is.setSourceFilename(this->getSourceFilename());				//imposto il nome del file all'oggetto VideoState
 	is.window = window;
 
+	unsigned p = is.getSourceFilename().find_last_of("/");			//Setto alla finestra video il nome del file
+	std::string b = is.getSourceFilename().substr(p+1);
+	window->setTitle(tr(b.c_str()));
+
 	window->show();
 
 	// Register all formats and codecs
@@ -412,8 +422,7 @@ void videoplayer::loadFile(){
 	_clock->schedule_refresh(40);	
 
 	/* inizializzazione finestra istogramma */
-	histo_window = new HistoDraw();
-	histo_window->setSize(640,480);
+	histo_window = new HistoDraw();	
 	//histo_window->show();
 
 	is.histo_window = histo_window;

@@ -115,6 +115,15 @@ void Video::startdisplay(void){
 	display = true;	
 };
 
+/**
+		Imposta titolo finestra
+		@param title titolo finestra
+	*/
+void Video::setTitle(QString title){
+	setWindowTitle(title);
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 

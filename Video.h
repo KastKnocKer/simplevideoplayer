@@ -63,6 +63,11 @@ public:
 	*/
 	void startdisplay(void);
 
+	/**
+		Imposta titolo finestra
+		@param title titolo finestra
+	*/
+	void setTitle(QString title);
 
 signals:
 
