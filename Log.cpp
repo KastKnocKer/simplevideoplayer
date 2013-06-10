@@ -21,7 +21,7 @@ Log::Log(VideoState *is, QWidget *parent):QDialog(parent)
     setLayout(mainLayout);
 
     setWindowTitle(tr("Info"));
-	setFixedSize(400, 400);
+	setMinimumSize(400,600);
 }
 
 

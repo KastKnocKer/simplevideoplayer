@@ -431,8 +431,6 @@ void videoplayer::loadFile(){
 
 	/* inizializzazione thread istogramma */
 	_histo = new HistoThread();
-	_histo->SetVideoState(&is);
-	_histo->start();
 	
 
 	/* lancio il thread di decodifica generale, apre i rispettivi codec,
@@ -446,6 +444,9 @@ void videoplayer::loadFile(){
 	connect(_demuxer, &DecodeThread::eof, window, &Video::closeWindow);
 	connect(_demuxer, &DecodeThread::eof, histo_window, &HistoDraw::closeWindow);
 	_demuxer->start();
+
+	_histo->SetVideoState(&is);
+	_histo->start();
 	
 	/**
 	connect per l'aggiornamento del max valore possibile dello slider

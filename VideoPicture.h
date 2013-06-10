@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <deque>
 #include <utility>
 
 #include <QMutex>
@@ -8,6 +9,7 @@
 
 #include "StaticValue.h"
 #include "Status.h"
+
 
 /**
 	Classe che mantiene la coda dei frame gia convertiti in RGB e del rispettivo
@@ -19,12 +21,20 @@ class VideoPicture
 {
 private:
 
-	QWaitCondition	*_cond;		/* Condition per wait */
+	QWaitCondition	*_cond_video, *_cond_histo;		/* Condition per wait */
 	QMutex			*_mutex;	/* Mutex per accesso esclusivo */
 
-	std::list<std::pair<AVFrame*, double>> queue;	/* Lista per memorizzazione frame rgb e pts */
+	int dim_codvideo;
+	int dim_codhisto;
+
+
+	std::deque<DataFrame> queue;	/* Lista per memorizzazione frame rgb e pts */
 
 	Status *ut;					/* puntatore alla classe di stato riproduzione */
+
+	unsigned int last_read;
+
+
 
 public:
 	
@@ -50,9 +60,11 @@ public:
 		Restituisce un frame RGB con il suo pts.
 		@return frame RGB con relativo PTS
 	*/
-	std::pair<AVFrame*, double> Get();
+	DataFrame Get();
 
-	std::pair<AVFrame*, double> Get2();
+	DataFrame Get2();
+
+	DataFrame Get3(int whois);
 
 	/**
 		Svuota la lista

@@ -23,7 +23,7 @@ private:
 
 	VideoState *_is;					/* Riferimento allo stato globale del video */
 
-	std::pair<AVFrame*, double> cur;	/* Frame corrente */
+	DataFrame cur;	/* Frame corrente */
 
 	std::vector <int> R;				/* Occorrenze pixel rossi */
 	std::vector <int> G;				/* Occorrenze pixel gialli */

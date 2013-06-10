@@ -48,9 +48,9 @@ void AVClock::video_refresh_timer(void){
         else
         {
             /* take an element from the queue */
-			std::pair<AVFrame*, double> p = _is->pictq.Get();
-			frame_current_pts = p.second;
-			pFrameRGB = p.first;
+			DataFrame p = _is->pictq.Get3(0);
+			frame_current_pts = p.pts;
+			pFrameRGB = p.pFrameRGB;
 
 			//setto il frame alla finestra
 			_is->window->setFrame(pFrameRGB);

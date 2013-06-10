@@ -6,9 +6,15 @@ HistoThread::HistoThread(QObject *parent){
 
 void HistoThread::run(){
 
-	
+	while(1){
 
-	while(!_is->ut.getStopValue()){
+		if(_is->ut.getStopValue()){
+			break;
+		}
+
+		if(_is->ut.getPauseValue()){
+			continue;
+		};
 
 		R.clear();
 		G.clear();
@@ -24,7 +30,7 @@ void HistoThread::run(){
 		/*
 			Prelevo il primo frame dalla picture queue
 		*/
-		cur = _is->pictq.Get2();
+		cur = _is->pictq.Get3(1);
 
 		/*
 			Per ogni pixel del frame che ho prelevato calcolo le occorrenze
@@ -32,10 +38,10 @@ void HistoThread::run(){
 		int p;
 		for(int y=0; y < _is->video_st->codec->height; ++y){
 			for(int x=0; x < _is->video_st->codec->width; ++x){
-				p = x*3+y*cur.first->linesize[0];		//Accedo al pixel che si trova nella riga y e colonna x
-				++R[cur.first->data[0][p]];				//Incremento il numero di pixel rossi
-				++G[cur.first->data[0][p+1]];			//Incremento il numero di pixel verdi
-				++B[cur.first->data[0][p+2]];			//Incremento il numero di pixel blu
+				p = x*3+y*cur.pFrameRGB->linesize[0];		//Accedo al pixel che si trova nella riga y e colonna x
+				++R[cur.pFrameRGB->data[0][p]];				//Incremento il numero di pixel rossi
+				++G[cur.pFrameRGB->data[0][p+1]];			//Incremento il numero di pixel verdi
+				++B[cur.pFrameRGB->data[0][p+2]];			//Incremento il numero di pixel blu
 			}
 		}
 
@@ -43,6 +49,8 @@ void HistoThread::run(){
 
 		emit ValuesReady();
 	}
+
+	qDebug() << "ESCO HISTOTHREAD";
 
 }
 

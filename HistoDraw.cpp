@@ -18,7 +18,7 @@ HistoDraw::HistoDraw(QWidget *parent) : QGLWidget(parent) {
 
 	setWindowTitle(tr("Histogram"));
 
-    setFixedSize(258,304);
+    setFixedSize(257,304);
 
 }
 
@@ -138,20 +138,7 @@ void HistoDraw::closeWindow(){
 ridefinizione dell'avvento di chiusura della finestra, emetto uno specifico segnale
 */
 void HistoDraw::closeEvent(QCloseEvent *event){
-	
-	//CASO PREMO CHIUDI FINESTRA
-	if(!_extClose){
 		
-		//qDebug() << "VIDEO - WINDOW CLOSING INT";
-		
-		emit XHistopressed();
-		event->ignore();
-	}
-	else{
-		
-		//qDebug() << "VIDEO - WINDOW CLOSING ext";
-		
-		emit windowClosing();
-	}
-	_extClose = false;
+	emit windowClosing();
+
 }

@@ -18,6 +18,12 @@ extern "C"	{
 #pragma comment(lib, "dev\\lib\\avformat.lib")
 #pragma comment(lib, "dev\\lib\\swscale.lib")
 
+struct DataFrame{
+	AVFrame* pFrameRGB;
+	double pts;
+	bool read;
+};
+
 
 class QDebug;
 
