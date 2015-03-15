@@ -1,0 +1,1 @@
+A simple video player created using ffmpeg and openGL
